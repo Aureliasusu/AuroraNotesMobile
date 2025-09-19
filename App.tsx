@@ -5,15 +5,10 @@
  * @format
  */
 
-import React, { useEffect } from 'react';
-import { StatusBar, StyleSheet, useColorScheme, View, ActivityIndicator } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
-import { useAuthStore } from './src/store/useAuthStore';
-import { SignInScreen } from './src/screens/auth/SignInScreen';
-import { NotesListScreen } from './src/screens/notes/NotesListScreen';
+import React from 'react';
+import { StatusBar, useColorScheme } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AppNavigator } from './src/navigation/AppNavigator';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -21,44 +16,9 @@ function App() {
   return (
     <SafeAreaProvider>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <AppNavigator />
     </SafeAreaProvider>
   );
 }
-
-function AppContent() {
-  const { user, loading } = useAuthStore();
-  const safeAreaInsets = useSafeAreaInsets();
-
-  useEffect(() => {
-    // Initialize auth state
-    useAuthStore.getState().setLoading(false);
-  }, []);
-
-  if (loading) {
-    return (
-      <View style={[styles.container, styles.loadingContainer]}>
-        <ActivityIndicator size="large" color="#3b82f6" />
-      </View>
-    );
-  }
-
-  return (
-    <View style={[styles.container, { paddingTop: safeAreaInsets.top }]}>
-      {user ? <NotesListScreen /> : <SignInScreen />}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
-  },
-  loadingContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default App;

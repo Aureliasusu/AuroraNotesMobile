@@ -9,6 +9,7 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -18,10 +19,11 @@ export const SignInScreen: React.FC = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuthStore();
+  const navigation = useNavigation();
 
   const handleSignIn = async () => {
     if (!email || !password) {
-      Alert.alert('错误', '请填写所有字段');
+      Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
@@ -30,7 +32,7 @@ export const SignInScreen: React.FC = () => {
     setLoading(false);
 
     if (!result.success) {
-      Alert.alert('登录失败', result.error || '未知错误');
+      Alert.alert('Sign In Failed', result.error || 'Unknown error');
     }
   };
 
@@ -42,31 +44,31 @@ export const SignInScreen: React.FC = () => {
       >
         <View style={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.title}>欢迎回来</Text>
-            <Text style={styles.subtitle}>登录您的Aurora Notes账户</Text>
+            <Text style={styles.title}>Welcome Back</Text>
+            <Text style={styles.subtitle}>Sign in to your Aurora Notes account</Text>
           </View>
 
           <View style={styles.form}>
             <Input
-              label="邮箱"
+              label="Email"
               value={email}
               onChangeText={setEmail}
-              placeholder="输入您的邮箱"
+              placeholder="Enter your email"
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
             />
 
             <Input
-              label="密码"
+              label="Password"
               value={password}
               onChangeText={setPassword}
-              placeholder="输入您的密码"
+              placeholder="Enter your password"
               secureTextEntry
             />
 
             <Button
-              title="登录"
+              title="Sign In"
               onPress={handleSignIn}
               loading={loading}
               disabled={loading}
@@ -75,9 +77,9 @@ export const SignInScreen: React.FC = () => {
           </View>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>还没有账户？</Text>
-            <TouchableOpacity>
-              <Text style={styles.linkText}>立即注册</Text>
+            <Text style={styles.footerText}>Don't have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('SignUp' as never)}>
+              <Text style={styles.linkText}>Sign Up</Text>
             </TouchableOpacity>
           </View>
         </View>

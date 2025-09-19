@@ -9,6 +9,7 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useAuthStore } from '../../store/useAuthStore';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -20,20 +21,21 @@ export const SignUpScreen: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { signUp } = useAuthStore();
+  const navigation = useNavigation();
 
   const handleSignUp = async () => {
     if (!fullName || !email || !password || !confirmPassword) {
-      Alert.alert('错误', '请填写所有字段');
+      Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert('错误', '密码不匹配');
+      Alert.alert('Error', 'Passwords do not match');
       return;
     }
 
     if (password.length < 6) {
-      Alert.alert('错误', '密码至少需要6个字符');
+      Alert.alert('Error', 'Password must be at least 6 characters');
       return;
     }
 
@@ -42,9 +44,9 @@ export const SignUpScreen: React.FC = () => {
     setLoading(false);
 
     if (!result.success) {
-      Alert.alert('注册失败', result.error || '未知错误');
+      Alert.alert('Sign Up Failed', result.error || 'Unknown error');
     } else {
-      Alert.alert('注册成功', '请检查您的邮箱以验证账户');
+      Alert.alert('Success', 'Please check your email to verify your account');
     }
   };
 
@@ -56,47 +58,47 @@ export const SignUpScreen: React.FC = () => {
       >
         <View style={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.title}>创建账户</Text>
-            <Text style={styles.subtitle}>开始您的Aurora Notes之旅</Text>
+            <Text style={styles.title}>Create Account</Text>
+            <Text style={styles.subtitle}>Start your Aurora Notes journey</Text>
           </View>
 
           <View style={styles.form}>
             <Input
-              label="姓名"
+              label="Full Name"
               value={fullName}
               onChangeText={setFullName}
-              placeholder="输入您的姓名"
+              placeholder="Enter your full name"
               autoCapitalize="words"
             />
 
             <Input
-              label="邮箱"
+              label="Email"
               value={email}
               onChangeText={setEmail}
-              placeholder="输入您的邮箱"
+              placeholder="Enter your email"
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
             />
 
             <Input
-              label="密码"
+              label="Password"
               value={password}
               onChangeText={setPassword}
-              placeholder="输入您的密码"
+              placeholder="Enter your password"
               secureTextEntry
             />
 
             <Input
-              label="确认密码"
+              label="Confirm Password"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
-              placeholder="再次输入密码"
+              placeholder="Confirm your password"
               secureTextEntry
             />
 
             <Button
-              title="注册"
+              title="Sign Up"
               onPress={handleSignUp}
               loading={loading}
               disabled={loading}
@@ -105,9 +107,9 @@ export const SignUpScreen: React.FC = () => {
           </View>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>已有账户？</Text>
-            <TouchableOpacity>
-              <Text style={styles.linkText}>立即登录</Text>
+            <Text style={styles.footerText}>Already have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('SignIn' as never)}>
+              <Text style={styles.linkText}>Sign In</Text>
             </TouchableOpacity>
           </View>
         </View>

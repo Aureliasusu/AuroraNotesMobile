@@ -8,15 +8,32 @@ import {
   SafeAreaView,
   RefreshControl,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
-import { useNotesStore } from '../../store/useNotesStore';
+import { useNavigation } from '@react-navigation/native';
+import { useNotes } from '../../hooks/useNotes';
 import { useAuthStore } from '../../store/useAuthStore';
-import { Note } from '../../types/database';
+import { NoteCard } from '../../components/ui/NoteCard';
+import { SearchBar } from '../../components/ui/SearchBar';
+import { FloatingActionButton } from '../../components/ui/FloatingActionButton';
+import { Button } from '../../components/ui/Button';
 
 export const NotesListScreen: React.FC = () => {
-  const { notes, loading, fetchNotes, setSelectedNote } = useNotesStore();
-  const { user } = useAuthStore();
+  const { 
+    notes, 
+    loading, 
+    fetchNotes, 
+    setSelectedNote, 
+    deleteNote,
+    searchNotes,
+    pinnedNotes,
+    activeNotes 
+  } = useNotes();
+  const { user, signOut } = useAuthStore();
+  const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showPinnedOnly, setShowPinnedOnly] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -30,76 +47,150 @@ export const NotesListScreen: React.FC = () => {
     setRefreshing(false);
   };
 
-  const handleNotePress = (note: Note) => {
+  const handleNotePress = (note: any) => {
     setSelectedNote(note);
-    // TODO: Navigate to note editor
+    navigation.navigate('NoteEditor' as never, { noteId: note.id } as never);
   };
 
-  const renderNoteItem = ({ item }: { item: Note }) => (
-    <TouchableOpacity
-      style={styles.noteItem}
+  const handleCreateNote = () => {
+    navigation.navigate('NoteEditor' as never, {} as never);
+  };
+
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+    await searchNotes(query);
+  };
+
+  const handleDeleteNote = (note: any) => {
+    Alert.alert(
+      'Delete Note',
+      'Are you sure you want to delete this note? This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Delete', 
+          style: 'destructive',
+          onPress: async () => {
+            await deleteNote(note.id);
+          }
+        },
+      ]
+    );
+  };
+
+  const handleSignOut = () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Sign Out', 
+          style: 'destructive',
+          onPress: signOut
+        },
+      ]
+    );
+  };
+
+  const filteredNotes = showPinnedOnly ? pinnedNotes : activeNotes;
+  const displayNotes = searchQuery ? notes : filteredNotes;
+
+  const renderNoteItem = ({ item }: { item: any }) => (
+    <NoteCard
+      note={item}
       onPress={() => handleNotePress(item)}
-    >
-      <View style={styles.noteHeader}>
-        <Text style={styles.noteTitle} numberOfLines={1}>
-          {item.title || '无标题'}
-        </Text>
-        <Text style={styles.noteDate}>
-          {new Date(item.updated_at).toLocaleDateString()}
-        </Text>
-      </View>
-      <Text style={styles.noteContent} numberOfLines={2}>
-        {item.content || '无内容'}
-      </Text>
-      {item.tags && item.tags.length > 0 && (
-        <View style={styles.tagsContainer}>
-          {item.tags.slice(0, 3).map((tag, index) => (
-            <View key={index} style={styles.tag}>
-              <Text style={styles.tagText}>{tag}</Text>
-            </View>
-          ))}
-          {item.tags.length > 3 && (
-            <Text style={styles.moreTagsText}>+{item.tags.length - 3}</Text>
-          )}
-        </View>
-      )}
-    </TouchableOpacity>
+      onLongPress={() => handleDeleteNote(item)}
+    />
   );
 
   if (loading && !refreshing) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#3b82f6" />
-        <Text style={styles.loadingText}>加载笔记中...</Text>
+        <Text style={styles.loadingText}>Loading notes...</Text>
       </View>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>我的笔记</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <Text style={styles.addButtonText}>+</Text>
+        <View style={styles.headerLeft}>
+            <Text style={styles.headerTitle}>My Notes</Text>
+            <Text style={styles.headerSubtitle}>
+              {displayNotes.length} notes
+            </Text>
+        </View>
+        <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
+            <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
 
-      {notes.length === 0 ? (
+      {/* Search Bar */}
+      <SearchBar
+        value={searchQuery}
+        onChangeText={handleSearch}
+        placeholder="Search notes..."
+      />
+
+      {/* Filter Tabs */}
+      <View style={styles.filterContainer}>
+        <TouchableOpacity
+          style={[styles.filterTab, !showPinnedOnly && styles.activeTab]}
+          onPress={() => setShowPinnedOnly(false)}
+        >
+          <Text style={[styles.filterText, !showPinnedOnly && styles.activeFilterText]}>
+            All ({activeNotes.length})
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.filterTab, showPinnedOnly && styles.activeTab]}
+          onPress={() => setShowPinnedOnly(true)}
+        >
+          <Text style={[styles.filterText, showPinnedOnly && styles.activeFilterText]}>
+            Pinned ({pinnedNotes.length})
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Notes List */}
+      {displayNotes.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyTitle}>还没有笔记</Text>
-          <Text style={styles.emptySubtitle}>点击右上角的 + 号创建您的第一篇笔记</Text>
+          <Text style={styles.emptyIcon}>📝</Text>
+          <Text style={styles.emptyTitle}>
+            {searchQuery ? 'No notes found' : 'No notes yet'}
+          </Text>
+          <Text style={styles.emptySubtitle}>
+            {searchQuery 
+              ? 'Try using different keywords to search' 
+              : 'Tap the + button in the bottom right to create your first note'
+            }
+          </Text>
+          {!searchQuery && (
+            <Button
+              title="Create Note"
+              onPress={handleCreateNote}
+              style={styles.createButton}
+            />
+          )}
         </View>
       ) : (
         <FlatList
-          data={notes}
+          data={displayNotes}
           keyExtractor={(item) => item.id}
           renderItem={renderNoteItem}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           }
           contentContainerStyle={styles.listContainer}
+          showsVerticalScrollIndicator={false}
         />
       )}
+
+      {/* Floating Action Button */}
+      <FloatingActionButton onPress={handleCreateNote} />
     </SafeAreaView>
   );
 };
@@ -119,86 +210,53 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
   },
+  headerLeft: {
+    flex: 1,
+  },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#111827',
   },
-  addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#3b82f6',
-    justifyContent: 'center',
-    alignItems: 'center',
+  headerSubtitle: {
+    fontSize: 14,
+    color: '#6b7280',
+    marginTop: 2,
   },
-  addButtonText: {
-    fontSize: 24,
+  signOutButton: {
+    padding: 8,
+  },
+  signOutText: {
+    fontSize: 16,
+    color: '#ef4444',
+    fontWeight: '500',
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    marginBottom: 8,
+  },
+  filterTab: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginRight: 8,
+    borderRadius: 20,
+    backgroundColor: '#f3f4f6',
+  },
+  activeTab: {
+    backgroundColor: '#3b82f6',
+  },
+  filterText: {
+    fontSize: 14,
+    color: '#6b7280',
+    fontWeight: '500',
+  },
+  activeFilterText: {
     color: '#fff',
-    fontWeight: 'bold',
   },
   listContainer: {
     padding: 16,
-  },
-  noteItem: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  noteHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 8,
-  },
-  noteTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
-    flex: 1,
-    marginRight: 8,
-  },
-  noteDate: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  noteContent: {
-    fontSize: 16,
-    color: '#4b5563',
-    lineHeight: 22,
-    marginBottom: 12,
-  },
-  tagsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-  },
-  tag: {
-    backgroundColor: '#e0f2fe',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginRight: 6,
-    marginBottom: 4,
-  },
-  tagText: {
-    fontSize: 12,
-    color: '#0369a1',
-    fontWeight: '500',
-  },
-  moreTagsText: {
-    fontSize: 12,
-    color: '#6b7280',
-    fontStyle: 'italic',
+    paddingBottom: 100, // Space for FAB
   },
   loadingContainer: {
     flex: 1,
@@ -216,16 +274,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 32,
   },
+  emptyIcon: {
+    fontSize: 64,
+    marginBottom: 16,
+  },
   emptyTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#111827',
     marginBottom: 8,
+    textAlign: 'center',
   },
   emptySubtitle: {
     fontSize: 16,
     color: '#6b7280',
     textAlign: 'center',
     lineHeight: 24,
+    marginBottom: 24,
+  },
+  createButton: {
+    minWidth: 120,
   },
 });
