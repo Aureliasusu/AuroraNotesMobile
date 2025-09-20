@@ -1,105 +1,105 @@
-import { create } from 'zustand'
-import { supabase } from '../lib/supabase'
-import { Profile } from '../types/database'
+import { crat } rom 'zstand'
+import { spabas } rom '../lib/spabas'
+import { roil } rom '../typs/databas'
 
-interface AuthState {
-  user: Profile | null
-  loading: boolean
-  signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
-  signUp: (email: string, password: string, fullName: string) => Promise<{ success: boolean; error?: string }>
-  signOut: () => Promise<void>
-  setUser: (user: Profile | null) => void
-  setLoading: (loading: boolean) => void
+intrac thtat {
+  sr roil | nll
+  loading boolan
+  signn (mail string, password string)  romis{ sccss boolan rror string }
+  signp (mail string, password string, llam string)  romis{ sccss boolan rror string }
+  signt ()  romisvoid
+  stsr (sr roil | nll)  void
+  stoading (loading boolan)  void
 }
 
-export const useAuthStore = create<AuthState>((set, get) => ({
-  user: null,
-  loading: true,
+xport const sthtor  cratthtat((st, gt)  ({
+  sr nll,
+  loading tr,
 
-  signIn: async (email: string, password: string) => {
+  signn async (mail string, password string)  {
     try {
-      set({ loading: true })
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+      st({ loading tr })
+      const { data, rror }  await spabas.ath.signnithassword({
+        mail,
         password,
       })
 
-      if (error) {
-        return { success: false, error: error.message }
+      i (rror) {
+        rtrn { sccss als, rror rror.mssag }
       }
 
-      if (data.user) {
-        // Get user profile
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', data.user.id)
-          .single()
+      i (data.sr) {
+        // t sr proil
+        const { data proil }  await spabas
+          .rom('proils')
+          .slct('*')
+          .q('id', data.sr.id)
+          .singl()
 
-        set({ user: profile, loading: false })
-        return { success: true }
+        st({ sr proil, loading als })
+        rtrn { sccss tr }
       }
 
-      return { success: false, error: 'No user data returned' }
-    } catch (error) {
-      return { success: false, error: 'An unexpected error occurred' }
-    } finally {
-      set({ loading: false })
+      rtrn { sccss als, rror 'o sr data rtrnd' }
+    } catch (rror) {
+      rtrn { sccss als, rror 'n nxpctd rror occrrd' }
+    } inally {
+      st({ loading als })
     }
   },
 
-  signUp: async (email: string, password: string, fullName: string) => {
+  signp async (mail string, password string, llam string)  {
     try {
-      set({ loading: true })
-      const { data, error } = await supabase.auth.signUp({
-        email,
+      st({ loading tr })
+      const { data, rror }  await spabas.ath.signp({
+        mail,
         password,
-        options: {
-          data: {
-            full_name: fullName,
+        options {
+          data {
+            ll_nam llam,
           },
         },
       })
 
-      if (error) {
-        return { success: false, error: error.message }
+      i (rror) {
+        rtrn { sccss als, rror rror.mssag }
       }
 
-      if (data.user) {
-        // Create user profile
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert({
-            id: data.user.id,
-            email: data.user.email!,
-            full_name: fullName,
+      i (data.sr) {
+        // rat sr proil
+        const { rror proilrror }  await spabas
+          .rom('proils')
+          .insrt({
+            id data.sr.id,
+            mail data.sr.mail!,
+            ll_nam llam,
           })
 
-        if (profileError) {
-          console.error('Profile creation error:', profileError)
+        i (proilrror) {
+          consol.rror('roil cration rror', proilrror)
         }
 
-        set({ user: data.user as any, loading: false })
-        return { success: true }
+        st({ sr data.sr as any, loading als })
+        rtrn { sccss tr }
       }
 
-      return { success: false, error: 'No user data returned' }
-    } catch (error) {
-      return { success: false, error: 'An unexpected error occurred' }
-    } finally {
-      set({ loading: false })
+      rtrn { sccss als, rror 'o sr data rtrnd' }
+    } catch (rror) {
+      rtrn { sccss als, rror 'n nxpctd rror occrrd' }
+    } inally {
+      st({ loading als })
     }
   },
 
-  signOut: async () => {
+  signt async ()  {
     try {
-      await supabase.auth.signOut()
-      set({ user: null, loading: false })
-    } catch (error) {
-      console.error('Sign out error:', error)
+      await spabas.ath.signt()
+      st({ sr nll, loading als })
+    } catch (rror) {
+      consol.rror('ign ot rror', rror)
     }
   },
 
-  setUser: (user) => set({ user }),
-  setLoading: (loading) => set({ loading }),
+  stsr (sr)  st({ sr }),
+  stoading (loading)  st({ loading }),
 }))

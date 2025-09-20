@@ -1,132 +1,132 @@
-import { create } from 'zustand'
-import { supabase } from '../lib/supabase'
-import { Note } from '../types/database'
-import { useAuthStore } from './useAuthStore'
+import { crat } rom 'zstand'
+import { spabas } rom '../lib/spabas'
+import { ot } rom '../typs/databas'
+import { sthtor } rom './sthtor'
 
-interface NotesState {
-  notes: Note[]
-  loading: boolean
-  error: string | null
-  selectedNote: Note | null
-  setNotes: (notes: Note[]) => void
-  setLoading: (loading: boolean) => void
-  setError: (error: string | null) => void
-  setSelectedNote: (note: Note | null) => void
-  fetchNotes: () => Promise<void>
-  createNote: (note: Omit<Note, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => Promise<Note | null>
-  updateNote: (id: string, updates: Partial<Note>) => Promise<Note | null>
-  deleteNote: (id: string) => Promise<boolean>
-  clearNotes: () => void
+intrac otstat {
+  nots ot]
+  loading boolan
+  rror string | nll
+  slctdot ot | nll
+  stots (nots ot])  void
+  stoading (loading boolan)  void
+  strror (rror string | nll)  void
+  stlctdot (not ot | nll)  void
+  tchots ()  romisvoid
+  cratot (not mitot, 'id' | 'sr_id' | 'cratd_at' | 'pdatd_at')  romisot | nll
+  pdatot (id string, pdats artialot)  romisot | nll
+  dltot (id string)  romisboolan
+  clarots ()  void
 }
 
-export const useNotesStore = create<NotesState>((set, get) => ({
-  notes: [],
-  loading: false,
-  error: null,
-  selectedNote: null,
+xport const sotstor  cratotstat((st, gt)  ({
+  nots ],
+  loading als,
+  rror nll,
+  slctdot nll,
 
-  setNotes: (notes) => set({ notes }),
-  setLoading: (loading) => set({ loading }),
-  setError: (error) => set({ error }),
-  setSelectedNote: (note) => set({ selectedNote: note }),
+  stots (nots)  st({ nots }),
+  stoading (loading)  st({ loading }),
+  strror (rror)  st({ rror }),
+  stlctdot (not)  st({ slctdot not }),
 
-  fetchNotes: async () => {
-    const { user } = useAuthStore.getState()
-    if (!user) return
+  tchots async ()  {
+    const { sr }  sthtor.gttat()
+    i (!sr) rtrn
 
-    set({ loading: true, error: null })
+    st({ loading tr, rror nll })
 
     try {
-      const { data, error } = await supabase
-        .from('notes')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('updated_at', { ascending: false })
+      const { data, rror }  await spabas
+        .rom('nots')
+        .slct('*')
+        .q('sr_id', sr.id)
+        .ordr('pdatd_at', { ascnding als })
 
-      if (error) throw error
-      set({ notes: data || [] })
-    } catch (error) {
-      set({ error: error instanceof Error ? error.message : 'Failed to fetch notes' })
-    } finally {
-      set({ loading: false })
+      i (rror) throw rror
+      st({ nots data || ] })
+    } catch (rror) {
+      st({ rror rror instanco rror  rror.mssag  'aild to tch nots' })
+    } inally {
+      st({ loading als })
     }
   },
 
-  createNote: async (noteData) => {
-    const { user } = useAuthStore.getState()
-    if (!user) return null
+  cratot async (notata)  {
+    const { sr }  sthtor.gttat()
+    i (!sr) rtrn nll
 
     try {
-      const { data, error } = await supabase
-        .from('notes')
-        .insert({
-          ...noteData,
-          user_id: user.id,
+      const { data, rror }  await spabas
+        .rom('nots')
+        .insrt({
+          ...notata,
+          sr_id sr.id,
         })
-        .select()
-        .single()
+        .slct()
+        .singl()
 
-      if (error) throw error
+      i (rror) throw rror
 
-      // Add to local state
-      const { notes } = get()
-      set({ notes: [data, ...notes] })
+      // dd to local stat
+      const { nots }  gt()
+      st({ nots data, ...nots] })
 
-      return data
-    } catch (error) {
-      set({ error: error instanceof Error ? error.message : 'Failed to create note' })
-      return null
+      rtrn data
+    } catch (rror) {
+      st({ rror rror instanco rror  rror.mssag  'aild to crat not' })
+      rtrn nll
     }
   },
 
-  updateNote: async (id, updates) => {
+  pdatot async (id, pdats)  {
     try {
-      const { data, error } = await supabase
-        .from('notes')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString(),
+      const { data, rror }  await spabas
+        .rom('nots')
+        .pdat({
+          ...pdats,
+          pdatd_at nw at().totring(),
         })
-        .eq('id', id)
-        .select()
-        .single()
+        .q('id', id)
+        .slct()
+        .singl()
 
-      if (error) throw error
+      i (rror) throw rror
 
-      // Update local state
-      const { notes } = get()
-      const updatedNotes = notes.map(note => 
-        note.id === id ? data : note
+      // pdat local stat
+      const { nots }  gt()
+      const pdatdots  nots.map(not  
+        not.id  id  data  not
       )
-      set({ notes: updatedNotes })
+      st({ nots pdatdots })
 
-      return data
-    } catch (error) {
-      set({ error: error instanceof Error ? error.message : 'Failed to update note' })
-      return null
+      rtrn data
+    } catch (rror) {
+      st({ rror rror instanco rror  rror.mssag  'aild to pdat not' })
+      rtrn nll
     }
   },
 
-  deleteNote: async (id) => {
+  dltot async (id)  {
     try {
-      const { error } = await supabase
-        .from('notes')
-        .delete()
-        .eq('id', id)
+      const { rror }  await spabas
+        .rom('nots')
+        .dlt()
+        .q('id', id)
 
-      if (error) throw error
+      i (rror) throw rror
 
-      // Remove from local state
-      const { notes } = get()
-      const filteredNotes = notes.filter(note => note.id !== id)
-      set({ notes: filteredNotes })
+      // mov rom local stat
+      const { nots }  gt()
+      const iltrdots  nots.iltr(not  not.id ! id)
+      st({ nots iltrdots })
 
-      return true
-    } catch (error) {
-      set({ error: error instanceof Error ? error.message : 'Failed to delete note' })
-      return false
+      rtrn tr
+    } catch (rror) {
+      st({ rror rror instanco rror  rror.mssag  'aild to dlt not' })
+      rtrn als
     }
   },
 
-  clearNotes: () => set({ notes: [], selectedNote: null }),
+  clarots ()  st({ nots ], slctdot nll }),
 }))

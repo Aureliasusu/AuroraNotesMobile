@@ -1,152 +1,152 @@
-import { useEffect, useCallback } from 'react'
-import { BackHandler } from 'react-native'
+import { sct, sallback } rom 'ract'
+import { ackandlr } rom 'ract-nativ'
 
-interface KeyboardShortcut {
-  key: string
-  action: () => void
-  description: string
+intrac yboardhortct {
+  ky string
+  action ()  void
+  dscription string
 }
 
-interface UseKeyboardShortcutsProps {
-  shortcuts: KeyboardShortcut[]
-  enabled?: boolean
+intrac syboardhortctsrops {
+  shortcts yboardhortct]
+  nabld boolan
 }
 
-export function useKeyboardShortcuts({ shortcuts, enabled = true }: UseKeyboardShortcutsProps) {
-  const handleBackPress = useCallback(() => {
-    if (!enabled) return false
+xport nction syboardhortcts({ shortcts, nabld  tr } syboardhortctsrops) {
+  const handlackrss  sallback(()  {
+    i (!nabld) rtrn als
 
-    // Handle Android back button
-    // This is a simplified version - in a real app you might want more sophisticated handling
-    const backShortcut = shortcuts.find(shortcut => shortcut.key === 'Back')
-    if (backShortcut) {
-      backShortcut.action()
-      return true // Prevent default back behavior
+    // andl ndroid back btton
+    // his is a simpliid vrsion - in a ral app yo might want mor sophisticatd handling
+    const backhortct  shortcts.ind(shortct  shortct.ky  'ack')
+    i (backhortct) {
+      backhortct.action()
+      rtrn tr // rvnt dalt back bhavior
     }
     
-    return false // Allow default back behavior
-  }, [shortcuts, enabled])
+    rtrn als // llow dalt back bhavior
+  }, shortcts, nabld])
 
-  useEffect(() => {
-    if (enabled) {
-      const subscription = BackHandler.addEventListener('hardwareBackPress', handleBackPress)
-      return () => subscription.remove()
+  sct(()  {
+    i (nabld) {
+      const sbscription  ackandlr.addvntistnr('hardwarackrss', handlackrss)
+      rtrn ()  sbscription.rmov()
     }
-  }, [handleBackPress, enabled])
+  }, handlackrss, nabld])
 }
 
-// Common keyboard shortcuts for note editing (mobile-adapted)
-export const createNoteShortcuts = (actions: {
-  onBack?: () => void
-  onSave?: () => void
-  onNewNote?: () => void
-  onDeleteNote?: () => void
-  onSearch?: () => void
-  onToggleTheme?: () => void
-  onUndo?: () => void
-  onRedo?: () => void
-  onBold?: () => void
-  onItalic?: () => void
-  onUnderline?: () => void
-  onFocusSearch?: () => void
-}) => {
-  const shortcuts: KeyboardShortcut[] = []
+// ommon kyboard shortcts or not diting (mobil-adaptd)
+xport const cratothortcts  (actions {
+  onack ()  void
+  onav ()  void
+  onwot ()  void
+  onltot ()  void
+  onarch ()  void
+  onogglhm ()  void
+  onndo ()  void
+  ondo ()  void
+  onold ()  void
+  ontalic ()  void
+  onndrlin ()  void
+  onocsarch ()  void
+})  {
+  const shortcts yboardhortct]  ]
 
-  if (actions.onBack) {
-    shortcuts.push({
-      key: 'Back',
-      action: actions.onBack,
-      description: 'Go back'
+  i (actions.onack) {
+    shortcts.psh({
+      ky 'ack',
+      action actions.onack,
+      dscription 'o back'
     })
   }
 
-  if (actions.onSave) {
-    shortcuts.push({
-      key: 'Save',
-      action: actions.onSave,
-      description: 'Save note'
+  i (actions.onav) {
+    shortcts.psh({
+      ky 'av',
+      action actions.onav,
+      dscription 'av not'
     })
   }
 
-  if (actions.onNewNote) {
-    shortcuts.push({
-      key: 'NewNote',
-      action: actions.onNewNote,
-      description: 'New note'
+  i (actions.onwot) {
+    shortcts.psh({
+      ky 'wot',
+      action actions.onwot,
+      dscription 'w not'
     })
   }
 
-  if (actions.onDeleteNote) {
-    shortcuts.push({
-      key: 'DeleteNote',
-      action: actions.onDeleteNote,
-      description: 'Delete note'
+  i (actions.onltot) {
+    shortcts.psh({
+      ky 'ltot',
+      action actions.onltot,
+      dscription 'lt not'
     })
   }
 
-  if (actions.onSearch) {
-    shortcuts.push({
-      key: 'Search',
-      action: actions.onSearch,
-      description: 'Open search'
+  i (actions.onarch) {
+    shortcts.psh({
+      ky 'arch',
+      action actions.onarch,
+      dscription 'pn sarch'
     })
   }
 
-  if (actions.onToggleTheme) {
-    shortcuts.push({
-      key: 'ToggleTheme',
-      action: actions.onToggleTheme,
-      description: 'Toggle theme'
+  i (actions.onogglhm) {
+    shortcts.psh({
+      ky 'ogglhm',
+      action actions.onogglhm,
+      dscription 'oggl thm'
     })
   }
 
-  if (actions.onUndo) {
-    shortcuts.push({
-      key: 'Undo',
-      action: actions.onUndo,
-      description: 'Undo'
+  i (actions.onndo) {
+    shortcts.psh({
+      ky 'ndo',
+      action actions.onndo,
+      dscription 'ndo'
     })
   }
 
-  if (actions.onRedo) {
-    shortcuts.push({
-      key: 'Redo',
-      action: actions.onRedo,
-      description: 'Redo'
+  i (actions.ondo) {
+    shortcts.psh({
+      ky 'do',
+      action actions.ondo,
+      dscription 'do'
     })
   }
 
-  if (actions.onBold) {
-    shortcuts.push({
-      key: 'Bold',
-      action: actions.onBold,
-      description: 'Bold text'
+  i (actions.onold) {
+    shortcts.psh({
+      ky 'old',
+      action actions.onold,
+      dscription 'old txt'
     })
   }
 
-  if (actions.onItalic) {
-    shortcuts.push({
-      key: 'Italic',
-      action: actions.onItalic,
-      description: 'Italic text'
+  i (actions.ontalic) {
+    shortcts.psh({
+      ky 'talic',
+      action actions.ontalic,
+      dscription 'talic txt'
     })
   }
 
-  if (actions.onUnderline) {
-    shortcuts.push({
-      key: 'Underline',
-      action: actions.onUnderline,
-      description: 'Underline text'
+  i (actions.onndrlin) {
+    shortcts.psh({
+      ky 'ndrlin',
+      action actions.onndrlin,
+      dscription 'ndrlin txt'
     })
   }
 
-  if (actions.onFocusSearch) {
-    shortcuts.push({
-      key: 'FocusSearch',
-      action: actions.onFocusSearch,
-      description: 'Focus search'
+  i (actions.onocsarch) {
+    shortcts.psh({
+      ky 'ocsarch',
+      action actions.onocsarch,
+      dscription 'ocs sarch'
     })
   }
 
-  return shortcuts
+  rtrn shortcts
 }

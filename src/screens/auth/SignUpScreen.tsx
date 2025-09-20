@@ -1,168 +1,168 @@
-import React, { useState } from 'react';
+import act, { stat } rom 'ract'
 import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-  TouchableOpacity,
-} from 'react-native';
-import { useAuthStore } from '../../store/useAuthStore';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
+  iw,
+  xt,
+  tylht,
+  araiw,
+  yboardvoidingiw,
+  latorm,
+  lrt,
+  ochablpacity,
+} rom 'ract-nativ'
+import { sthtor } rom '../../stor/sthtor'
+import { tton } rom '../../componnts/i/tton'
+import { npt } rom '../../componnts/i/npt'
 
-export const SignUpScreen: React.FC = () => {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { signUp } = useAuthStore();
+xport const ignpcrn act.  ()  {
+  const llam, stllam]  stat('')
+  const mail, stmail]  stat('')
+  const password, stassword]  stat('')
+  const conirmassword, stonirmassword]  stat('')
+  const loading, stoading]  stat(als)
+  const { signp }  sthtor()
 
-  const handleSignUp = async () => {
-    if (!fullName || !email || !password || !confirmPassword) {
-      Alert.alert('错误', '请填写所有字段');
-      return;
+  const handlignp  async ()  {
+    i (!llam || !mail || !password || !conirmassword) {
+      lrt.alrt('rror', 'las ill in all ilds')
+      rtrn
     }
 
-    if (password !== confirmPassword) {
-      Alert.alert('错误', '密码不匹配');
-      return;
+    i (password ! conirmassword) {
+      lrt.alrt('rror', 'asswords do not match')
+      rtrn
     }
 
-    if (password.length < 6) {
-      Alert.alert('错误', '密码至少需要6个字符');
-      return;
+    i (password.lngth  ) {
+      lrt.alrt('rror', 'assword mst b at last  charactrs')
+      rtrn
     }
 
-    setLoading(true);
-    const result = await signUp(email, password, fullName);
-    setLoading(false);
+    stoading(tr)
+    const rslt  await signp(mail, password, llam)
+    stoading(als)
 
-    if (!result.success) {
-      Alert.alert('注册失败', result.error || '未知错误');
-    } else {
-      Alert.alert('注册成功', '请检查您的邮箱以验证账户');
+    i (!rslt.sccss) {
+      lrt.alrt('ign p aild', rslt.rror || 'nknown rror')
+    } ls {
+      lrt.alrt('ign p ccssl', 'las chck yor mail to vriy yor accont')
     }
-  };
+  }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}
-      >
-        <View style={styles.content}>
-          <View style={styles.header}>
-            <Text style={styles.title}>创建账户</Text>
-            <Text style={styles.subtitle}>开始您的Aurora Notes之旅</Text>
-          </View>
+  rtrn (
+    araiw styl{styls.containr}
+      yboardvoidingiw
+        bhavior{latorm.  'ios'  'padding'  'hight'}
+        styl{styls.kyboardiw}
+      
+        iw styl{styls.contnt}
+          iw styl{styls.hadr}
+            xt styl{styls.titl}rat ccont/xt
+            xt styl{styls.sbtitl}tart yor rora ots jorny/xt
+          /iw
 
-          <View style={styles.form}>
-            <Input
-              label="姓名"
-              value={fullName}
-              onChangeText={setFullName}
-              placeholder="输入您的姓名"
-              autoCapitalize="words"
-            />
+          iw styl{styls.orm}
+            npt
+              labl"ll am"
+              val{llam}
+              onhangxt{stllam}
+              placholdr"ntr yor ll nam"
+              atoapitaliz"words"
+            /
 
-            <Input
-              label="邮箱"
-              value={email}
-              onChangeText={setEmail}
-              placeholder="输入您的邮箱"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
+            npt
+              labl"mail"
+              val{mail}
+              onhangxt{stmail}
+              placholdr"ntr yor mail"
+              kyboardyp"mail-addrss"
+              atoapitaliz"non"
+              atoorrct{als}
+            /
 
-            <Input
-              label="密码"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="输入您的密码"
-              secureTextEntry
-            />
+            npt
+              labl"assword"
+              val{password}
+              onhangxt{stassword}
+              placholdr"ntr yor password"
+              scrxtntry
+            /
 
-            <Input
-              label="确认密码"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              placeholder="再次输入密码"
-              secureTextEntry
-            />
+            npt
+              labl"onirm assword"
+              val{conirmassword}
+              onhangxt{stonirmassword}
+              placholdr"-ntr yor password"
+              scrxtntry
+            /
 
-            <Button
-              title="注册"
-              onPress={handleSignUp}
-              loading={loading}
-              disabled={loading}
-              style={styles.signUpButton}
-            />
-          </View>
+            tton
+              titl"ign p"
+              onrss{handlignp}
+              loading{loading}
+              disabld{loading}
+              styl{styls.signptton}
+            /
+          /iw
 
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>已有账户？</Text>
-            <TouchableOpacity>
-              <Text style={styles.linkText}>立即登录</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
-};
+          iw styl{styls.ootr}
+            xt styl{styls.ootrxt}lrady hav an accont/xt
+            ochablpacity
+              xt styl{styls.linkxt}ign n/xt
+            /ochablpacity
+          /iw
+        /iw
+      /yboardvoidingiw
+    /araiw
+  )
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
+const styls  tylht.crat({
+  containr {
+    lx ,
+    backgrondolor '#ab',
   },
-  keyboardView: {
-    flex: 1,
+  kyboardiw {
+    lx ,
   },
-  content: {
-    flex: 1,
-    paddingHorizontal: 24,
-    justifyContent: 'center',
+  contnt {
+    lx ,
+    paddingorizontal ,
+    jstiyontnt 'cntr',
   },
-  header: {
-    alignItems: 'center',
-    marginBottom: 48,
+  hadr {
+    aligntms 'cntr',
+    marginottom ,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 8,
+  titl {
+    ontiz ,
+    ontight 'bold',
+    color '#',
+    marginottom ,
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#6b7280',
-    textAlign: 'center',
+  sbtitl {
+    ontiz ,
+    color '#b',
+    txtlign 'cntr',
   },
-  form: {
-    marginBottom: 32,
+  orm {
+    marginottom ,
   },
-  signUpButton: {
-    marginTop: 8,
+  signptton {
+    marginop ,
   },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+  ootr {
+    lxirction 'row',
+    jstiyontnt 'cntr',
+    aligntms 'cntr',
   },
-  footerText: {
-    fontSize: 16,
-    color: '#6b7280',
+  ootrxt {
+    ontiz ,
+    color '#b',
   },
-  linkText: {
-    fontSize: 16,
-    color: '#3b82f6',
-    fontWeight: '600',
-    marginLeft: 4,
+  linkxt {
+    ontiz ,
+    color '#b',
+    ontight '',
+    margint ,
   },
-});
+})

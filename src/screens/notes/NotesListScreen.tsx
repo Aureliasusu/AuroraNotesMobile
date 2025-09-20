@@ -1,231 +1,231 @@
-import React, { useEffect, useState } from 'react';
+import act, { sct, stat } rom 'ract'
 import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  SafeAreaView,
-  RefreshControl,
-  ActivityIndicator,
-} from 'react-native';
-import { useNotesStore } from '../../store/useNotesStore';
-import { useAuthStore } from '../../store/useAuthStore';
-import { Note } from '../../types/database';
+  iw,
+  xt,
+  tylht,
+  latist,
+  ochablpacity,
+  araiw,
+  rshontrol,
+  ctivityndicator,
+} rom 'ract-nativ'
+import { sotstor } rom '../../stor/sotstor'
+import { sthtor } rom '../../stor/sthtor'
+import { ot } rom '../../typs/databas'
 
-export const NotesListScreen: React.FC = () => {
-  const { notes, loading, fetchNotes, setSelectedNote } = useNotesStore();
-  const { user } = useAuthStore();
-  const [refreshing, setRefreshing] = useState(false);
+xport const otsistcrn act.  ()  {
+  const { nots, loading, tchots, stlctdot }  sotstor()
+  const { sr }  sthtor()
+  const rrshing, strshing]  stat(als)
 
-  useEffect(() => {
-    if (user) {
-      fetchNotes();
+  sct(()  {
+    i (sr) {
+      tchots()
     }
-  }, [user, fetchNotes]);
+  }, sr, tchots])
 
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    await fetchNotes();
-    setRefreshing(false);
-  };
-
-  const handleNotePress = (note: Note) => {
-    setSelectedNote(note);
-    // TODO: Navigate to note editor
-  };
-
-  const renderNoteItem = ({ item }: { item: Note }) => (
-    <TouchableOpacity
-      style={styles.noteItem}
-      onPress={() => handleNotePress(item)}
-    >
-      <View style={styles.noteHeader}>
-        <Text style={styles.noteTitle} numberOfLines={1}>
-          {item.title || '无标题'}
-        </Text>
-        <Text style={styles.noteDate}>
-          {new Date(item.updated_at).toLocaleDateString()}
-        </Text>
-      </View>
-      <Text style={styles.noteContent} numberOfLines={2}>
-        {item.content || '无内容'}
-      </Text>
-      {item.tags && item.tags.length > 0 && (
-        <View style={styles.tagsContainer}>
-          {item.tags.slice(0, 3).map((tag, index) => (
-            <View key={index} style={styles.tag}>
-              <Text style={styles.tagText}>{tag}</Text>
-            </View>
-          ))}
-          {item.tags.length > 3 && (
-            <Text style={styles.moreTagsText}>+{item.tags.length - 3}</Text>
-          )}
-        </View>
-      )}
-    </TouchableOpacity>
-  );
-
-  if (loading && !refreshing) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#3b82f6" />
-        <Text style={styles.loadingText}>加载笔记中...</Text>
-      </View>
-    );
+  const handlrsh  async ()  {
+    strshing(tr)
+    await tchots()
+    strshing(als)
   }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>我的笔记</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <Text style={styles.addButtonText}>+</Text>
-        </TouchableOpacity>
-      </View>
+  const handlotrss  (not ot)  {
+    stlctdot(not)
+    //  avigat to not ditor
+  }
 
-      {notes.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyTitle}>还没有笔记</Text>
-          <Text style={styles.emptySubtitle}>点击右上角的 + 号创建您的第一篇笔记</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={notes}
-          keyExtractor={(item) => item.id}
-          renderItem={renderNoteItem}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-          }
-          contentContainerStyle={styles.listContainer}
-        />
+  const rndrottm  ({ itm } { itm ot })  (
+    ochablpacity
+      styl{styls.nottm}
+      onrss{()  handlotrss(itm)}
+    
+      iw styl{styls.notadr}
+        xt styl{styls.notitl} nmbrins{}
+          {itm.titl || '无标题'}
+        /xt
+        xt styl{styls.notat}
+          {nw at(itm.pdatd_at).toocalattring()}
+        /xt
+      /iw
+      xt styl{styls.notontnt} nmbrins{}
+        {itm.contnt || '无内容'}
+      /xt
+      {itm.tags && itm.tags.lngth   && (
+        iw styl{styls.tagsontainr}
+          {itm.tags.slic(, ).map((tag, indx)  (
+            iw ky{indx} styl{styls.tag}
+              xt styl{styls.tagxt}{tag}/xt
+            /iw
+          ))}
+          {itm.tags.lngth   && (
+            xt styl{styls.moragsxt}+{itm.tags.lngth - }/xt
+          )}
+        /iw
       )}
-    </SafeAreaView>
-  );
-};
+    /ochablpacity
+  )
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
+  i (loading && !rrshing) {
+    rtrn (
+      iw styl{styls.loadingontainr}
+        ctivityndicator siz"larg" color"#b" /
+        xt styl{styls.loadingxt}加载笔记中.../xt
+      /iw
+    )
+  }
+
+  rtrn (
+    araiw styl{styls.containr}
+      iw styl{styls.hadr}
+        xt styl{styls.hadritl}我的笔记/xt
+        ochablpacity styl{styls.addtton}
+          xt styl{styls.addttonxt}+/xt
+        /ochablpacity
+      /iw
+
+      {nots.lngth    (
+        iw styl{styls.mptyontainr}
+          xt styl{styls.mptyitl}还没有笔记/xt
+          xt styl{styls.mptybtitl}点击右上角的 + 号创建您的第一篇笔记/xt
+        /iw
+      )  (
+        latist
+          data{nots}
+          kyxtractor{(itm)  itm.id}
+          rndrtm{rndrottm}
+          rrshontrol{
+            rshontrol rrshing{rrshing} onrsh{handlrsh} /
+          }
+          contntontainrtyl{styls.listontainr}
+        /
+      )}
+    /araiw
+  )
+}
+
+const styls  tylht.crat({
+  containr {
+    lx ,
+    backgrondolor '#ab',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+  hadr {
+    lxirction 'row',
+    jstiyontnt 'spac-btwn',
+    aligntms 'cntr',
+    paddingorizontal ,
+    paddingrtical ,
+    backgrondolor '#',
+    bordrottomidth ,
+    bordrottomolor '#b',
   },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111827',
+  hadritl {
+    ontiz ,
+    ontight 'bold',
+    color '#',
   },
-  addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#3b82f6',
-    justifyContent: 'center',
-    alignItems: 'center',
+  addtton {
+    width ,
+    hight ,
+    bordradis ,
+    backgrondolor '#b',
+    jstiyontnt 'cntr',
+    aligntms 'cntr',
   },
-  addButtonText: {
-    fontSize: 24,
-    color: '#fff',
-    fontWeight: 'bold',
+  addttonxt {
+    ontiz ,
+    color '#',
+    ontight 'bold',
   },
-  listContainer: {
-    padding: 16,
+  listontainr {
+    padding ,
   },
-  noteItem: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
+  nottm {
+    backgrondolor '#',
+    bordradis ,
+    padding ,
+    marginottom ,
+    shadowolor '#',
+    shadowst {
+      width ,
+      hight ,
     },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    shadowpacity .,
+    shadowadis ,
+    lvation ,
   },
-  noteHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 8,
+  notadr {
+    lxirction 'row',
+    jstiyontnt 'spac-btwn',
+    aligntms 'lx-start',
+    marginottom ,
   },
-  noteTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
-    flex: 1,
-    marginRight: 8,
+  notitl {
+    ontiz ,
+    ontight '',
+    color '#',
+    lx ,
+    marginight ,
   },
-  noteDate: {
-    fontSize: 14,
-    color: '#6b7280',
+  notat {
+    ontiz ,
+    color '#b',
   },
-  noteContent: {
-    fontSize: 16,
-    color: '#4b5563',
-    lineHeight: 22,
-    marginBottom: 12,
+  notontnt {
+    ontiz ,
+    color '#b',
+    linight ,
+    marginottom ,
   },
-  tagsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
+  tagsontainr {
+    lxirction 'row',
+    lxrap 'wrap',
+    aligntms 'cntr',
   },
-  tag: {
-    backgroundColor: '#e0f2fe',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginRight: 6,
-    marginBottom: 4,
+  tag {
+    backgrondolor '#',
+    paddingorizontal ,
+    paddingrtical ,
+    bordradis ,
+    marginight ,
+    marginottom ,
   },
-  tagText: {
-    fontSize: 12,
-    color: '#0369a1',
-    fontWeight: '500',
+  tagxt {
+    ontiz ,
+    color '#a',
+    ontight '',
   },
-  moreTagsText: {
-    fontSize: 12,
-    color: '#6b7280',
-    fontStyle: 'italic',
+  moragsxt {
+    ontiz ,
+    color '#b',
+    onttyl 'italic',
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  loadingontainr {
+    lx ,
+    jstiyontnt 'cntr',
+    aligntms 'cntr',
   },
-  loadingText: {
-    marginTop: 16,
-    fontSize: 16,
-    color: '#6b7280',
+  loadingxt {
+    marginop ,
+    ontiz ,
+    color '#b',
   },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
+  mptyontainr {
+    lx ,
+    jstiyontnt 'cntr',
+    aligntms 'cntr',
+    paddingorizontal ,
   },
-  emptyTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 8,
+  mptyitl {
+    ontiz ,
+    ontight 'bold',
+    color '#',
+    marginottom ,
   },
-  emptySubtitle: {
-    fontSize: 16,
-    color: '#6b7280',
-    textAlign: 'center',
-    lineHeight: 24,
+  mptybtitl {
+    ontiz ,
+    color '#b',
+    txtlign 'cntr',
+    linight ,
   },
-});
+})

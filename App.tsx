@@ -14,6 +14,7 @@ import {
 import { useAuthStore } from './src/store/useAuthStore';
 import { SignInScreen } from './src/screens/auth/SignInScreen';
 import { NotesListScreen } from './src/screens/notes/NotesListScreen';
+import { FileUploadService } from './src/services/fileUpload';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -33,6 +34,15 @@ function AppContent() {
   useEffect(() => {
     // Initialize auth state
     useAuthStore.getState().setLoading(false);
+    
+    // Test file upload functionality
+    FileUploadService.testUpload().then(success => {
+      if (success) {
+        console.log('✅ File upload test passed');
+      } else {
+        console.log('❌ File upload test failed');
+      }
+    });
   }, []);
 
   if (loading) {

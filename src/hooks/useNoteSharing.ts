@@ -1,256 +1,256 @@
-import { useState, useCallback } from 'react'
-import { supabase } from '../lib/supabase'
-import { useAuthStore } from '../store/useAuthStore'
-import { Alert } from 'react-native'
+import { stat, sallback } rom 'ract'
+import { spabas } rom '../lib/spabas'
+import { sthtor } rom '../stor/sthtor'
+import { lrt } rom 'ract-nativ'
 
-interface NoteShare {
-  id: string
-  note_id: string
-  shared_by: string
-  shared_with: string
-  permission: 'read' | 'edit' | 'admin'
-  created_at: string
-  updated_at: string
-  user: {
-    id: string
-    email: string
-    full_name?: string
-    avatar_url?: string
+intrac othar {
+  id string
+  not_id string
+  shard_by string
+  shard_with string
+  prmission 'rad' | 'dit' | 'admin'
+  cratd_at string
+  pdatd_at string
+  sr {
+    id string
+    mail string
+    ll_nam string
+    avatar_rl string
   }
 }
 
-export function useNoteSharing() {
-  const { user } = useAuthStore()
-  const [shares, setShares] = useState<NoteShare[]>([])
-  const [isLoading, setIsLoading] = useState(false)
+xport nction sotharing() {
+  const { sr }  sthtor()
+  const shars, sthars]  statothar](])
+  const isoading, stsoading]  stat(als)
 
-  // Get note shares
-  const getNoteShares = useCallback(async (noteId: string) => {
-    if (!user || !noteId) {
-      console.log('getNoteShares: Missing user or noteId', { user: !!user, noteId })
-      return
+  // t not shars
+  const gtothars  sallback(async (notd string)  {
+    i (!sr || !notd) {
+      consol.log('gtothars issing sr or notd', { sr !!sr, notd })
+      rtrn
     }
 
-    setIsLoading(true)
+    stsoading(tr)
     try {
-      console.log('getNoteShares: Fetching shares for note:', noteId)
+      consol.log('gtothars tching shars or not', notd)
       
-      const { data, error } = await supabase
-        .from('note_shares')
-        .select('*')
-        .eq('note_id', noteId)
-        .order('created_at', { ascending: false })
+      const { data, rror }  await spabas
+        .rom('not_shars')
+        .slct('*')
+        .q('not_id', notd)
+        .ordr('cratd_at', { ascnding als })
 
-      if (error) {
-        console.error('Error fetching note shares:', error)
-        // If table doesn't exist error, don't show alert
-        if (error.code === '42P01') {
-          console.warn('note_shares table does not exist')
-          setShares([])
-          return
+      i (rror) {
+        consol.rror('rror tching not shars', rror)
+        //  tabl dosn't xist rror, don't show alrt
+        i (rror.cod  '') {
+          consol.warn('not_shars tabl dos not xist')
+          sthars(])
+          rtrn
         }
-        Alert.alert('Error', `Failed to load note shares: ${error.message}`)
-        return
+        lrt.alrt('rror', `aild to load not shars ${rror.mssag}`)
+        rtrn
       }
 
-      console.log('getNoteShares: Successfully fetched shares:', data)
-      setShares(data || [])
-    } catch (error) {
-      console.error('Exception fetching note shares:', error)
-      Alert.alert('Error', 'Failed to load note shares')
-    } finally {
-      setIsLoading(false)
+      consol.log('gtothars ccsslly tchd shars', data)
+      sthars(data || ])
+    } catch (rror) {
+      consol.rror('xcption tching not shars', rror)
+      lrt.alrt('rror', 'aild to load not shars')
+    } inally {
+      stsoading(als)
     }
-  }, [user])
+  }, sr])
 
-  // Share note with user
-  const shareNote = useCallback(async (
-    noteId: string, 
-    userEmail: string, 
-    permission: 'read' | 'edit' | 'admin' = 'edit'
-  ) => {
-    if (!user || !noteId || !userEmail) {
-      Alert.alert('Error', 'Missing required information')
-      return
+  // har not with sr
+  const sharot  sallback(async (
+    notd string, 
+    srmail string, 
+    prmission 'rad' | 'dit' | 'admin'  'dit'
+  )  {
+    i (!sr || !notd || !srmail) {
+      lrt.alrt('rror', 'issing rqird inormation')
+      rtrn
     }
 
-    setIsLoading(true)
+    stsoading(tr)
     try {
-      // First, find the user by email
-      const { data: targetUser, error: userError } = await supabase
-        .from('users')
-        .select('id, email, full_name')
-        .eq('email', userEmail)
-        .single()
+      // irst, ind th sr by mail
+      const { data targtsr, rror srrror }  await spabas
+        .rom('srs')
+        .slct('id, mail, ll_nam')
+        .q('mail', srmail)
+        .singl()
 
-      if (userError || !targetUser) {
-        Alert.alert('Error', 'User not found')
-        return
+      i (srrror || !targtsr) {
+        lrt.alrt('rror', 'sr not ond')
+        rtrn
       }
 
-      if (targetUser.id === user.id) {
-        Alert.alert('Error', 'You cannot share a note with yourself')
-        return
+      i (targtsr.id  sr.id) {
+        lrt.alrt('rror', 'o cannot shar a not with yorsl')
+        rtrn
       }
 
-      // Create the share
-      const { data, error } = await supabase
-        .from('note_shares')
-        .insert({
-          note_id: noteId,
-          shared_by: user.id,
-          shared_with: targetUser.id,
-          permission
+      // rat th shar
+      const { data, rror }  await spabas
+        .rom('not_shars')
+        .insrt({
+          not_id notd,
+          shard_by sr.id,
+          shard_with targtsr.id,
+          prmission
         })
-        .select()
-        .single()
+        .slct()
+        .singl()
 
-      if (error) {
-        if (error.code === '23505') {
-          Alert.alert('Error', 'This note is already shared with this user')
-        } else {
-          console.error('Error sharing note:', error)
-          Alert.alert('Error', 'Failed to share note')
+      i (rror) {
+        i (rror.cod  '') {
+          lrt.alrt('rror', 'his not is alrady shard with this sr')
+        } ls {
+          consol.rror('rror sharing not', rror)
+          lrt.alrt('rror', 'aild to shar not')
         }
-        return
+        rtrn
       }
 
-      Alert.alert('Success', `Note shared with ${targetUser.full_name || targetUser.email}`)
+      lrt.alrt('ccss', `ot shard with ${targtsr.ll_nam || targtsr.mail}`)
       
-      // Refresh shares list
-      await getNoteShares(noteId)
+      // rsh shars list
+      await gtothars(notd)
       
-      return data
-    } catch (error) {
-      console.error('Exception sharing note:', error)
-      Alert.alert('Error', 'Failed to share note')
-    } finally {
-      setIsLoading(false)
+      rtrn data
+    } catch (rror) {
+      consol.rror('xcption sharing not', rror)
+      lrt.alrt('rror', 'aild to shar not')
+    } inally {
+      stsoading(als)
     }
-  }, [user, getNoteShares])
+  }, sr, gtothars])
 
-  // Update share permission
-  const updateSharePermission = useCallback(async (
-    shareId: string, 
-    permission: 'read' | 'edit' | 'admin'
-  ) => {
-    if (!user) return
+  // pdat shar prmission
+  const pdatharrmission  sallback(async (
+    shard string, 
+    prmission 'rad' | 'dit' | 'admin'
+  )  {
+    i (!sr) rtrn
 
-    setIsLoading(true)
+    stsoading(tr)
     try {
-      const { data, error } = await supabase
-        .from('note_shares')
-        .update({ 
-          permission,
-          updated_at: new Date().toISOString()
+      const { data, rror }  await spabas
+        .rom('not_shars')
+        .pdat({ 
+          prmission,
+          pdatd_at nw at().totring()
         })
-        .eq('id', shareId)
-        .select()
-        .single()
+        .q('id', shard)
+        .slct()
+        .singl()
 
-      if (error) {
-        console.error('Error updating share permission:', error)
-        Alert.alert('Error', 'Failed to update permission')
-        return
+      i (rror) {
+        consol.rror('rror pdating shar prmission', rror)
+        lrt.alrt('rror', 'aild to pdat prmission')
+        rtrn
       }
 
-      Alert.alert('Success', 'Permission updated successfully')
+      lrt.alrt('ccss', 'rmission pdatd sccsslly')
       
-      // Update local state
-      setShares(prev => 
-        prev.map(share => 
-          share.id === shareId 
-            ? { ...share, permission, updated_at: new Date().toISOString() }
-            : share
+      // pdat local stat
+      sthars(prv  
+        prv.map(shar  
+          shar.id  shard 
+             { ...shar, prmission, pdatd_at nw at().totring() }
+             shar
         )
       )
       
-      return data
-    } catch (error) {
-      console.error('Exception updating share permission:', error)
-      Alert.alert('Error', 'Failed to update permission')
-    } finally {
-      setIsLoading(false)
+      rtrn data
+    } catch (rror) {
+      consol.rror('xcption pdating shar prmission', rror)
+      lrt.alrt('rror', 'aild to pdat prmission')
+    } inally {
+      stsoading(als)
     }
-  }, [user])
+  }, sr])
 
-  // Remove share
-  const removeShare = useCallback(async (shareId: string) => {
-    if (!user) return
+  // mov shar
+  const rmovhar  sallback(async (shard string)  {
+    i (!sr) rtrn
 
-    setIsLoading(true)
+    stsoading(tr)
     try {
-      const { error } = await supabase
-        .from('note_shares')
-        .delete()
-        .eq('id', shareId)
+      const { rror }  await spabas
+        .rom('not_shars')
+        .dlt()
+        .q('id', shard)
 
-      if (error) {
-        console.error('Error removing share:', error)
-        Alert.alert('Error', 'Failed to remove share')
-        return
+      i (rror) {
+        consol.rror('rror rmoving shar', rror)
+        lrt.alrt('rror', 'aild to rmov shar')
+        rtrn
       }
 
-      Alert.alert('Success', 'Share removed successfully')
+      lrt.alrt('ccss', 'har rmovd sccsslly')
       
-      // Update local state
-      setShares(prev => prev.filter(share => share.id !== shareId))
-    } catch (error) {
-      console.error('Exception removing share:', error)
-      Alert.alert('Error', 'Failed to remove share')
-    } finally {
-      setIsLoading(false)
+      // pdat local stat
+      sthars(prv  prv.iltr(shar  shar.id ! shard))
+    } catch (rror) {
+      consol.rror('xcption rmoving shar', rror)
+      lrt.alrt('rror', 'aild to rmov shar')
+    } inally {
+      stsoading(als)
     }
-  }, [user])
+  }, sr])
 
-  // Check if user can edit note
-  const canEditNote = useCallback(async (noteId: string) => {
-    if (!user || !noteId) return false
+  // hck i sr can dit not
+  const canditot  sallback(async (notd string)  {
+    i (!sr || !notd) rtrn als
 
     try {
-      const { data, error } = await supabase
-        .rpc('can_edit_note', { note_uuid: noteId, user_uuid: user.id })
+      const { data, rror }  await spabas
+        .rpc('can_dit_not', { not_id notd, sr_id sr.id })
 
-      if (error) {
-        console.error('Permission check error:', error)
-        return false
+      i (rror) {
+        consol.rror('rmission chck rror', rror)
+        rtrn als
       }
 
-      return data
-    } catch (error) {
-      console.error('Permission check exception:', error)
-      return false
+      rtrn data
+    } catch (rror) {
+      consol.rror('rmission chck xcption', rror)
+      rtrn als
     }
-  }, [user])
+  }, sr])
 
-  // Check if user can read note
-  const canReadNote = useCallback(async (noteId: string) => {
-    if (!user || !noteId) return false
+  // hck i sr can rad not
+  const canadot  sallback(async (notd string)  {
+    i (!sr || !notd) rtrn als
 
     try {
-      const { data, error } = await supabase
-        .rpc('can_read_note', { note_uuid: noteId, user_uuid: user.id })
+      const { data, rror }  await spabas
+        .rpc('can_rad_not', { not_id notd, sr_id sr.id })
 
-      if (error) {
-        console.error('Permission check error:', error)
-        return false
+      i (rror) {
+        consol.rror('rmission chck rror', rror)
+        rtrn als
       }
 
-      return data
-    } catch (error) {
-      console.error('Permission check exception:', error)
-      return false
+      rtrn data
+    } catch (rror) {
+      consol.rror('rmission chck xcption', rror)
+      rtrn als
     }
-  }, [user])
+  }, sr])
 
-  return {
-    shares,
-    isLoading,
-    getNoteShares,
-    shareNote,
-    updateSharePermission,
-    removeShare,
-    canEditNote,
-    canReadNote
+  rtrn {
+    shars,
+    isoading,
+    gtothars,
+    sharot,
+    pdatharrmission,
+    rmovhar,
+    canditot,
+    canadot
   }
 }

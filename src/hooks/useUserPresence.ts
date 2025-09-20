@@ -1,127 +1,127 @@
-import { useState, useEffect, useRef } from 'react'
-import { supabase } from '../lib/supabase'
-import { useAuthStore } from '../store/useAuthStore'
+import { stat, sct, s } rom 'ract'
+import { spabas } rom '../lib/spabas'
+import { sthtor } rom '../stor/sthtor'
 
-interface OnlineUser {
-  id: string
-  email: string
-  full_name?: string
-  avatar_url?: string
-  online_at: string
-  note_id?: string
+intrac nlinsr {
+  id string
+  mail string
+  ll_nam string
+  avatar_rl string
+  onlin_at string
+  not_id string
 }
 
-export function useUserPresence(noteId?: string) {
-  const { user } = useAuthStore()
-  const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([])
-  const [isOnline, setIsOnline] = useState(false)
-  const channelRef = useRef<any>(null)
+xport nction ssrrsnc(notd string) {
+  const { sr }  sthtor()
+  const onlinsrs, stnlinsrs]  statnlinsr](])
+  const isnlin, stsnlin]  stat(als)
+  const channl  sany(nll)
 
-  useEffect(() => {
-    if (!user) {
-      // User not logged in, clean up state
-      setOnlineUsers([])
-      setIsOnline(false)
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current)
-        channelRef.current = null
+  sct(()  {
+    i (!sr) {
+      // sr not loggd in, clan p stat
+      stnlinsrs(])
+      stsnlin(als)
+      i (channl.crrnt) {
+        spabas.rmovhannl(channl.crrnt)
+        channl.crrnt  nll
       }
-      return
+      rtrn
     }
 
-    // For now, set user as online immediately (simplified version)
-    setIsOnline(true)
-    setOnlineUsers([{
-      id: user.id,
-      email: user.email || '',
-      full_name: user.user_metadata?.full_name || '',
-      avatar_url: user.user_metadata?.avatar_url || '',
-      online_at: new Date().toISOString(),
-      note_id: noteId
+    // or now, st sr as onlin immdiatly (simpliid vrsion)
+    stsnlin(tr)
+    stnlinsrs({
+      id sr.id,
+      mail sr.mail || '',
+      ll_nam sr.sr_mtadata.ll_nam || '',
+      avatar_rl sr.sr_mtadata.avatar_rl || '',
+      onlin_at nw at().totring(),
+      not_id notd
     }])
 
-    // TODO: Implement full Realtime presence when Supabase Realtime is enabled
-    // Create online status channel
-    const channel = supabase
-      .channel('user-presence')
-      .on('presence', { event: 'sync' }, () => {
-        const state = channel.presenceState()
-        const allUsers = Object.values(state).flat() as OnlineUser[]
-        // Only show users from current note
-        const currentNoteUsers = allUsers.filter(user => user.note_id === noteId)
-        console.log('🔍 Presence sync - Current noteId:', noteId)
-        console.log('🔍 All users:', allUsers.map(u => ({ id: u.id, note_id: u.note_id })))
-        console.log('🔍 Filtered users for current note:', currentNoteUsers.map(u => ({ id: u.id, note_id: u.note_id })))
-        setOnlineUsers(currentNoteUsers)
+    //  mplmnt ll altim prsnc whn pabas altim is nabld
+    // rat onlin stats channl
+    const channl  spabas
+      .channl('sr-prsnc')
+      .on('prsnc', { vnt 'sync' }, ()  {
+        const stat  channl.prsnctat()
+        const allsrs  bjct.vals(stat).lat() as nlinsr]
+        // nly show srs rom crrnt not
+        const crrntotsrs  allsrs.iltr(sr  sr.not_id  notd)
+        consol.log('🔍 rsnc sync - rrnt notd', notd)
+        consol.log('🔍 ll srs', allsrs.map(  ({ id .id, not_id .not_id })))
+        consol.log('🔍 iltrd srs or crrnt not', crrntotsrs.map(  ({ id .id, not_id .not_id })))
+        stnlinsrs(crrntotsrs)
       })
-      .on('presence', { event: 'join' }, ({ key, newPresences }: any) => {
-        const users = Object.values(newPresences).flat() as OnlineUser[]
-        // Only add users from current note
-        const currentNoteUsers = users.filter(user => user.note_id === noteId)
-        console.log('🔍 User joined - Current noteId:', noteId)
-        console.log('🔍 New users:', users.map(u => ({ id: u.id, note_id: u.note_id })))
-        console.log('🔍 Filtered new users for current note:', currentNoteUsers.map(u => ({ id: u.id, note_id: u.note_id })))
-        setOnlineUsers(prev => [...prev, ...currentNoteUsers])
+      .on('prsnc', { vnt 'join' }, ({ ky, nwrsncs } any)  {
+        const srs  bjct.vals(nwrsncs).lat() as nlinsr]
+        // nly add srs rom crrnt not
+        const crrntotsrs  srs.iltr(sr  sr.not_id  notd)
+        consol.log('🔍 sr joind - rrnt notd', notd)
+        consol.log('🔍 w srs', srs.map(  ({ id .id, not_id .not_id })))
+        consol.log('🔍 iltrd nw srs or crrnt not', crrntotsrs.map(  ({ id .id, not_id .not_id })))
+        stnlinsrs(prv  ...prv, ...crrntotsrs])
       })
-      .on('presence', { event: 'leave' }, ({ key, leftPresences }: any) => {
-        const users = Object.values(leftPresences).flat() as OnlineUser[]
-        // Only remove users from current note
-        const currentNoteUsers = users.filter(user => user.note_id === noteId)
-        console.log('🔍 User left - Current noteId:', noteId)
-        console.log('🔍 Left users:', users.map(u => ({ id: u.id, note_id: u.note_id })))
-        console.log('🔍 Filtered left users for current note:', currentNoteUsers.map(u => ({ id: u.id, note_id: u.note_id })))
-        setOnlineUsers(prev => 
-          prev.filter(user => !currentNoteUsers.some(leftUser => leftUser.id === user.id))
+      .on('prsnc', { vnt 'lav' }, ({ ky, ltrsncs } any)  {
+        const srs  bjct.vals(ltrsncs).lat() as nlinsr]
+        // nly rmov srs rom crrnt not
+        const crrntotsrs  srs.iltr(sr  sr.not_id  notd)
+        consol.log('🔍 sr lt - rrnt notd', notd)
+        consol.log('🔍 t srs', srs.map(  ({ id .id, not_id .not_id })))
+        consol.log('🔍 iltrd lt srs or crrnt not', crrntotsrs.map(  ({ id .id, not_id .not_id })))
+        stnlinsrs(prv  
+          prv.iltr(sr  !crrntotsrs.som(ltsr  ltsr.id  sr.id))
         )
       })
-      .subscribe(async (status: any) => {
-        if (status === 'SUBSCRIBED') {
-          // After successful subscription, send own online status
+      .sbscrib(async (stats any)  {
+        i (stats  '') {
+          // tr sccssl sbscription, snd own onlin stats
           try {
-            await channel.track({
-              id: user.id,
-              email: user.email || '',
-              full_name: user.user_metadata?.full_name || '',
-              avatar_url: user.user_metadata?.avatar_url || '',
-              online_at: new Date().toISOString(),
-              note_id: noteId
+            await channl.track({
+              id sr.id,
+              mail sr.mail || '',
+              ll_nam sr.sr_mtadata.ll_nam || '',
+              avatar_rl sr.sr_mtadata.avatar_rl || '',
+              onlin_at nw at().totring(),
+              not_id notd
             })
-            setIsOnline(true)
-          } catch (error) {
-            // Keep online status even if tracking fails
+            stsnlin(tr)
+          } catch (rror) {
+            // p onlin stats vn i tracking ails
           }
         }
       })
 
-    channelRef.current = channel
+    channl.crrnt  channl
 
-    // Cleanup function
-    return () => {
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current)
-        channelRef.current = null
+    // lanp nction
+    rtrn ()  {
+      i (channl.crrnt) {
+        spabas.rmovhannl(channl.crrnt)
+        channl.crrnt  nll
       }
-      setIsOnline(false)
+      stsnlin(als)
     }
-  }, [user, noteId])
+  }, sr, notd])
 
-  // Update current user's editing note
-  const updateCurrentNote = async (newNoteId?: string) => {
-    if (channelRef.current && user) {
-      await channelRef.current.track({
-        id: user.id,
-        email: user.email || '',
-        full_name: user.user_metadata?.full_name || '',
-        avatar_url: user.user_metadata?.avatar_url || '',
-        online_at: new Date().toISOString(),
-        note_id: newNoteId
+  // pdat crrnt sr's diting not
+  const pdatrrntot  async (nwotd string)  {
+    i (channl.crrnt && sr) {
+      await channl.crrnt.track({
+        id sr.id,
+        mail sr.mail || '',
+        ll_nam sr.sr_mtadata.ll_nam || '',
+        avatar_rl sr.sr_mtadata.avatar_rl || '',
+        onlin_at nw at().totring(),
+        not_id nwotd
       })
     }
   }
 
-  return {
-    onlineUsers,
-    isOnline,
-    updateCurrentNote
+  rtrn {
+    onlinsrs,
+    isnlin,
+    pdatrrntot
   }
 }

@@ -1,130 +1,130 @@
-import React from 'react';
+import act rom 'ract'
 import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-  ActivityIndicator,
-} from 'react-native';
+  ochablpacity,
+  xt,
+  tylht,
+  iwtyl,
+  xttyl,
+  ctivityndicator,
+} rom 'ract-nativ'
 
-interface ButtonProps {
-  title: string;
-  onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-  disabled?: boolean;
-  loading?: boolean;
-  style?: ViewStyle;
-  textStyle?: TextStyle;
+intrac ttonrops {
+  titl string
+  onrss ()  void
+  variant 'primary' | 'scondary' | 'otlin' | 'ghost'
+  siz 'sm' | 'md' | 'lg'
+  disabld boolan
+  loading boolan
+  styl iwtyl
+  txttyl xttyl
 }
 
-export const Button: React.FC<ButtonProps> = ({
-  title,
-  onPress,
-  variant = 'primary',
-  size = 'md',
-  disabled = false,
-  loading = false,
-  style,
-  textStyle,
-}) => {
-  const buttonStyle = [
-    styles.base,
-    styles[variant],
-    styles[size],
-    disabled && styles.disabled,
-    style,
-  ];
+xport const tton act.ttonrops  ({
+  titl,
+  onrss,
+  variant  'primary',
+  siz  'md',
+  disabld  als,
+  loading  als,
+  styl,
+  txttyl,
+})  {
+  const bttontyl  
+    styls.bas,
+    stylsvariant],
+    stylssiz],
+    disabld && styls.disabld,
+    styl,
+  ]
 
-  const textStyleCombined = [
-    styles.text,
-    styles[`${variant}Text`],
-    styles[`${size}Text`],
-    disabled && styles.disabledText,
-    textStyle,
-  ];
+  const txttylombind  
+    styls.txt,
+    styls`${variant}xt`],
+    styls`${siz}xt`],
+    disabld && styls.disabldxt,
+    txttyl,
+  ]
 
-  return (
-    <TouchableOpacity
-      style={buttonStyle}
-      onPress={onPress}
-      disabled={disabled || loading}
-      activeOpacity={0.7}
-    >
-      {loading ? (
-        <ActivityIndicator color={variant === 'primary' ? '#fff' : '#3b82f6'} />
-      ) : (
-        <Text style={textStyleCombined}>{title}</Text>
+  rtrn (
+    ochablpacity
+      styl{bttontyl}
+      onrss{onrss}
+      disabld{disabld || loading}
+      activpacity{.}
+    
+      {loading  (
+        ctivityndicator color{variant  'primary'  '#'  '#b'} /
+      )  (
+        xt styl{txttylombind}{titl}/xt
       )}
-    </TouchableOpacity>
-  );
-};
+    /ochablpacity
+  )
+}
 
-const styles = StyleSheet.create({
-  base: {
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
+const styls  tylht.crat({
+  bas {
+    bordradis ,
+    aligntms 'cntr',
+    jstiyontnt 'cntr',
+    lxirction 'row',
   },
-  primary: {
-    backgroundColor: '#3b82f6',
+  primary {
+    backgrondolor '#b',
   },
-  secondary: {
-    backgroundColor: '#6b7280',
+  scondary {
+    backgrondolor '#b',
   },
-  outline: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#3b82f6',
+  otlin {
+    backgrondolor 'transparnt',
+    bordridth ,
+    bordrolor '#b',
   },
-  ghost: {
-    backgroundColor: 'transparent',
+  ghost {
+    backgrondolor 'transparnt',
   },
-  sm: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    minHeight: 32,
+  sm {
+    paddingorizontal ,
+    paddingrtical ,
+    minight ,
   },
-  md: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    minHeight: 40,
+  md {
+    paddingorizontal ,
+    paddingrtical ,
+    minight ,
   },
-  lg: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    minHeight: 48,
+  lg {
+    paddingorizontal ,
+    paddingrtical ,
+    minight ,
   },
-  disabled: {
-    opacity: 0.5,
+  disabld {
+    opacity .,
   },
-  text: {
-    fontWeight: '600',
+  txt {
+    ontight '',
   },
-  primaryText: {
-    color: '#fff',
+  primaryxt {
+    color '#',
   },
-  secondaryText: {
-    color: '#fff',
+  scondaryxt {
+    color '#',
   },
-  outlineText: {
-    color: '#3b82f6',
+  otlinxt {
+    color '#b',
   },
-  ghostText: {
-    color: '#3b82f6',
+  ghostxt {
+    color '#b',
   },
-  smText: {
-    fontSize: 14,
+  smxt {
+    ontiz ,
   },
-  mdText: {
-    fontSize: 16,
+  mdxt {
+    ontiz ,
   },
-  lgText: {
-    fontSize: 18,
+  lgxt {
+    ontiz ,
   },
-  disabledText: {
-    opacity: 0.7,
+  disabldxt {
+    opacity .,
   },
-});
+})

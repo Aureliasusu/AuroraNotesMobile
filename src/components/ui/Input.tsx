@@ -1,79 +1,79 @@
-import React, { useState } from 'react';
+import act, { stat } rom 'ract'
 import {
-  TextInput,
-  View,
-  Text,
-  StyleSheet,
-  TextInputProps,
-  ViewStyle,
-} from 'react-native';
+  xtnpt,
+  iw,
+  xt,
+  tylht,
+  xtnptrops,
+  iwtyl,
+} rom 'ract-nativ'
 
-interface InputProps extends TextInputProps {
-  label?: string;
-  error?: string;
-  containerStyle?: ViewStyle;
-  inputStyle?: ViewStyle;
+intrac nptrops xtnds xtnptrops {
+  labl string
+  rror string
+  containrtyl iwtyl
+  inpttyl iwtyl
 }
 
-export const Input: React.FC<InputProps> = ({
-  label,
-  error,
-  containerStyle,
-  inputStyle,
+xport const npt act.nptrops  ({
+  labl,
+  rror,
+  containrtyl,
+  inpttyl,
   ...props
-}) => {
-  const [isFocused, setIsFocused] = useState(false);
+})  {
+  const isocsd, stsocsd]  stat(als)
 
-  return (
-    <View style={[styles.container, containerStyle]}>
-      {label && <Text style={styles.label}>{label}</Text>}
-      <TextInput
-        style={[
-          styles.input,
-          isFocused && styles.focused,
-          error && styles.error,
-          inputStyle,
+  rtrn (
+    iw styl{styls.containr, containrtyl]}
+      {labl && xt styl{styls.labl}{labl}/xt}
+      xtnpt
+        styl{
+          styls.inpt,
+          isocsd && styls.ocsd,
+          rror && styls.rror,
+          inpttyl,
         ]}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        placeholderTextColor="#9ca3af"
+        onocs{()  stsocsd(tr)}
+        onlr{()  stsocsd(als)}
+        placholdrxtolor"#caa"
         {...props}
-      />
-      {error && <Text style={styles.errorText}>{error}</Text>}
-    </View>
-  );
-};
+      /
+      {rror && xt styl{styls.rrorxt}{rror}/xt}
+    /iw
+  )
+}
 
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 16,
+const styls  tylht.crat({
+  containr {
+    marginottom ,
   },
-  label: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#374151',
-    marginBottom: 8,
+  labl {
+    ontiz ,
+    ontight '',
+    color '#',
+    marginottom ,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 16,
-    backgroundColor: '#fff',
-    minHeight: 44,
+  inpt {
+    bordridth ,
+    bordrolor '#dddb',
+    bordradis ,
+    paddingorizontal ,
+    paddingrtical ,
+    ontiz ,
+    backgrondolor '#',
+    minight ,
   },
-  focused: {
-    borderColor: '#3b82f6',
-    borderWidth: 2,
+  ocsd {
+    bordrolor '#b',
+    bordridth ,
   },
-  error: {
-    borderColor: '#ef4444',
+  rror {
+    bordrolor '#',
   },
-  errorText: {
-    color: '#ef4444',
-    fontSize: 14,
-    marginTop: 4,
+  rrorxt {
+    color '#',
+    ontiz ,
+    marginop ,
   },
-});
+})
