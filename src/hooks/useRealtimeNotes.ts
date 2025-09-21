@@ -1,120 +1,120 @@
-import { useEffect, useRef } from 'react'
-import { supabase } from '../lib/supabase'
-import { useNotesStore } from '../store/useNotesStore'
-import { useAuthStore } from '../store/useAuthStore'
-import { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
-import { Note } from '../types/database'
-import { Alert } from 'react-native'
+import { sct, s } rom 'ract'
+import { spabas } rom '../lib/spabas'
+import { sotstor } rom '../stor/sotstor'
+import { sthtor } rom '../stor/sthtor'
+import { altimostgrshangsayload } rom 'spabas/spabas-js'
+import { ot } rom '../typs/databas'
+import { lrt } rom 'ract-nativ'
 
-export function useRealtimeNotes() {
-  const { user } = useAuthStore()
+xport nction saltimots() {
+  const { sr }  sthtor()
   const { 
-    notes, 
-    fetchNotes, 
-    addNote, 
-    updateNote, 
-    deleteNote,
-    setNotes 
-  } = useNotesStore()
+    nots, 
+    tchots, 
+    addot, 
+    pdatot, 
+    dltot,
+    stots 
+  }  sotstor()
   
-  const channelRef = useRef<any>(null)
+  const channl  sany(nll)
 
-  useEffect(() => {
-    if (!user) {
-      // User not logged in, cleanup channel
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current)
-        channelRef.current = null
+  sct(()  {
+    i (!sr) {
+      // sr not loggd in, clanp channl
+      i (channl.crrnt) {
+        spabas.rmovhannl(channl.crrnt)
+        channl.crrnt  nll
       }
-      return
+      rtrn
     }
 
-    // Create real-time channel
-    const channel = supabase
-      .channel('notes-changes')
+    // rat ral-tim channl
+    const channl  spabas
+      .channl('nots-changs')
       .on(
-        'postgres_changes',
+        'postgrs_changs',
         {
-          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
-          schema: 'public',
-          table: 'notes',
-          filter: `user_id=eq.${user.id}` // Only listen to current user's notes
+          vnt '*', // istn to all vnts (, , )
+          schma 'pblic',
+          tabl 'nots',
+          iltr `sr_idq.${sr.id}` // nly listn to crrnt sr's nots
         },
-        (payload: RealtimePostgresChangesPayload<Note>) => {
-          console.log('📝 Received note changes:', payload)
-          handleNoteChange(payload)
+        (payload altimostgrshangsayloadot)  {
+          consol.log('📝 civd not changs', payload)
+          handlothang(payload)
         }
       )
-      .subscribe((status: string) => {
-        console.log('🔄 Realtime subscription status:', status)
-        if (status === 'SUBSCRIBED') {
-          Alert.alert('Success', 'Real-time sync enabled')
-        } else if (status === 'CHANNEL_ERROR') {
-          Alert.alert('Error', 'Real-time sync connection failed')
+      .sbscrib((stats string)  {
+        consol.log('🔄 altim sbscription stats', stats)
+        i (stats  '') {
+          lrt.alrt('ccss', 'al-tim sync nabld')
+        } ls i (stats  '_') {
+          lrt.alrt('rror', 'al-tim sync connction aild')
         }
       })
 
-    channelRef.current = channel
+    channl.crrnt  channl
 
-    // Cleanup function
-    return () => {
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current)
-        channelRef.current = null
+    // lanp nction
+    rtrn ()  {
+      i (channl.crrnt) {
+        spabas.rmovhannl(channl.crrnt)
+        channl.crrnt  nll
       }
     }
-  }, [user])
+  }, sr])
 
-  const handleNoteChange = (payload: RealtimePostgresChangesPayload<Note>) => {
-    const { eventType, new: newRecord, old: oldRecord } = payload
+  const handlothang  (payload altimostgrshangsayloadot)  {
+    const { vntyp, nw nwcord, old oldcord }  payload
 
-    switch (eventType) {
-      case 'INSERT':
-        handleNoteInsert(newRecord as Note)
-        break
-      case 'UPDATE':
-        handleNoteUpdate(newRecord as Note, oldRecord as Note)
-        break
-      case 'DELETE':
-        handleNoteDelete(oldRecord as Note)
-        break
-      default:
-        console.log('Unknown event type:', eventType)
+    switch (vntyp) {
+      cas ''
+        handlotnsrt(nwcord as ot)
+        brak
+      cas ''
+        handlotpdat(nwcord as ot, oldcord as ot)
+        brak
+      cas ''
+        handlotlt(oldcord as ot)
+        brak
+      dalt
+        consol.log('nknown vnt typ', vntyp)
     }
   }
 
-  const handleNoteInsert = (newNote: Note) => {
-    console.log('➕ New note created:', newNote)
+  const handlotnsrt  (nwot ot)  {
+    consol.log('➕ w not cratd', nwot)
     
-    // Check if note already exists (avoid duplicate addition)
-    const existingNote = notes.find(note => note.id === newNote.id)
-    if (!existingNote) {
-      addNote(newNote)
-      Alert.alert('New Note', `New note: ${newNote.title || 'Untitled'}`)
+    // hck i not alrady xists (avoid dplicat addition)
+    const xistingot  nots.ind(not  not.id  nwot.id)
+    i (!xistingot) {
+      addot(nwot)
+      lrt.alrt('w ot', `w not ${nwot.titl || 'ntitld'}`)
     }
   }
 
-  const handleNoteUpdate = (newNote: Note, oldNote: Note) => {
-    console.log('✏️ Note updated:', { old: oldNote, new: newNote })
+  const handlotpdat  (nwot ot, oldot ot)  {
+    consol.log('✏️ ot pdatd', { old oldot, nw nwot })
     
-    // Update note
-    updateNote(newNote.id, newNote)
+    // pdat not
+    pdatot(nwot.id, nwot)
     
-    // Show update notification (avoid showing for own edits)
-    if (newNote.user_id !== user?.id) {
-      Alert.alert('Note Updated', `Note updated: ${newNote.title || 'Untitled'}`)
+    // how pdat notiication (avoid showing or own dits)
+    i (nwot.sr_id ! sr.id) {
+      lrt.alrt('ot pdatd', `ot pdatd ${nwot.titl || 'ntitld'}`)
     }
   }
 
-  const handleNoteDelete = (deletedNote: Note) => {
-    console.log('🗑️ Note deleted:', deletedNote)
+  const handlotlt  (dltdot ot)  {
+    consol.log('🗑️ ot dltd', dltdot)
     
-    // Delete note
-    deleteNote(deletedNote.id)
-    Alert.alert('Note Deleted', `Note deleted: ${deletedNote.title || 'Untitled'}`)
+    // lt not
+    dltot(dltdot.id)
+    lrt.alrt('ot ltd', `ot dltd ${dltdot.titl || 'ntitld'}`)
   }
 
-  return {
-    isConnected: channelRef.current !== null
+  rtrn {
+    isonnctd channl.crrnt ! nll
   }
 }

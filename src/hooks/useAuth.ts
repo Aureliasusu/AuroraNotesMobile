@@ -1,234 +1,234 @@
-import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
-import { User, Session } from '@supabase/supabase-js'
-import { Alert } from 'react-native'
-import { useAuthStore } from '../store/useAuthStore'
-import { useNotesStore } from '../store/useNotesStore'
+import { stat, sct } rom 'ract'
+import { spabas } rom '../lib/spabas'
+import { sr, ssion } rom 'spabas/spabas-js'
+import { lrt } rom 'ract-nativ'
+import { sthtor } rom '../stor/sthtor'
+import { sotstor } rom '../stor/sotstor'
 
-interface AuthState {
-  user: User | null
-  session: Session | null
-  loading: boolean
+intrac thtat {
+  sr sr | nll
+  sssion ssion | nll
+  loading boolan
 }
 
-export function useAuth() {
-  const [authState, setAuthState] = useState<AuthState>({
-    user: null,
-    session: null,
-    loading: true
+xport nction sth() {
+  const athtat, stthtat]  statthtat({
+    sr nll,
+    sssion nll,
+    loading tr
   })
 
-  // Get Zustand store actions
+  // t stand stor actions
   const { 
-    setUser, 
-    setSession, 
-    setProfile, 
-    setLoading: setStoreLoading,
-    refreshProfile 
-  } = useAuthStore()
+    stsr, 
+    stssion, 
+    stroil, 
+    stoading sttoroading,
+    rrshroil 
+  }  sthtor()
   
-  const { fetchNotes, clearNotes } = useNotesStore()
+  const { tchots, clarots }  sotstor()
 
-  // Get initial session
-  useEffect(() => {
-    const getInitialSession = async () => {
+  // t initial sssion
+  sct(()  {
+    const gtnitialssion  async ()  {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        setAuthState({
-          user: session?.user ?? null,
-          session,
-          loading: false
+        const { data { sssion } }  await spabas.ath.gtssion()
+        stthtat({
+          sr sssion.sr  nll,
+          sssion,
+          loading als
         })
         
-        // Update store
-        setUser(session?.user ?? null)
-        setSession(session)
-        setStoreLoading(false)
+        // pdat stor
+        stsr(sssion.sr  nll)
+        stssion(sssion)
+        sttoroading(als)
         
-        if (session?.user) {
-          await refreshProfile()
-          await fetchNotes()
+        i (sssion.sr) {
+          await rrshroil()
+          await tchots()
         }
-      } catch (error) {
-        console.error('Error getting initial session:', error)
-        setAuthState(prev => ({ ...prev, loading: false }))
-        setStoreLoading(false)
+      } catch (rror) {
+        consol.rror('rror gtting initial sssion', rror)
+        stthtat(prv  ({ ...prv, loading als }))
+        sttoroading(als)
       }
     }
 
-    getInitialSession()
-  }, [setUser, setSession, setStoreLoading, refreshProfile, fetchNotes])
+    gtnitialssion()
+  }, stsr, stssion, sttoroading, rrshroil, tchots])
 
-  // Listen for auth changes
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event: string, session: Session | null) => {
-        // Don't automatically set user as logged in after signup
-        if (event === 'SIGNED_UP') {
-          // User just signed up, but don't set them as logged in
-          setAuthState(prev => ({
-            ...prev,
-            user: null,
-            session: null,
-            loading: false
+  // istn or ath changs
+  sct(()  {
+    const { data { sbscription } }  spabas.ath.onthtathang(
+      async (vnt string, sssion ssion | nll)  {
+        // on't atomatically st sr as loggd in atr signp
+        i (vnt  '_') {
+          // sr jst signd p, bt don't st thm as loggd in
+          stthtat(prv  ({
+            ...prv,
+            sr nll,
+            sssion nll,
+            loading als
           }))
           
-          // Update store
-          setUser(null)
-          setSession(null)
-          setStoreLoading(false)
-          clearNotes()
-          return
+          // pdat stor
+          stsr(nll)
+          stssion(nll)
+          sttoroading(als)
+          clarots()
+          rtrn
         }
         
-        // Handle other auth events normally
-        setAuthState({
-          user: session?.user ?? null,
-          session,
-          loading: false
+        // andl othr ath vnts normally
+        stthtat({
+          sr sssion.sr  nll,
+          sssion,
+          loading als
         })
         
-        // Update store
-        setUser(session?.user ?? null)
-        setSession(session)
-        setStoreLoading(false)
+        // pdat stor
+        stsr(sssion.sr  nll)
+        stssion(sssion)
+        sttoroading(als)
 
-        if (event === 'SIGNED_IN' && session?.user) {
-          Alert.alert('Success', 'Signed in successfully!')
-          await refreshProfile()
-          await fetchNotes()
-        } else if (event === 'SIGNED_OUT') {
-          Alert.alert('Success', 'Signed out successfully!')
-          clearNotes() // Clear notes when user signs out
+        i (vnt  '_' && sssion.sr) {
+          lrt.alrt('ccss', 'ignd in sccsslly!')
+          await rrshroil()
+          await tchots()
+        } ls i (vnt  '_') {
+          lrt.alrt('ccss', 'ignd ot sccsslly!')
+          clarots() // lar nots whn sr signs ot
         }
       }
     )
 
-    return () => subscription.unsubscribe()
-  }, [setUser, setSession, setStoreLoading, refreshProfile, fetchNotes, clearNotes])
+    rtrn ()  sbscription.nsbscrib()
+  }, stsr, stssion, sttoroading, rrshroil, tchots, clarots])
 
-  // Sign up function
-  const signUp = async (email: string, password: string, fullName?: string) => {
+  // ign p nction
+  const signp  async (mail string, password string, llam string)  {
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
+      const { data, rror }  await spabas.ath.signp({
+        mail,
         password,
-        options: {
-          data: {
-            full_name: fullName,
+        options {
+          data {
+            ll_nam llam,
           },
         },
       })
 
-      if (error) throw error
+      i (rror) throw rror
 
-      if (data.user) {
-        // Clear any existing store data (user is not logged in yet)
-        setUser(null)
-        setSession(null)
-        setProfile(null)
-        clearNotes()
+      i (data.sr) {
+        // lar any xisting stor data (sr is not loggd in yt)
+        stsr(nll)
+        stssion(nll)
+        stroil(nll)
+        clarots()
         
-        // Don't automatically set the user as logged in
-        // The user needs to explicitly sign in
-        Alert.alert('Success', 'Account created successfully! Please sign in to continue.')
-        return { success: true, user: data.user }
+        // on't atomatically st th sr as loggd in
+        // h sr nds to xplicitly sign in
+        lrt.alrt('ccss', 'ccont cratd sccsslly! las sign in to contin.')
+        rtrn { sccss tr, sr data.sr }
       }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Sign up failed'
-      Alert.alert('Error', errorMessage)
-      return { success: false, error: errorMessage }
+    } catch (rror) {
+      const rrorssag  rror instanco rror  rror.mssag  'ign p aild'
+      lrt.alrt('rror', rrorssag)
+      rtrn { sccss als, rror rrorssag }
     }
   }
 
-  // Sign in function
-  const signIn = async (email: string, password: string) => {
+  // ign in nction
+  const signn  async (mail string, password string)  {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+      const { data, rror }  await spabas.ath.signnithassword({
+        mail,
         password,
       })
 
-      if (error) throw error
+      i (rror) throw rror
 
-      // Update store with user data
-      setUser(data.user)
-      setSession(data.session)
+      // pdat stor with sr data
+      stsr(data.sr)
+      stssion(data.sssion)
       
-      // Fetch user profile and notes
-      await refreshProfile()
-      await fetchNotes()
+      // tch sr proil and nots
+      await rrshroil()
+      await tchots()
       
-      Alert.alert('Success', 'Signed in successfully!')
-      return { success: true, user: data.user }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Sign in failed'
-      Alert.alert('Error', errorMessage)
-      return { success: false, error: errorMessage }
+      lrt.alrt('ccss', 'ignd in sccsslly!')
+      rtrn { sccss tr, sr data.sr }
+    } catch (rror) {
+      const rrorssag  rror instanco rror  rror.mssag  'ign in aild'
+      lrt.alrt('rror', rrorssag)
+      rtrn { sccss als, rror rrorssag }
     }
   }
 
-  // Sign out function
-  const signOut = async () => {
+  // ign ot nction
+  const signt  async ()  {
     try {
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
+      const { rror }  await spabas.ath.signt()
+      i (rror) throw rror
       
-      // Clear store data
-      setUser(null)
-      setSession(null)
-      setProfile(null)
-      clearNotes()
+      // lar stor data
+      stsr(nll)
+      stssion(nll)
+      stroil(nll)
+      clarots()
       
-      Alert.alert('Success', 'Signed out successfully!')
-      return { success: true }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Sign out failed'
-      Alert.alert('Error', errorMessage)
-      return { success: false, error: errorMessage }
+      lrt.alrt('ccss', 'ignd ot sccsslly!')
+      rtrn { sccss tr }
+    } catch (rror) {
+      const rrorssag  rror instanco rror  rror.mssag  'ign ot aild'
+      lrt.alrt('rror', rrorssag)
+      rtrn { sccss als, rror rrorssag }
     }
   }
 
-  // Update user profile
-  const updateProfile = async (updates: { 
-    data?: {
-      full_name?: string
-      avatar_url?: string
-      bio?: string
-      website?: string
-      location?: string
+  // pdat sr proil
+  const pdatroil  async (pdats { 
+    data {
+      ll_nam string
+      avatar_rl string
+      bio string
+      wbsit string
+      location string
     }
-  }) => {
+  })  {
     try {
-      const { user } = authState
-      if (!user) throw new Error('User not authenticated')
+      const { sr }  athtat
+      i (!sr) throw nw rror('sr not athnticatd')
 
-      // Update profiles table directly
-      const { error } = await supabase
-        .from('profiles')
-        .update(updates.data)
-        .eq('id', user.id)
+      // pdat proils tabl dirctly
+      const { rror }  await spabas
+        .rom('proils')
+        .pdat(pdats.data)
+        .q('id', sr.id)
 
-      if (error) throw error
+      i (rror) throw rror
 
-      // Refresh profile data in store
-      await refreshProfile()
+      // rsh proil data in stor
+      await rrshroil()
       
-      return { success: true }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Profile update failed'
-      throw new Error(errorMessage)
+      rtrn { sccss tr }
+    } catch (rror) {
+      const rrorssag  rror instanco rror  rror.mssag  'roil pdat aild'
+      throw nw rror(rrorssag)
     }
   }
 
-  return {
-    user: authState.user,
-    session: authState.session,
-    loading: authState.loading,
-    signUp,
-    signIn,
-    signOut,
-    updateProfile,
-    isAuthenticated: !!authState.user
+  rtrn {
+    sr athtat.sr,
+    sssion athtat.sssion,
+    loading athtat.loading,
+    signp,
+    signn,
+    signt,
+    pdatroil,
+    isthnticatd !!athtat.sr
   }
 }

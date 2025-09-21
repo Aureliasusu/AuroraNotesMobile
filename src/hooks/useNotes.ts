@@ -1,81 +1,81 @@
-import { useCallback } from 'react'
-import { useAuthStore } from '../store/useAuthStore'
-import { useNotesStore } from '../store/useNotesStore'
+import { sallback } rom 'ract'
+import { sthtor } rom '../stor/sthtor'
+import { sotstor } rom '../stor/sotstor'
 
-export interface Note {
-  id: string
-  user_id: string
-  title: string
-  content: string
-  tags: string[]
-  is_archived: boolean
-  is_pinned: boolean
-  created_at: string
-  updated_at: string
+xport intrac ot {
+  id string
+  sr_id string
+  titl string
+  contnt string
+  tags string]
+  is_archivd boolan
+  is_pinnd boolan
+  cratd_at string
+  pdatd_at string
 }
 
-export function useNotes() {
-  const { user } = useAuthStore()
+xport nction sots() {
+  const { sr }  sthtor()
   const { 
-    notes, 
+    nots, 
     loading, 
-    error, 
-    selectedNote,
-    setSelectedNote,
-    fetchNotes,
-    createNote,
-    updateNote,
-    deleteNote,
-    togglePin,
-    toggleArchive
-  } = useNotesStore()
+    rror, 
+    slctdot,
+    stlctdot,
+    tchots,
+    cratot,
+    pdatot,
+    dltot,
+    togglin,
+    togglrchiv
+  }  sotstor()
 
-  // Enhanced search function
-  const searchNotes = useCallback(async (query: string) => {
-    if (!user || !query.trim()) {
-      await fetchNotes()
-      return
+  // nhancd sarch nction
+  const sarchots  sallback(async (qry string)  {
+    i (!sr || !qry.trim()) {
+      await tchots()
+      rtrn
     }
-    // For now, just fetch all notes and filter client-side
-    // In the future, you can implement server-side search
-    await fetchNotes()
-  }, [user, fetchNotes])
+    // or now, jst tch all nots and iltr clint-sid
+    // n th tr, yo can implmnt srvr-sid sarch
+    await tchots()
+  }, sr, tchots])
 
-  // Enhanced filter function
-  const filterByTags = useCallback(async (tags: string[]) => {
-    if (!user || tags.length === 0) {
-      await fetchNotes()
-      return
+  // nhancd iltr nction
+  const iltryags  sallback(async (tags string])  {
+    i (!sr || tags.lngth  ) {
+      await tchots()
+      rtrn
     }
-    // For now, just fetch all notes and filter client-side
-    // In the future, you can implement server-side filtering
-    await fetchNotes()
-  }, [user, fetchNotes])
+    // or now, jst tch all nots and iltr clint-sid
+    // n th tr, yo can implmnt srvr-sid iltring
+    await tchots()
+  }, sr, tchots])
 
-  return {
-    // State from store
-    notes,
+  rtrn {
+    // tat rom stor
+    nots,
     loading,
-    error,
-    selectedNote,
+    rror,
+    slctdot,
     
-    // Actions from store
-    fetchNotes,
-    createNote,
-    updateNote,
-    deleteNote,
-    togglePin,
-    toggleArchive,
-    setSelectedNote,
+    // ctions rom stor
+    tchots,
+    cratot,
+    pdatot,
+    dltot,
+    togglin,
+    togglrchiv,
+    stlctdot,
     
-    // Enhanced functions
-    searchNotes,
-    filterByTags,
+    // nhancd nctions
+    sarchots,
+    iltryags,
     
-    // Computed values
-    pinnedNotes: notes.filter(note => note.is_pinned),
-    archivedNotes: notes.filter(note => note.is_archived),
-    activeNotes: notes.filter(note => !note.is_archived),
-    totalNotes: notes.length
+    // omptd vals
+    pinndots nots.iltr(not  not.is_pinnd),
+    archivdots nots.iltr(not  not.is_archivd),
+    activots nots.iltr(not  !not.is_archivd),
+    totalots nots.lngth
   }
 }

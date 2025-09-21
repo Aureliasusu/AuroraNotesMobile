@@ -1,506 +1,506 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { supabase } from '../lib/supabase'
-import { useAuthStore } from '../store/useAuthStore'
-import { useNotesStore } from '../store/useNotesStore'
-import { useUserPresence } from './useUserPresence'
-import { Note } from '../types/database'
-import { Alert } from 'react-native'
+import { stat, sct, s, sallback } rom 'ract'
+import { spabas } rom '../lib/spabas'
+import { sthtor } rom '../stor/sthtor'
+import { sotstor } rom '../stor/sotstor'
+import { ssrrsnc } rom './ssrrsnc'
+import { ot } rom '../typs/databas'
+import { lrt } rom 'ract-nativ'
 
-interface EditingUser {
-  id: string
-  email: string
-  full_name?: string
-  avatar_url?: string
-  cursor_position?: number
-  last_seen: string
-  isTyping?: boolean
-  typingTimeout?: NodeJS.Timeout
+intrac ditingsr {
+  id string
+  mail string
+  ll_nam string
+  avatar_rl string
+  crsor_position nmbr
+  last_sn string
+  isyping boolan
+  typingimot od.imot
 }
 
-interface Conflict {
-  id: string
-  field: string
-  localValue: string
-  remoteValue: string
-  remoteUser: string
-  timestamp: Date
+intrac onlict {
+  id string
+  ild string
+  localal string
+  rmotal string
+  rmotsr string
+  timstamp at
 }
 
-interface Comment {
-  id: string
-  content: string
-  author: {
-    id: string
-    name: string
-    email: string
-    avatar_url?: string
+intrac ommnt {
+  id string
+  contnt string
+  athor {
+    id string
+    nam string
+    mail string
+    avatar_rl string
   }
-  position: {
-    start: number
-    end: number
+  position {
+    start nmbr
+    nd nmbr
   }
-  created_at: string
-  resolved: boolean
-  replies?: Comment[]
+  cratd_at string
+  rsolvd boolan
+  rplis ommnt]
 }
 
-interface Change {
-  id: string
-  type: 'insert' | 'delete' | 'modify'
-  content: string
-  position: number
-  length: number
-  author: {
-    id: string
-    name: string
-    email: string
-    avatar_url?: string
+intrac hang {
+  id string
+  typ 'insrt' | 'dlt' | 'modiy'
+  contnt string
+  position nmbr
+  lngth nmbr
+  athor {
+    id string
+    nam string
+    mail string
+    avatar_rl string
   }
-  timestamp: string
-  description?: string
+  timstamp string
+  dscription string
 }
 
-interface Notification {
-  id: string
-  type: 'info' | 'success' | 'warning' | 'error'
-  title: string
-  message: string
-  timestamp: string
-  read: boolean
-  action?: {
-    label: string
-    onClick: () => void
+intrac otiication {
+  id string
+  typ 'ino' | 'sccss' | 'warning' | 'rror'
+  titl string
+  mssag string
+  timstamp string
+  rad boolan
+  action {
+    labl string
+    onlick ()  void
   }
-  user?: {
-    id: string
-    name: string
-    avatar_url?: string
+  sr {
+    id string
+    nam string
+    avatar_rl string
   }
 }
 
-export function useCollaborativeEditing(noteId?: string) {
-  const { user } = useAuthStore()
-  const { updateNote } = useNotesStore()
-  const { onlineUsers, updateCurrentNote } = useUserPresence(noteId)
+xport nction sollaborativditing(notd string) {
+  const { sr }  sthtor()
+  const { pdatot }  sotstor()
+  const { onlinsrs, pdatrrntot }  ssrrsnc(notd)
   
-  const [editingUsers, setEditingUsers] = useState<EditingUser[]>([])
-  const [isEditing, setIsEditing] = useState(false)
-  const [lastSaved, setLastSaved] = useState<Date | null>(null)
-  const [conflicts, setConflicts] = useState<Conflict[]>([])
-  const [comments, setComments] = useState<Comment[]>([])
-  const [changes, setChanges] = useState<Change[]>([])
-  const [notifications, setNotifications] = useState<Notification[]>([])
+  const ditingsrs, stditingsrs]  statditingsr](])
+  const isditing, stsditing]  stat(als)
+  const lastavd, stastavd]  statat | nll(nll)
+  const conlicts, stonlicts]  statonlict](])
+  const commnts, stommnts]  statommnt](])
+  const changs, sthangs]  stathang](])
+  const notiications, stotiications]  statotiication](])
   
-  const channelRef = useRef<any>(null)
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const lastContentRef = useRef<string>('')
+  const channl  sany(nll)
+  const savimot  sod.imot | nll(nll)
+  const lastontnt  sstring('')
 
-  // Listen to note content changes
-  useEffect(() => {
-    if (!user || !noteId) {
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current)
-        channelRef.current = null
+  // istn to not contnt changs
+  sct(()  {
+    i (!sr || !notd) {
+      i (channl.crrnt) {
+        spabas.rmovhannl(channl.crrnt)
+        channl.crrnt  nll
       }
-      return
+      rtrn
     }
 
-    // Create collaborative editing channel
-    const channel = supabase
-      .channel(`note-${noteId}`)
+    // rat collaborativ diting channl
+    const channl  spabas
+      .channl(`not-${notd}`)
       .on(
-        'postgres_changes',
+        'postgrs_changs',
         {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'notes',
-          filter: `id=eq.${noteId}`
+          vnt '',
+          schma 'pblic',
+          tabl 'nots',
+          iltr `idq.${notd}`
         },
-        (payload: any) => {
-          const updatedNote = payload.new as Note
+        (payload any)  {
+          const pdatdot  payload.nw as ot
           
-          // If update is not from current user, update content
-          if (updatedNote.user_id !== user.id) {
-            handleRemoteUpdate(updatedNote)
+          //  pdat is not rom crrnt sr, pdat contnt
+          i (pdatdot.sr_id ! sr.id) {
+            handlmotpdat(pdatdot)
           }
         }
       )
-      .on('broadcast', { event: 'cursor-move' }, (payload: any) => {
-        handleCursorMove(payload)
+      .on('broadcast', { vnt 'crsor-mov' }, (payload any)  {
+        handlrsorov(payload)
       })
-      .on('broadcast', { event: 'user-typing' }, (payload: any) => {
-        handleUserTyping(payload)
+      .on('broadcast', { vnt 'sr-typing' }, (payload any)  {
+        handlsryping(payload)
       })
-      .subscribe((status: any) => {
-        // Subscription status handled
+      .sbscrib((stats any)  {
+        // bscription stats handld
       })
 
-    channelRef.current = channel
+    channl.crrnt  channl
 
-    // Update current user's editing note
-    updateCurrentNote(noteId)
+    // pdat crrnt sr's diting not
+    pdatrrntot(notd)
 
-    return () => {
-      if (channelRef.current) {
-        supabase.removeChannel(channelRef.current)
-        channelRef.current = null
+    rtrn ()  {
+      i (channl.crrnt) {
+        spabas.rmovhannl(channl.crrnt)
+        channl.crrnt  nll
       }
     }
-  }, [user, noteId, updateCurrentNote])
+  }, sr, notd, pdatrrntot])
 
-  // Handle remote updates
-  const handleRemoteUpdate = (updatedNote: Note) => {
-    // Update note content
-    updateNote(updatedNote.id, updatedNote)
+  // andl rmot pdats
+  const handlmotpdat  (pdatdot ot)  {
+    // pdat not contnt
+    pdatot(pdatdot.id, pdatdot)
     
-    // Show update notification
-    Alert.alert('Note Updated', 'Note content updated')
+    // how pdat notiication
+    lrt.alrt('ot pdatd', 'ot contnt pdatd')
   }
 
-  // Handle cursor movement
-  const handleCursorMove = (payload: any) => {
-    const { user_id, cursor_position, user_info } = payload
+  // andl crsor movmnt
+  const handlrsorov  (payload any)  {
+    const { sr_id, crsor_position, sr_ino }  payload
     
-    if (user_id !== user?.id && user_info) {
-      setEditingUsers(prev => {
-        const existing = prev.find(u => u.id === user_id)
-        if (existing) {
-          return prev.map(u => 
-            u.id === user_id 
-              ? { ...u, cursor_position, last_seen: new Date().toISOString() }
-              : u
+    i (sr_id ! sr.id && sr_ino) {
+      stditingsrs(prv  {
+        const xisting  prv.ind(  .id  sr_id)
+        i (xisting) {
+          rtrn prv.map(  
+            .id  sr_id 
+               { ..., crsor_position, last_sn nw at().totring() }
+               
           )
-        } else {
-          return [...prev, {
-            id: user_id,
-            email: user_info.email || '',
-            full_name: user_info.full_name || '',
-            avatar_url: user_info.avatar_url || '',
-            cursor_position,
-            last_seen: new Date().toISOString()
+        } ls {
+          rtrn ...prv, {
+            id sr_id,
+            mail sr_ino.mail || '',
+            ll_nam sr_ino.ll_nam || '',
+            avatar_rl sr_ino.avatar_rl || '',
+            crsor_position,
+            last_sn nw at().totring()
           }]
         }
       })
     }
   }
 
-  // Handle user typing
-  const handleUserTyping = (payload: any) => {
-    const { user_id, user_info } = payload
+  // andl sr typing
+  const handlsryping  (payload any)  {
+    const { sr_id, sr_ino }  payload
     
-    if (user_id !== user?.id && user_info) {
-      setEditingUsers(prev => {
-        const existing = prev.find(u => u.id === user_id)
-        if (existing) {
-          // Clear existing typing timeout
-          if (existing.typingTimeout) {
-            clearTimeout(existing.typingTimeout)
+    i (sr_id ! sr.id && sr_ino) {
+      stditingsrs(prv  {
+        const xisting  prv.ind(  .id  sr_id)
+        i (xisting) {
+          // lar xisting typing timot
+          i (xisting.typingimot) {
+            clarimot(xisting.typingimot)
           }
           
-          // Set new timeout to stop typing indicator
-          const typingTimeout = setTimeout(() => {
-            setEditingUsers(prev => 
-              prev.map(u => 
-                u.id === user_id 
-                  ? { ...u, isTyping: false, typingTimeout: undefined }
-                  : u
+          // t nw timot to stop typing indicator
+          const typingimot  stimot(()  {
+            stditingsrs(prv  
+              prv.map(  
+                .id  sr_id 
+                   { ..., isyping als, typingimot ndind }
+                   
               )
             )
-          }, 2000)
+          }, )
           
-          return prev.map(u => 
-            u.id === user_id 
-              ? { ...u, isTyping: true, typingTimeout, last_seen: new Date().toISOString() }
-              : u
+          rtrn prv.map(  
+            .id  sr_id 
+               { ..., isyping tr, typingimot, last_sn nw at().totring() }
+               
           )
-        } else {
-          // Add new user with typing indicator
-          const typingTimeout = setTimeout(() => {
-            setEditingUsers(prev => 
-              prev.map(u => 
-                u.id === user_id 
-                  ? { ...u, isTyping: false, typingTimeout: undefined }
-                  : u
+        } ls {
+          // dd nw sr with typing indicator
+          const typingimot  stimot(()  {
+            stditingsrs(prv  
+              prv.map(  
+                .id  sr_id 
+                   { ..., isyping als, typingimot ndind }
+                   
               )
             )
-          }, 2000)
+          }, )
           
-          return [...prev, {
-            id: user_id,
-            email: user_info.email || '',
-            full_name: user_info.full_name || '',
-            avatar_url: user_info.avatar_url || '',
-            isTyping: true,
-            typingTimeout,
-            last_seen: new Date().toISOString()
+          rtrn ...prv, {
+            id sr_id,
+            mail sr_ino.mail || '',
+            ll_nam sr_ino.ll_nam || '',
+            avatar_rl sr_ino.avatar_rl || '',
+            isyping tr,
+            typingimot,
+            last_sn nw at().totring()
           }]
         }
       })
     }
   }
 
-  // Broadcast cursor movement
-  const broadcastCursorMove = useCallback((cursorPosition: number) => {
-    if (channelRef.current && user) {
-      channelRef.current.send({
-        type: 'broadcast',
-        event: 'cursor-move',
-        payload: {
-          user_id: user.id,
-          cursor_position: cursorPosition,
-          user_info: {
-            email: user.email,
-            full_name: user.user_metadata?.full_name,
-            avatar_url: user.user_metadata?.avatar_url
+  // roadcast crsor movmnt
+  const broadcastrsorov  sallback((crsorosition nmbr)  {
+    i (channl.crrnt && sr) {
+      channl.crrnt.snd({
+        typ 'broadcast',
+        vnt 'crsor-mov',
+        payload {
+          sr_id sr.id,
+          crsor_position crsorosition,
+          sr_ino {
+            mail sr.mail,
+            ll_nam sr.sr_mtadata.ll_nam,
+            avatar_rl sr.sr_mtadata.avatar_rl
           }
         }
       })
     }
-  }, [user])
+  }, sr])
 
-  // Broadcast user typing with typing indicator
-  const broadcastUserTyping = useCallback(() => {
-    if (!channelRef.current || !user) return
+  // roadcast sr typing with typing indicator
+  const broadcastsryping  sallback(()  {
+    i (!channl.crrnt || !sr) rtrn
     
-    // Update local typing state
-    setEditingUsers(prev => {
-      const existing = prev.find(u => u.id === user.id)
-      if (existing) {
-        // Clear existing timeout
-        if (existing.typingTimeout) {
-          clearTimeout(existing.typingTimeout)
+    // pdat local typing stat
+    stditingsrs(prv  {
+      const xisting  prv.ind(  .id  sr.id)
+      i (xisting) {
+        // lar xisting timot
+        i (xisting.typingimot) {
+          clarimot(xisting.typingimot)
         }
         
-        // Set new timeout to stop typing indicator
-        const typingTimeout = setTimeout(() => {
-          setEditingUsers(prev => 
-            prev.map(u => 
-              u.id === user.id 
-                ? { ...u, isTyping: false, typingTimeout: undefined }
-                : u
+        // t nw timot to stop typing indicator
+        const typingimot  stimot(()  {
+          stditingsrs(prv  
+            prv.map(  
+              .id  sr.id 
+                 { ..., isyping als, typingimot ndind }
+                 
             )
           )
-        }, 2000)
+        }, )
         
-        return prev.map(u => 
-          u.id === user.id 
-            ? { ...u, isTyping: true, typingTimeout, last_seen: new Date().toISOString() }
-            : u
+        rtrn prv.map(  
+          .id  sr.id 
+             { ..., isyping tr, typingimot, last_sn nw at().totring() }
+             
         )
-      } else {
-        // Add new user with typing indicator
-        const typingTimeout = setTimeout(() => {
-          setEditingUsers(prev => 
-            prev.map(u => 
-              u.id === user.id 
-                ? { ...u, isTyping: false, typingTimeout: undefined }
-                : u
+      } ls {
+        // dd nw sr with typing indicator
+        const typingimot  stimot(()  {
+          stditingsrs(prv  
+            prv.map(  
+              .id  sr.id 
+                 { ..., isyping als, typingimot ndind }
+                 
             )
           )
-        }, 2000)
+        }, )
         
-        return [...prev, {
-          id: user.id,
-          email: user.email || '',
-          full_name: user.user_metadata?.full_name || '',
-          avatar_url: user.user_metadata?.avatar_url || '',
-          isTyping: true,
-          typingTimeout,
-          last_seen: new Date().toISOString()
+        rtrn ...prv, {
+          id sr.id,
+          mail sr.mail || '',
+          ll_nam sr.sr_mtadata.ll_nam || '',
+          avatar_rl sr.sr_mtadata.avatar_rl || '',
+          isyping tr,
+          typingimot,
+          last_sn nw at().totring()
         }]
       }
     })
     
-    channelRef.current.send({
-      type: 'broadcast',
-      event: 'user-typing',
-      payload: {
-        user_id: user.id,
-        user_info: {
-          email: user.email,
-          full_name: user.user_metadata?.full_name,
-          avatar_url: user.user_metadata?.avatar_url
+    channl.crrnt.snd({
+      typ 'broadcast',
+      vnt 'sr-typing',
+      payload {
+        sr_id sr.id,
+        sr_ino {
+          mail sr.mail,
+          ll_nam sr.sr_mtadata.ll_nam,
+          avatar_rl sr.sr_mtadata.avatar_rl
         }
       }
     })
-  }, [user])
+  }, sr])
 
-  // Save note content (debounced)
-  const saveNoteContent = useCallback(async (content: string) => {
-    if (!noteId || !user || content === lastContentRef.current) {
-      return
+  // av not contnt (dboncd)
+  const savotontnt  sallback(async (contnt string)  {
+    i (!notd || !sr || contnt  lastontnt.crrnt) {
+      rtrn
     }
 
-    lastContentRef.current = content
+    lastontnt.crrnt  contnt
 
-    // Clear previous save timer
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current)
+    // lar prvios sav timr
+    i (savimot.crrnt) {
+      clarimot(savimot.crrnt)
     }
 
-    // Set new save timer (save after 1 second)
-    saveTimeoutRef.current = setTimeout(async () => {
+    // t nw sav timr (sav atr  scond)
+    savimot.crrnt  stimot(async ()  {
       try {
-        const { error } = await supabase
-          .from('notes')
-          .update({ 
-            content,
-            updated_at: new Date().toISOString()
+        const { rror }  await spabas
+          .rom('nots')
+          .pdat({ 
+            contnt,
+            pdatd_at nw at().totring()
           })
-          .eq('id', noteId)
+          .q('id', notd)
 
-        if (error) {
-          console.error('Failed to save note:', error)
-          Alert.alert('Error', 'Save failed')
-        } else {
-          setLastSaved(new Date())
+        i (rror) {
+          consol.rror('aild to sav not', rror)
+          lrt.alrt('rror', 'av aild')
+        } ls {
+          stastavd(nw at())
         }
-      } catch (error) {
-        console.error('Note save exception:', error)
-        Alert.alert('Error', 'Save failed')
+      } catch (rror) {
+        consol.rror('ot sav xcption', rror)
+        lrt.alrt('rror', 'av aild')
       }
-    }, 1000)
-  }, [noteId, user])
+    }, )
+  }, notd, sr])
 
-  // Start editing
-  const startEditing = useCallback(async () => {
-    setIsEditing(true)
-  }, [])
+  // tart diting
+  const startditing  sallback(async ()  {
+    stsditing(tr)
+  }, ])
 
-  // Stop editing
-  const stopEditing = useCallback(() => {
-    setIsEditing(false)
-    setEditingUsers([])
-  }, [])
+  // top diting
+  const stopditing  sallback(()  {
+    stsditing(als)
+    stditingsrs(])
+  }, ])
 
-  // Cleanup timer
-  useEffect(() => {
-    return () => {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current)
+  // lanp timr
+  sct(()  {
+    rtrn ()  {
+      i (savimot.crrnt) {
+        clarimot(savimot.crrnt)
       }
     }
-  }, [])
+  }, ])
 
-  // Resolve conflict
-  const resolveConflict = useCallback((conflictId: string, resolution: 'local' | 'remote' | 'merge') => {
-    const conflict = conflicts.find(c => c.id === conflictId)
-    if (!conflict) return
+  // solv conlict
+  const rsolvonlict  sallback((conlictd string, rsoltion 'local' | 'rmot' | 'mrg')  {
+    const conlict  conlicts.ind(c  c.id  conlictd)
+    i (!conlict) rtrn
 
-    switch (resolution) {
-      case 'local':
-        // Keep local version - no action needed
-        break
-      case 'remote':
-        // Use remote version - update local content
-        if (conflict.field === 'content') {
-          lastContentRef.current = conflict.remoteValue
-          // Trigger content update in parent component
-          // This would need to be handled by the parent component
+    switch (rsoltion) {
+      cas 'local'
+        // p local vrsion - no action ndd
+        brak
+      cas 'rmot'
+        // s rmot vrsion - pdat local contnt
+        i (conlict.ild  'contnt') {
+          lastontnt.crrnt  conlict.rmotal
+          // riggr contnt pdat in parnt componnt
+          // his wold nd to b handld by th parnt componnt
         }
-        break
-      case 'merge':
-        // Simple merge - append remote content
-        if (conflict.field === 'content') {
-          const mergedContent = `${conflict.localValue}\n\n---\n\n${conflict.remoteValue}`
-          lastContentRef.current = mergedContent
+        brak
+      cas 'mrg'
+        // impl mrg - appnd rmot contnt
+        i (conlict.ild  'contnt') {
+          const mrgdontnt  `${conlict.localal}nn---nn${conlict.rmotal}`
+          lastontnt.crrnt  mrgdontnt
         }
-        break
+        brak
     }
 
-    // Remove resolved conflict
-    setConflicts(prev => prev.filter(c => c.id !== conflictId))
-  }, [conflicts])
+    // mov rsolvd conlict
+    stonlicts(prv  prv.iltr(c  c.id ! conlictd))
+  }, conlicts])
 
-  // Dismiss conflict
-  const dismissConflict = useCallback((conflictId: string) => {
-    setConflicts(prev => prev.filter(c => c.id !== conflictId))
-  }, [])
+  // ismiss conlict
+  const dismissonlict  sallback((conlictd string)  {
+    stonlicts(prv  prv.iltr(c  c.id ! conlictd))
+  }, ])
 
-  // Add comment
-  const addComment = useCallback((content: string, position: { start: number; end: number }) => {
-    if (!user) return
+  // dd commnt
+  const addommnt  sallback((contnt string, position { start nmbr nd nmbr })  {
+    i (!sr) rtrn
 
-    const comment: Comment = {
-      id: `comment_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      content,
-      author: {
-        id: user.id,
-        name: user.user_metadata?.full_name || user.email || 'Unknown',
-        email: user.email || '',
-        avatar_url: user.user_metadata?.avatar_url
+    const commnt ommnt  {
+      id `commnt_${at.now()}_${ath.random().totring().sbstr(, )}`,
+      contnt,
+      athor {
+        id sr.id,
+        nam sr.sr_mtadata.ll_nam || sr.mail || 'nknown',
+        mail sr.mail || '',
+        avatar_rl sr.sr_mtadata.avatar_rl
       },
       position,
-      created_at: new Date().toISOString(),
-      resolved: false
+      cratd_at nw at().totring(),
+      rsolvd als
     }
 
-    setComments(prev => [...prev, comment])
+    stommnts(prv  ...prv, commnt])
     
-    // Broadcast comment to other users
-    if (channelRef.current) {
-      channelRef.current.send({
-        type: 'broadcast',
-        event: 'comment-added',
-        payload: { comment }
+    // roadcast commnt to othr srs
+    i (channl.crrnt) {
+      channl.crrnt.snd({
+        typ 'broadcast',
+        vnt 'commnt-addd',
+        payload { commnt }
       })
     }
-  }, [user])
+  }, sr])
 
-  // Add notification
-  const addNotification = useCallback((notification: Omit<Notification, 'id' | 'timestamp' | 'read'>) => {
-    const newNotification: Notification = {
-      ...notification,
-      id: `notification_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      timestamp: new Date().toISOString(),
-      read: false
+  // dd notiication
+  const addotiication  sallback((notiication mitotiication, 'id' | 'timstamp' | 'rad')  {
+    const nwotiication otiication  {
+      ...notiication,
+      id `notiication_${at.now()}_${ath.random().totring().sbstr(, )}`,
+      timstamp nw at().totring(),
+      rad als
     }
 
-    setNotifications(prev => [newNotification, ...prev])
-  }, [])
+    stotiications(prv  nwotiication, ...prv])
+  }, ])
 
-  // Mark notification as read
-  const markNotificationAsRead = useCallback((notificationId: string) => {
-    setNotifications(prev => 
-      prev.map(n => n.id === notificationId ? { ...n, read: true } : n)
+  // ark notiication as rad
+  const markotiicationsad  sallback((notiicationd string)  {
+    stotiications(prv  
+      prv.map(n  n.id  notiicationd  { ...n, rad tr }  n)
     )
-  }, [])
+  }, ])
 
-  // Clear notification
-  const clearNotification = useCallback((notificationId: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== notificationId))
-  }, [])
+  // lar notiication
+  const clarotiication  sallback((notiicationd string)  {
+    stotiications(prv  prv.iltr(n  n.id ! notiicationd))
+  }, ])
 
-  // Mark all notifications as read
-  const markAllNotificationsAsRead = useCallback(() => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })))
-  }, [])
+  // ark all notiications as rad
+  const markllotiicationssad  sallback(()  {
+    stotiications(prv  prv.map(n  ({ ...n, rad tr })))
+  }, ])
 
-  // Clear all notifications
-  const clearAllNotifications = useCallback(() => {
-    setNotifications([])
-  }, [])
+  // lar all notiications
+  const clarllotiications  sallback(()  {
+    stotiications(])
+  }, ])
 
-  return {
-    editingUsers,
-    isEditing,
-    lastSaved,
-    conflicts,
-    comments,
-    changes,
-    notifications,
-    startEditing,
-    stopEditing,
-    saveNoteContent,
-    broadcastCursorMove,
-    broadcastUserTyping,
-    resolveConflict,
-    dismissConflict,
-    addComment,
-    addNotification,
-    markNotificationAsRead,
-    clearNotification,
-    markAllNotificationsAsRead,
-    clearAllNotifications
+  rtrn {
+    ditingsrs,
+    isditing,
+    lastavd,
+    conlicts,
+    commnts,
+    changs,
+    notiications,
+    startditing,
+    stopditing,
+    savotontnt,
+    broadcastrsorov,
+    broadcastsryping,
+    rsolvonlict,
+    dismissonlict,
+    addommnt,
+    addotiication,
+    markotiicationsad,
+    clarotiication,
+    markllotiicationssad,
+    clarllotiications
   }
 }

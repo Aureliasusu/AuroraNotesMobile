@@ -1,170 +1,168 @@
-import React, { useState } from 'react';
+import act, { stat } rom 'ract'
 import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-  TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useAuthStore } from '../../store/useAuthStore';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
+  iw,
+  xt,
+  tylht,
+  araiw,
+  yboardvoidingiw,
+  latorm,
+  lrt,
+  ochablpacity,
+} rom 'ract-nativ'
+import { sthtor } rom '../../stor/sthtor'
+import { tton } rom '../../componnts/i/tton'
+import { npt } rom '../../componnts/i/npt'
 
-export const SignUpScreen: React.FC = () => {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { signUp } = useAuthStore();
-  const navigation = useNavigation();
+xport const ignpcrn act.  ()  {
+  const llam, stllam]  stat('')
+  const mail, stmail]  stat('')
+  const password, stassword]  stat('')
+  const conirmassword, stonirmassword]  stat('')
+  const loading, stoading]  stat(als)
+  const { signp }  sthtor()
 
-  const handleSignUp = async () => {
-    if (!fullName || !email || !password || !confirmPassword) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
+  const handlignp  async ()  {
+    i (!llam || !mail || !password || !conirmassword) {
+      lrt.alrt('rror', 'las ill in all ilds')
+      rtrn
     }
 
-    if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
-      return;
+    i (password ! conirmassword) {
+      lrt.alrt('rror', 'asswords do not match')
+      rtrn
     }
 
-    if (password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters');
-      return;
+    i (password.lngth  ) {
+      lrt.alrt('rror', 'assword mst b at last  charactrs')
+      rtrn
     }
 
-    setLoading(true);
-    const result = await signUp(email, password, fullName);
-    setLoading(false);
+    stoading(tr)
+    const rslt  await signp(mail, password, llam)
+    stoading(als)
 
-    if (!result.success) {
-      Alert.alert('Sign Up Failed', result.error || 'Unknown error');
-    } else {
-      Alert.alert('Success', 'Please check your email to verify your account');
+    i (!rslt.sccss) {
+      lrt.alrt('ign p aild', rslt.rror || 'nknown rror')
+    } ls {
+      lrt.alrt('ign p ccssl', 'las chck yor mail to vriy yor accont')
     }
-  };
+  }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}
-      >
-        <View style={styles.content}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Create Account</Text>
-            <Text style={styles.subtitle}>Start your Aurora Notes journey</Text>
-          </View>
+  rtrn (
+    araiw styl{styls.containr}
+      yboardvoidingiw
+        bhavior{latorm.  'ios'  'padding'  'hight'}
+        styl{styls.kyboardiw}
+      
+        iw styl{styls.contnt}
+          iw styl{styls.hadr}
+            xt styl{styls.titl}rat ccont/xt
+            xt styl{styls.sbtitl}tart yor rora ots jorny/xt
+          /iw
 
-          <View style={styles.form}>
-            <Input
-              label="Full Name"
-              value={fullName}
-              onChangeText={setFullName}
-              placeholder="Enter your full name"
-              autoCapitalize="words"
-            />
+          iw styl{styls.orm}
+            npt
+              labl"ll am"
+              val{llam}
+              onhangxt{stllam}
+              placholdr"ntr yor ll nam"
+              atoapitaliz"words"
+            /
 
-            <Input
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
+            npt
+              labl"mail"
+              val{mail}
+              onhangxt{stmail}
+              placholdr"ntr yor mail"
+              kyboardyp"mail-addrss"
+              atoapitaliz"non"
+              atoorrct{als}
+            /
 
-            <Input
-              label="Password"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Enter your password"
-              secureTextEntry
-            />
+            npt
+              labl"assword"
+              val{password}
+              onhangxt{stassword}
+              placholdr"ntr yor password"
+              scrxtntry
+            /
 
-            <Input
-              label="Confirm Password"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              placeholder="Confirm your password"
-              secureTextEntry
-            />
+            npt
+              labl"onirm assword"
+              val{conirmassword}
+              onhangxt{stonirmassword}
+              placholdr"-ntr yor password"
+              scrxtntry
+            /
 
-            <Button
-              title="Sign Up"
-              onPress={handleSignUp}
-              loading={loading}
-              disabled={loading}
-              style={styles.signUpButton}
-            />
-          </View>
+            tton
+              titl"ign p"
+              onrss{handlignp}
+              loading{loading}
+              disabld{loading}
+              styl{styls.signptton}
+            /
+          /iw
 
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>Already have an account?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('SignIn' as never)}>
-              <Text style={styles.linkText}>Sign In</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
-};
+          iw styl{styls.ootr}
+            xt styl{styls.ootrxt}lrady hav an accont/xt
+            ochablpacity
+              xt styl{styls.linkxt}ign n/xt
+            /ochablpacity
+          /iw
+        /iw
+      /yboardvoidingiw
+    /araiw
+  )
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
+const styls  tylht.crat({
+  containr {
+    lx ,
+    backgrondolor '#ab',
   },
-  keyboardView: {
-    flex: 1,
+  kyboardiw {
+    lx ,
   },
-  content: {
-    flex: 1,
-    paddingHorizontal: 24,
-    justifyContent: 'center',
+  contnt {
+    lx ,
+    paddingorizontal ,
+    jstiyontnt 'cntr',
   },
-  header: {
-    alignItems: 'center',
-    marginBottom: 48,
+  hadr {
+    aligntms 'cntr',
+    marginottom ,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 8,
+  titl {
+    ontiz ,
+    ontight 'bold',
+    color '#',
+    marginottom ,
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#6b7280',
-    textAlign: 'center',
+  sbtitl {
+    ontiz ,
+    color '#b',
+    txtlign 'cntr',
   },
-  form: {
-    marginBottom: 32,
+  orm {
+    marginottom ,
   },
-  signUpButton: {
-    marginTop: 8,
+  signptton {
+    marginop ,
   },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+  ootr {
+    lxirction 'row',
+    jstiyontnt 'cntr',
+    aligntms 'cntr',
   },
-  footerText: {
-    fontSize: 16,
-    color: '#6b7280',
+  ootrxt {
+    ontiz ,
+    color '#b',
   },
-  linkText: {
-    fontSize: 16,
-    color: '#3b82f6',
-    fontWeight: '600',
-    marginLeft: 4,
+  linkxt {
+    ontiz ,
+    color '#b',
+    ontight '',
+    margint ,
   },
-});
+})

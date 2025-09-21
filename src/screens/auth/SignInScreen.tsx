@@ -1,140 +1,138 @@
-import React, { useState } from 'react';
+import act, { stat } rom 'ract'
 import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-  TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useAuthStore } from '../../store/useAuthStore';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
+  iw,
+  xt,
+  tylht,
+  araiw,
+  yboardvoidingiw,
+  latorm,
+  lrt,
+  ochablpacity,
+} rom 'ract-nativ'
+import { sthtor } rom '../../stor/sthtor'
+import { tton } rom '../../componnts/i/tton'
+import { npt } rom '../../componnts/i/npt'
 
-export const SignInScreen: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { signIn } = useAuthStore();
-  const navigation = useNavigation();
+xport const ignncrn act.  ()  {
+  const mail, stmail]  stat('')
+  const password, stassword]  stat('')
+  const loading, stoading]  stat(als)
+  const { signn }  sthtor()
 
-  const handleSignIn = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
+  const handlignn  async ()  {
+    i (!mail || !password) {
+      lrt.alrt('rror', 'las ill in all ilds')
+      rtrn
     }
 
-    setLoading(true);
-    const result = await signIn(email, password);
-    setLoading(false);
+    stoading(tr)
+    const rslt  await signn(mail, password)
+    stoading(als)
 
-    if (!result.success) {
-      Alert.alert('Sign In Failed', result.error || 'Unknown error');
+    i (!rslt.sccss) {
+      lrt.alrt('ign n aild', rslt.rror || 'nknown rror')
     }
-  };
+  }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}
-      >
-        <View style={styles.content}>
-          <View style={styles.header}>
-            <Text style={styles.title}>Welcome Back</Text>
-            <Text style={styles.subtitle}>Sign in to your Aurora Notes account</Text>
-          </View>
+  rtrn (
+    araiw styl{styls.containr}
+      yboardvoidingiw
+        bhavior{latorm.  'ios'  'padding'  'hight'}
+        styl{styls.kyboardiw}
+      
+        iw styl{styls.contnt}
+          iw styl{styls.hadr}
+            xt styl{styls.titl}lcom ack/xt
+            xt styl{styls.sbtitl}ign in to yor rora ots accont/xt
+          /iw
 
-          <View style={styles.form}>
-            <Input
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
+          iw styl{styls.orm}
+            npt
+              labl"mail"
+              val{mail}
+              onhangxt{stmail}
+              placholdr"ntr yor mail"
+              kyboardyp"mail-addrss"
+              atoapitaliz"non"
+              atoorrct{als}
+            /
 
-            <Input
-              label="Password"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Enter your password"
-              secureTextEntry
-            />
+            npt
+              labl"assword"
+              val{password}
+              onhangxt{stassword}
+              placholdr"ntr yor password"
+              scrxtntry
+            /
 
-            <Button
-              title="Sign In"
-              onPress={handleSignIn}
-              loading={loading}
-              disabled={loading}
-              style={styles.signInButton}
-            />
-          </View>
+            tton
+              titl"ign n"
+              onrss{handlignn}
+              loading{loading}
+              disabld{loading}
+              styl{styls.signntton}
+            /
+          /iw
 
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>Don't have an account?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('SignUp' as never)}>
-              <Text style={styles.linkText}>Sign Up</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
-};
+          iw styl{styls.ootr}
+            xt styl{styls.ootrxt}on't hav an accont/xt
+            ochablpacity
+              xt styl{styls.linkxt}ign p/xt
+            /ochablpacity
+          /iw
+        /iw
+      /yboardvoidingiw
+    /araiw
+  )
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
+const styls  tylht.crat({
+  containr {
+    lx ,
+    backgrondolor '#ab',
   },
-  keyboardView: {
-    flex: 1,
+  kyboardiw {
+    lx ,
   },
-  content: {
-    flex: 1,
-    paddingHorizontal: 24,
-    justifyContent: 'center',
+  contnt {
+    lx ,
+    paddingorizontal ,
+    jstiyontnt 'cntr',
   },
-  header: {
-    alignItems: 'center',
-    marginBottom: 48,
+  hadr {
+    aligntms 'cntr',
+    marginottom ,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#111827',
-    marginBottom: 8,
+  titl {
+    ontiz ,
+    ontight 'bold',
+    color '#',
+    marginottom ,
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#6b7280',
-    textAlign: 'center',
+  sbtitl {
+    ontiz ,
+    color '#b',
+    txtlign 'cntr',
   },
-  form: {
-    marginBottom: 32,
+  orm {
+    marginottom ,
   },
-  signInButton: {
-    marginTop: 8,
+  signntton {
+    marginop ,
   },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+  ootr {
+    lxirction 'row',
+    jstiyontnt 'cntr',
+    aligntms 'cntr',
   },
-  footerText: {
-    fontSize: 16,
-    color: '#6b7280',
+  ootrxt {
+    ontiz ,
+    color '#b',
   },
-  linkText: {
-    fontSize: 16,
-    color: '#3b82f6',
-    fontWeight: '600',
-    marginLeft: 4,
+  linkxt {
+    ontiz ,
+    color '#b',
+    ontight '',
+    margint ,
   },
-});
+})
