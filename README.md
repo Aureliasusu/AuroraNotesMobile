@@ -1,4 +1,4 @@
-# Aurora Notes Mobile 📱
+# AuroraNotes Mobile - Complete Setup Guide
 
 > AI-Powered Cross-Platform Note-Taking App with Advanced Features
 
