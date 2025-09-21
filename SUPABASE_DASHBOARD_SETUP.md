@@ -1,122 +1,122 @@
-# Supabase Dashboard Environment Variables Setup
+# pabas ashboard nvironmnt ariabls tp
 
-## 🌐 What is Supabase Dashboard?
+## 🌐 hat is pabas ashboard
 
-**Supabase Dashboard** is the web interface where you manage your Supabase project.
+**pabas ashboard** is th wb intrac whr yo manag yor pabas projct.
 
-- **URL**: https://supabase.com/dashboard
-- **Purpose**: Manage your database, storage, functions, and settings
-- **Access**: Login with your Supabase account
+- **** https//spabas.com/dashboard
+- **rpos** anag yor databas, storag, nctions, and sttings
+- **ccss** ogin with yor pabas accont
 
-## 🔧 Environment Variables Setup
+## 🔧 nvironmnt ariabls tp
 
-### Step 1: Login to Supabase Dashboard
-1. Go to https://supabase.com/dashboard
-2. Login with your account
-3. Select your project
+### tp  ogin to pabas ashboard
+. o to https//spabas.com/dashboard
+. ogin with yor accont
+. lct yor projct
 
-### Step 2: Navigate to Edge Functions
-1. In the left sidebar, click **"Edge Functions"**
-2. You'll see a list of your deployed functions
+### tp  avigat to dg nctions
+. n th lt sidbar, click **"dg nctions"**
+. o'll s a list o yor dployd nctions
 
-### Step 3: Set Environment Variables
-1. Click on **"Settings"** or **"Environment Variables"**
-2. Add the following variables:
+### tp  t nvironmnt ariabls
+. lick on **"ttings"** or **"nvironmnt ariabls"**
+. dd th ollowing variabls
 
 ```
-WEATHER_API_KEY=your_openweathermap_api_key_here
-NEWS_API_KEY=your_newsapi_key_here
-OPENAI_API_KEY=your_openai_api_key_here
+__yor_opnwathrmap_api_ky_hr
+__yor_nwsapi_ky_hr
+__yor_opnai_api_ky_hr
 ```
 
-### Step 4: Save Changes
-1. Click **"Save"** or **"Update"**
-2. Variables are now available to your Edge Functions
+### tp  av hangs
+. lick **"av"** or **"pdat"**
+. ariabls ar now availabl to yor dg nctions
 
-## 🚀 Edge Functions Deployment
+## 🚀 dg nctions ploymnt
 
-### Method 1: Using Supabase CLI (Recommended)
+### thod  sing pabas  (commndd)
 ```bash
-# 1. Install Supabase CLI
-brew install supabase/tap/supabase
+# . nstall pabas 
+brw install spabas/tap/spabas
 
-# 2. Login to Supabase
-supabase login
+# . ogin to pabas
+spabas login
 
-# 3. Link to your project
-supabase link --project-ref your-project-ref
+# . ink to yor projct
+spabas link --projct-r yor-projct-r
 
-# 4. Deploy functions
-supabase functions deploy
+# . ploy nctions
+spabas nctions dploy
 ```
 
-### Method 2: Using Supabase Dashboard (Limited)
-- **Can't deploy from Dashboard directly**
-- **Can only view and manage deployed functions**
-- **Must use CLI for deployment**
+### thod  sing pabas ashboard (imitd)
+- **an't dploy rom ashboard dirctly**
+- **an only viw and manag dployd nctions**
+- **st s  or dploymnt**
 
-## 📋 Complete Setup Process
+## 📋 omplt tp rocss
 
-### 1. Prepare Edge Functions Project
+### . rpar dg nctions rojct
 ```bash
-cd AuroraNotesEdgeFunctions
-# Your functions are already created
+cd roraotsdgnctions
+# or nctions ar alrady cratd
 ```
 
-### 2. Set Environment Variables in Dashboard
-1. Go to Supabase Dashboard
-2. Navigate to Edge Functions
-3. Add environment variables:
-   - `WEATHER_API_KEY`
-   - `NEWS_API_KEY`
-   - `OPENAI_API_KEY`
+### . t nvironmnt ariabls in ashboard
+. o to pabas ashboard
+. avigat to dg nctions
+. dd nvironmnt variabls
+   - `__`
+   - `__`
+   - `__`
 
-### 3. Deploy Functions
+### . ploy nctions
 ```bash
-# Deploy all functions
-supabase functions deploy
+# ploy all nctions
+spabas nctions dploy
 
-# Or deploy specific function
-supabase functions deploy get-weather
-supabase functions deploy translate-text
-supabase functions deploy get-news
+# r dploy spciic nction
+spabas nctions dploy gt-wathr
+spabas nctions dploy translat-txt
+spabas nctions dploy gt-nws
 ```
 
-### 4. Test Functions
+### . st nctions
 ```bash
-# Test weather function
-curl -X POST 'https://your-project-ref.supabase.co/functions/v1/get-weather' \
-  -H 'Authorization: Bearer your-anon-key' \
-  -H 'Content-Type: application/json' \
-  -d '{"lat": 40.7128, "lon": -74.0060}'
+# st wathr nction
+crl -  'https//yor-projct-r.spabas.co/nctions/v/gt-wathr' 
+  - 'thorization arr yor-anon-ky' 
+  - 'ontnt-yp application/json' 
+  -d '{"lat" ., "lon" -.}'
 ```
 
-## 🔍 How to Find Your Project Reference
+## 🔍 ow to ind or rojct rnc
 
-### Method 1: From Supabase Dashboard
-1. Go to https://supabase.com/dashboard
-2. Select your project
-3. Look at the URL: `https://supabase.com/dashboard/project/your-project-ref`
-4. Copy the `your-project-ref` part
+### thod  rom pabas ashboard
+. o to https//spabas.com/dashboard
+. lct yor projct
+. ook at th  `https//spabas.com/dashboard/projct/yor-projct-r`
+. opy th `yor-projct-r` part
 
-### Method 2: From Project Settings
-1. Go to Settings → General
-2. Find "Reference ID"
-3. Copy the reference ID
+### thod  rom rojct ttings
+. o to ttings → nral
+. ind "rnc "
+. opy th rrnc 
 
-## 🎯 Summary
+## 🎯 mmary
 
-**Environment Variables Setup:**
-- ✅ **Location**: Supabase Dashboard → Edge Functions → Settings
-- ✅ **Purpose**: Store API keys securely
-- ✅ **Access**: Available to all Edge Functions
+**nvironmnt ariabls tp**
+- ✅ **ocation** pabas ashboard → dg nctions → ttings
+- ✅ **rpos** tor  kys scrly
+- ✅ **ccss** vailabl to all dg nctions
 
-**Edge Functions Deployment:**
-- ✅ **Method**: Supabase CLI (command line)
-- ✅ **Command**: `supabase functions deploy`
-- ✅ **Result**: Functions deployed to Supabase cloud
+**dg nctions ploymnt**
+- ✅ **thod** pabas  (command lin)
+- ✅ **ommand** `spabas nctions dploy`
+- ✅ **slt** nctions dployd to pabas clod
 
-**Not in Dashboard:**
-- ❌ **Can't deploy from web interface**
-- ❌ **Must use CLI for deployment**
-- ✅ **Can view and manage after deployment**
+**ot in ashboard**
+- ❌ **an't dploy rom wb intrac**
+- ❌ **st s  or dploymnt**
+- ✅ **an viw and manag atr dploymnt**

@@ -4,7 +4,7 @@
 
 ### 1. Deploy Edge Functions
 ```bash
-# Navigate to Edge Functions project
+# Navigate to edge functions project
 cd ../AuroraNotesEdgeFunctions
 
 # Login to Supabase
@@ -23,13 +23,13 @@ supabase functions deploy
 3. Navigate to **Edge Functions** → **Settings**
 4. Add these environment variables:
    ```
-   WEATHER_API_KEY=your_openweathermap_api_key
+   OPENWEATHER_API_KEY=your_openweather_api_key
    NEWS_API_KEY=your_newsapi_key
    OPENAI_API_KEY=your_openai_api_key
    ```
 
 ### 3. Configure Supabase Storage
-1. In Supabase Dashboard, go to **Storage**
+1. In Supabase dashboard, go to **Storage**
 2. Click **"New Bucket"**
 3. Name: `note-attachments`
 4. Public: `true`
@@ -61,30 +61,30 @@ npm install react-native-image-picker react-native-document-picker @react-native
 <uses-permission android:name="android.permission.CAMERA" />
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 ```
 
 ## 🔑 Get API Keys
 
-### Weather API (OpenWeatherMap)
+### Weather (OpenWeatherMap)
 1. Go to https://openweathermap.org/api
 2. Click "Sign Up"
-3. Verify email
+3. Verify Email
 4. Get API key
 
-### News API (NewsAPI)
+### News (NewsAPI)
 1. Go to https://newsapi.org/
 2. Click "Get API Key"
-3. Verify email
+3. Verify Email
 4. Get API key
 
-### OpenAI API (Optional)
+### OpenAI (Optional)
 1. Go to https://platform.openai.com/
 2. Create account
 3. Add payment method
 4. Get API key
 
-## ✅ Test Your Setup
+## ✅ Test Setup
 
 ### Test Edge Functions
 ```bash
@@ -107,11 +107,11 @@ npm run ios
 npm run android
 ```
 
-## 🎯 What You Get
+## 🎯 What to Expect
 
 After deployment, your app will have:
 - ✅ AI note analysis
-- ✅ File upload to Supabase Storage
+- ✅ File upload to Supabase storage
 - ✅ Weather information
 - ✅ News search
 - ✅ Text translation
@@ -119,17 +119,17 @@ After deployment, your app will have:
 
 ## 🆘 Troubleshooting
 
-### Edge Functions not working?
-- Check environment variables in Supabase Dashboard
+### Edge Functions not working
+- Check environment variables in Supabase dashboard
 - Verify API keys are correct
-- Check function logs in Supabase Dashboard
+- Check function logs in Supabase dashboard
 
-### File upload not working?
-- Verify Storage bucket is created
+### File upload not working
+- Verify storage bucket is created
 - Check bucket permissions
 - Verify mobile permissions are configured
 
-### API calls failing?
+### API calls failing
 - Check network connection
 - Verify API keys are valid
 - Check function logs for errors

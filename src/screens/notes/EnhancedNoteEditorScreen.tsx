@@ -1,545 +1,545 @@
-import React, { useState, useEffect } from 'react';
+import act, { stat, sct } rom 'ract'
 import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-  TextInput,
-} from 'react-native';
-import { useNotes } from '../../hooks/useNotes';
-import { useAIAnalysis } from '../../hooks/useAIAnalysis';
-import { useFileUpload } from '../../hooks/useFileUpload';
-import { useThirdPartyAPIs } from '../../hooks/useThirdPartyAPIs';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Card } from '../../components/ui/Card';
+  iw,
+  xt,
+  tylht,
+  araiw,
+  yboardvoidingiw,
+  latorm,
+  crolliw,
+  ochablpacity,
+  lrt,
+  xtnpt,
+} rom 'ract-nativ'
+import { sots } rom '../../hooks/sots'
+import { snalysis } rom '../../hooks/snalysis'
+import { silpload } rom '../../hooks/silpload'
+import { shirdartys } rom '../../hooks/shirdartys'
+import { tton } rom '../../componnts/i/tton'
+import { npt } rom '../../componnts/i/npt'
+import { ard } rom '../../componnts/i/ard'
 
-interface EnhancedNoteEditorScreenProps {
-  noteId?: string;
-  onSave?: () => void;
-  onCancel?: () => void;
+intrac nhancdotditorcrnrops {
+  notd string
+  onav ()  void
+  onancl ()  void
 }
 
-export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> = ({
-  noteId,
-  onSave,
-  onCancel,
-}) => {
-  const { notes, createNote, updateNote, selectedNote, setSelectedNote } = useNotes();
-  const { analyzeNote, generateSummary, extractKeywords, suggestTags, loading: aiLoading } = useAIAnalysis();
-  const { pickImageFromGallery, takePhoto, pickDocument, uploadedFiles, uploading: fileUploading } = useFileUpload();
-  const { processText, loading: apiLoading } = useThirdPartyAPIs();
+xport const nhancdotditorcrn act.nhancdotditorcrnrops  ({
+  notd,
+  onav,
+  onancl,
+})  {
+  const { nots, cratot, pdatot, slctdot, stlctdot }  sots()
+  const { analyzot, gnratmmary, xtractywords, sggstags, loading aioading }  snalysis()
+  const { pickmagromallry, takhoto, pickocmnt, ploaddils, ploading ilploading }  silpload()
+  const { procssxt, loading apioading }  shirdartys()
   
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [tags, setTags] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
-  const [aiSuggestions, setAiSuggestions] = useState<any>(null);
+  const titl, stitl]  stat('')
+  const contnt, stontnt]  stat('')
+  const tags, stags]  stat('')
+  const isaving, stsaving]  stat(als)
+  const aiggstions, stiggstions]  statany(nll)
 
-  const isEditing = !!noteId;
-  const currentNote = isEditing ? selectedNote || notes.find(n => n.id === noteId) : null;
-  const loading = aiLoading || fileUploading || apiLoading;
+  const isditing  !!notd
+  const crrntot  isditing  slctdot || nots.ind(n  n.id  notd)  nll
+  const loading  aioading || ilploading || apioading
 
-  useEffect(() => {
-    if (currentNote) {
-      setTitle(currentNote.title);
-      setContent(currentNote.content);
-      setTags(currentNote.tags.join(', '));
+  sct(()  {
+    i (crrntot) {
+      stitl(crrntot.titl)
+      stontnt(crrntot.contnt)
+      stags(crrntot.tags.join(', '))
     }
-  }, [currentNote]);
+  }, crrntot])
 
-  // AI note analysis
-  const handleAIAnalysis = async () => {
-    if (!content.trim()) {
-      Alert.alert('Error', 'Please enter some content to analyze');
-      return;
+  //  not analysis
+  const handlnalysis  async ()  {
+    i (!contnt.trim()) {
+      lrt.alrt('rror', 'las ntr som contnt to analyz')
+      rtrn
     }
 
     try {
-      const suggestions = await processText(content);
-      setAiSuggestions(suggestions);
-      Alert.alert('AI Analysis Complete', 'Check the suggestions below');
-    } catch (error) {
-      Alert.alert('Analysis Error', 'Failed to analyze content');
+      const sggstions  await procssxt(contnt)
+      stiggstions(sggstions)
+      lrt.alrt(' nalysis omplt', 'hck th sggstions blow')
+    } catch (rror) {
+      lrt.alrt('nalysis rror', 'aild to analyz contnt')
     }
-  };
+  }
 
-  // Apply AI suggestions
-  const applyAISuggestions = () => {
-    if (aiSuggestions) {
-      if (aiSuggestions.tags && aiSuggestions.tags.length > 0) {
-        const existingTags = tags ? tags.split(',').map(t => t.trim()) : [];
-        const newTags = [...new Set([...existingTags, ...aiSuggestions.tags])];
-        setTags(newTags.join(', '));
+  // pply  sggstions
+  const applyggstions  ()  {
+    i (aiggstions) {
+      i (aiggstions.tags && aiggstions.tags.lngth  ) {
+        const xistingags  tags  tags.split(',').map(t  t.trim())  ]
+        const nwags  ...nw t(...xistingags, ...aiggstions.tags])]
+        stags(nwags.join(', '))
       }
     }
-  };
+  }
 
-  // Pick image from gallery
-  const handlePickImage = async () => {
+  // ick imag rom gallry
+  const handlickmag  async ()  {
     try {
-      const result = await pickImageFromGallery();
-      if (result) {
-        Alert.alert('Success', 'Image uploaded successfully');
+      const rslt  await pickmagromallry()
+      i (rslt) {
+        lrt.alrt('ccss', 'mag ploadd sccsslly')
       }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to upload image');
+    } catch (rror) {
+      lrt.alrt('rror', 'aild to pload imag')
     }
-  };
+  }
 
-  // Take photo
-  const handleTakePhoto = async () => {
+  // ak photo
+  const handlakhoto  async ()  {
     try {
-      const result = await takePhoto();
-      if (result) {
-        Alert.alert('Success', 'Photo uploaded successfully');
+      const rslt  await takhoto()
+      i (rslt) {
+        lrt.alrt('ccss', 'hoto ploadd sccsslly')
       }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to take photo');
+    } catch (rror) {
+      lrt.alrt('rror', 'aild to tak photo')
     }
-  };
+  }
 
-  // Pick document
-  const handlePickDocument = async () => {
+  // ick docmnt
+  const handlickocmnt  async ()  {
     try {
-      const result = await pickDocument();
-      if (result) {
-        Alert.alert('Success', 'Document uploaded successfully');
+      const rslt  await pickocmnt()
+      i (rslt) {
+        lrt.alrt('ccss', 'ocmnt ploadd sccsslly')
       }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to upload document');
+    } catch (rror) {
+      lrt.alrt('rror', 'aild to pload docmnt')
     }
-  };
+  }
 
-  // Save note
-  const handleSave = async () => {
-    if (!title.trim() && !content.trim()) {
-      Alert.alert('Error', 'Please enter a title or content');
-      return;
+  // av not
+  const handlav  async ()  {
+    i (!titl.trim() && !contnt.trim()) {
+      lrt.alrt('rror', 'las ntr a titl or contnt')
+      rtrn
     }
 
-    setIsSaving(true);
+    stsaving(tr)
 
     try {
-      const noteData = {
-        title: title.trim() || 'Untitled',
-        content: content.trim(),
-        tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
-        attachments: uploadedFiles.map(file => ({
-          url: file.url,
-          name: file.name,
-          type: file.type,
+      const notata  {
+        titl titl.trim() || 'ntitld',
+        contnt contnt.trim(),
+        tags tags.split(',').map(tag  tag.trim()).iltr(oolan),
+        attachmnts ploaddils.map(il  ({
+          rl il.rl,
+          nam il.nam,
+          typ il.typ,
         })),
-      };
-
-      if (isEditing && currentNote) {
-        await updateNote(currentNote.id, {
-          ...currentNote,
-          ...noteData,
-          updated_at: new Date().toISOString(),
-        });
-      } else {
-        await createNote(noteData);
       }
 
-      Alert.alert('Success', isEditing ? 'Note updated' : 'Note created');
-      onSave?.();
-    } catch (error) {
-      Alert.alert('Error', 'Save failed, please try again');
-    } finally {
-      setIsSaving(false);
-    }
-  };
+      i (isditing && crrntot) {
+        await pdatot(crrntot.id, {
+          ...crrntot,
+          ...notata,
+          pdatd_at nw at().totring(),
+        })
+      } ls {
+        await cratot(notata)
+      }
 
-  // Cancel editing
-  const handleCancel = () => {
-    if (title.trim() || content.trim()) {
-      Alert.alert(
-        'Confirm',
-        'You have unsaved changes. Are you sure you want to leave?',
-        [
-          { text: 'Continue Editing', style: 'cancel' },
-          { text: 'Leave', style: 'destructive', onPress: onCancel },
+      lrt.alrt('ccss', isditing  'ot pdatd'  'ot cratd')
+      onav.()
+    } catch (rror) {
+      lrt.alrt('rror', 'av aild, plas try again')
+    } inally {
+      stsaving(als)
+    }
+  }
+
+  // ancl diting
+  const handlancl  ()  {
+    i (titl.trim() || contnt.trim()) {
+      lrt.alrt(
+        'onirm',
+        'o hav nsavd changs. r yo sr yo want to lav',
+        
+          { txt 'ontin diting', styl 'cancl' },
+          { txt 'av', styl 'dstrctiv', onrss onancl },
         ]
-      );
-    } else {
-      onCancel?.();
+      )
+    } ls {
+      onancl.()
     }
-  };
+  }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
-            <Text style={styles.cancelText}>Cancel</Text>
-          </TouchableOpacity>
+  rtrn (
+    araiw styl{styls.containr}
+      yboardvoidingiw
+        bhavior{latorm.  'ios'  'padding'  'hight'}
+        styl{styls.kyboardiw}
+      
+        {/* adr */}
+        iw styl{styls.hadr}
+          ochablpacity onrss{handlancl} styl{styls.cancltton}
+            xt styl{styls.canclxt}ancl/xt
+          /ochablpacity
           
-          <Text style={styles.title}>
-            {isEditing ? 'Edit Note' : 'New Note'}
-          </Text>
+          xt styl{styls.titl}
+            {isditing  'dit ot'  'w ot'}
+          /xt
           
-          <Button
-            title="Save"
-            onPress={handleSave}
-            loading={isSaving}
-            disabled={isSaving}
-            size="sm"
-            style={styles.saveButton}
-          />
-        </View>
+          tton
+            titl"av"
+            onrss{handlav}
+            loading{isaving}
+            disabld{isaving}
+            siz"sm"
+            styl{styls.savtton}
+          /
+        /iw
 
-        {/* Content */}
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* Basic Form */}
-          <Card style={styles.formCard}>
-            <Input
-              value={title}
-              onChangeText={setTitle}
-              placeholder="Enter title..."
-              style={styles.titleInput}
-              maxLength={100}
-            />
+        {/* ontnt */}
+        crolliw styl{styls.contnt} showsrticalcrollndicator{als}
+          {/* asic orm */}
+          ard styl{styls.ormard}
+            npt
+              val{titl}
+              onhangxt{stitl}
+              placholdr"ntr titl..."
+              styl{styls.titlnpt}
+              maxngth{}
+            /
 
-            <View style={styles.contentContainer}>
-              <Text style={styles.contentLabel}>Content</Text>
-              <TextInput
-                style={styles.contentInput}
-                value={content}
-                onChangeText={setContent}
-                placeholder="Start writing..."
-                multiline
-                textAlignVertical="top"
-                maxLength={10000}
-              />
-            </View>
+            iw styl{styls.contntontainr}
+              xt styl{styls.contntabl}ontnt/xt
+              xtnpt
+                styl{styls.contntnpt}
+                val{contnt}
+                onhangxt{stontnt}
+                placholdr"tart writing..."
+                mltilin
+                txtlignrtical"top"
+                maxngth{}
+              /
+            /iw
 
-            <Input
-              label="Tags"
-              value={tags}
-              onChangeText={setTags}
-              placeholder="Separate tags with commas..."
-              style={styles.tagsInput}
-            />
-          </Card>
+            npt
+              labl"ags"
+              val{tags}
+              onhangxt{stags}
+              placholdr"parat tags with commas..."
+              styl{styls.tagsnpt}
+            /
+          /ard
 
-          {/* AI Analysis */}
-          <Card style={styles.aiCard}>
-            <View style={styles.aiHeader}>
-              <Text style={styles.aiTitle}>AI Analysis</Text>
-              <Button
-                title="Analyze"
-                onPress={handleAIAnalysis}
-                loading={loading}
-                disabled={loading || !content.trim()}
-                size="sm"
-                variant="outline"
-              />
-            </View>
+          {/*  nalysis */}
+          ard styl{styls.aiard}
+            iw styl{styls.aiadr}
+              xt styl{styls.aiitl} nalysis/xt
+              tton
+                titl"nalyz"
+                onrss{handlnalysis}
+                loading{loading}
+                disabld{loading || !contnt.trim()}
+                siz"sm"
+                variant"otlin"
+              /
+            /iw
 
-            {aiSuggestions && (
-              <View style={styles.aiSuggestions}>
-                <Text style={styles.suggestionTitle}>Suggestions:</Text>
+            {aiggstions && (
+              iw styl{styls.aiggstions}
+                xt styl{styls.sggstionitl}ggstions/xt
                 
-                {aiSuggestions.summary && (
-                  <View style={styles.suggestionItem}>
-                    <Text style={styles.suggestionLabel}>Summary:</Text>
-                    <Text style={styles.suggestionText}>{aiSuggestions.summary}</Text>
-                  </View>
+                {aiggstions.smmary && (
+                  iw styl{styls.sggstiontm}
+                    xt styl{styls.sggstionabl}mmary/xt
+                    xt styl{styls.sggstionxt}{aiggstions.smmary}/xt
+                  /iw
                 )}
 
-                {aiSuggestions.keywords && aiSuggestions.keywords.length > 0 && (
-                  <View style={styles.suggestionItem}>
-                    <Text style={styles.suggestionLabel}>Keywords:</Text>
-                    <Text style={styles.suggestionText}>{aiSuggestions.keywords.join(', ')}</Text>
-                  </View>
+                {aiggstions.kywords && aiggstions.kywords.lngth   && (
+                  iw styl{styls.sggstiontm}
+                    xt styl{styls.sggstionabl}ywords/xt
+                    xt styl{styls.sggstionxt}{aiggstions.kywords.join(', ')}/xt
+                  /iw
                 )}
 
-                {aiSuggestions.sentiment && (
-                  <View style={styles.suggestionItem}>
-                    <Text style={styles.suggestionLabel}>Sentiment:</Text>
-                    <Text style={styles.suggestionText}>{aiSuggestions.sentiment}</Text>
-                  </View>
+                {aiggstions.sntimnt && (
+                  iw styl{styls.sggstiontm}
+                    xt styl{styls.sggstionabl}ntimnt/xt
+                    xt styl{styls.sggstionxt}{aiggstions.sntimnt}/xt
+                  /iw
                 )}
 
-                {aiSuggestions.tags && aiSuggestions.tags.length > 0 && (
-                  <View style={styles.suggestionItem}>
-                    <Text style={styles.suggestionLabel}>Suggested Tags:</Text>
-                    <Text style={styles.suggestionText}>{aiSuggestions.tags.join(', ')}</Text>
-                    <Button
-                      title="Apply Tags"
-                      onPress={applyAISuggestions}
-                      size="sm"
-                      variant="ghost"
-                      style={styles.applyButton}
-                    />
-                  </View>
+                {aiggstions.tags && aiggstions.tags.lngth   && (
+                  iw styl{styls.sggstiontm}
+                    xt styl{styls.sggstionabl}ggstd ags/xt
+                    xt styl{styls.sggstionxt}{aiggstions.tags.join(', ')}/xt
+                    tton
+                      titl"pply ags"
+                      onrss{applyggstions}
+                      siz"sm"
+                      variant"ghost"
+                      styl{styls.applytton}
+                    /
+                  /iw
                 )}
-              </View>
+              /iw
             )}
-          </Card>
+          /ard
 
-          {/* File Upload */}
-          <Card style={styles.uploadCard}>
-            <Text style={styles.uploadTitle}>Attachments</Text>
+          {/* il pload */}
+          ard styl{styls.ploadard}
+            xt styl{styls.ploaditl}ttachmnts/xt
             
-            <View style={styles.uploadButtons}>
-              <Button
-                title="📷 Gallery"
-                onPress={handlePickImage}
-                loading={fileUploading}
-                disabled={fileUploading}
-                size="sm"
-                variant="outline"
-                style={styles.uploadButton}
-              />
-              <Button
-                title="📸 Camera"
-                onPress={handleTakePhoto}
-                loading={fileUploading}
-                disabled={fileUploading}
-                size="sm"
-                variant="outline"
-                style={styles.uploadButton}
-              />
-              <Button
-                title="📄 Document"
-                onPress={handlePickDocument}
-                loading={fileUploading}
-                disabled={fileUploading}
-                size="sm"
-                variant="outline"
-                style={styles.uploadButton}
-              />
-            </View>
+            iw styl{styls.ploadttons}
+              tton
+                titl"📷 allry"
+                onrss{handlickmag}
+                loading{ilploading}
+                disabld{ilploading}
+                siz"sm"
+                variant"otlin"
+                styl{styls.ploadtton}
+              /
+              tton
+                titl"📸 amra"
+                onrss{handlakhoto}
+                loading{ilploading}
+                disabld{ilploading}
+                siz"sm"
+                variant"otlin"
+                styl{styls.ploadtton}
+              /
+              tton
+                titl"📄 ocmnt"
+                onrss{handlickocmnt}
+                loading{ilploading}
+                disabld{ilploading}
+                siz"sm"
+                variant"otlin"
+                styl{styls.ploadtton}
+              /
+            /iw
 
-            {uploadedFiles.length > 0 && (
-              <View style={styles.uploadedFiles}>
-                <Text style={styles.uploadedFilesTitle}>Uploaded Files:</Text>
-                {uploadedFiles.map((file, index) => (
-                  <View key={index} style={styles.uploadedFile}>
-                    <Text style={styles.uploadedFileName}>{file.name}</Text>
-                    <Text style={styles.uploadedFileType}>{file.type}</Text>
-                  </View>
+            {ploaddils.lngth   && (
+              iw styl{styls.ploaddils}
+                xt styl{styls.ploaddilsitl}ploadd ils/xt
+                {ploaddils.map((il, indx)  (
+                  iw ky{indx} styl{styls.ploaddil}
+                    xt styl{styls.ploaddilam}{il.nam}/xt
+                    xt styl{styls.ploaddilyp}{il.typ}/xt
+                  /iw
                 ))}
-              </View>
+              /iw
             )}
-          </Card>
+          /ard
 
-          {/* Note Info */}
-          {currentNote && (
-            <Card style={styles.infoCard}>
-              <Text style={styles.infoTitle}>Note Information</Text>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Created:</Text>
-                <Text style={styles.infoValue}>
-                  {new Date(currentNote.created_at).toLocaleString('en-US')}
-                </Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Last Modified:</Text>
-                <Text style={styles.infoValue}>
-                  {new Date(currentNote.updated_at).toLocaleString('en-US')}
-                </Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Word Count:</Text>
-                <Text style={styles.infoValue}>
-                  {content.length} / 10,000
-                </Text>
-              </View>
-            </Card>
+          {/* ot no */}
+          {crrntot && (
+            ard styl{styls.inoard}
+              xt styl{styls.inoitl}ot normation/xt
+              iw styl{styls.inoow}
+                xt styl{styls.inoabl}ratd/xt
+                xt styl{styls.inoal}
+                  {nw at(crrntot.cratd_at).toocaltring('n-')}
+                /xt
+              /iw
+              iw styl{styls.inoow}
+                xt styl{styls.inoabl}ast odiid/xt
+                xt styl{styls.inoal}
+                  {nw at(crrntot.pdatd_at).toocaltring('n-')}
+                /xt
+              /iw
+              iw styl{styls.inoow}
+                xt styl{styls.inoabl}ord ont/xt
+                xt styl{styls.inoal}
+                  {contnt.lngth} / ,
+                /xt
+              /iw
+            /ard
           )}
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
-};
+        /crolliw
+      /yboardvoidingiw
+    /araiw
+  )
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
+const styls  tylht.crat({
+  containr {
+    lx ,
+    backgrondolor '#ab',
   },
-  keyboardView: {
-    flex: 1,
+  kyboardiw {
+    lx ,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+  hadr {
+    lxirction 'row',
+    aligntms 'cntr',
+    jstiyontnt 'spac-btwn',
+    paddingorizontal ,
+    paddingrtical ,
+    backgrondolor '#',
+    bordrottomidth ,
+    bordrottomolor '#b',
   },
-  cancelButton: {
-    padding: 8,
+  cancltton {
+    padding ,
   },
-  cancelText: {
-    fontSize: 16,
-    color: '#6b7280',
+  canclxt {
+    ontiz ,
+    color '#b',
   },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
+  titl {
+    ontiz ,
+    ontight '',
+    color '#',
   },
-  saveButton: {
-    minWidth: 60,
+  savtton {
+    minidth ,
   },
-  content: {
-    flex: 1,
-    padding: 16,
+  contnt {
+    lx ,
+    padding ,
   },
-  formCard: {
-    marginBottom: 16,
+  ormard {
+    marginottom ,
   },
-  titleInput: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 16,
+  titlnpt {
+    ontiz ,
+    ontight '',
+    marginottom ,
   },
-  contentContainer: {
-    marginBottom: 16,
+  contntontainr {
+    marginottom ,
   },
-  contentLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#374151',
-    marginBottom: 8,
+  contntabl {
+    ontiz ,
+    ontight '',
+    color '#',
+    marginottom ,
   },
-  contentInput: {
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#fff',
-    minHeight: 200,
-    textAlignVertical: 'top',
+  contntnpt {
+    bordridth ,
+    bordrolor '#dddb',
+    bordradis ,
+    padding ,
+    ontiz ,
+    backgrondolor '#',
+    minight ,
+    txtlignrtical 'top',
   },
-  tagsInput: {
-    marginBottom: 0,
+  tagsnpt {
+    marginottom ,
   },
-  aiCard: {
-    marginBottom: 16,
-    backgroundColor: '#f8fafc',
+  aiard {
+    marginottom ,
+    backgrondolor '#ac',
   },
-  aiHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
+  aiadr {
+    lxirction 'row',
+    jstiyontnt 'spac-btwn',
+    aligntms 'cntr',
+    marginottom ,
   },
-  aiTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
+  aiitl {
+    ontiz ,
+    ontight '',
+    color '#',
   },
-  aiSuggestions: {
-    marginTop: 12,
+  aiggstions {
+    marginop ,
   },
-  suggestionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 8,
+  sggstionitl {
+    ontiz ,
+    ontight '',
+    color '#',
+    marginottom ,
   },
-  suggestionItem: {
-    marginBottom: 12,
+  sggstiontm {
+    marginottom ,
   },
-  suggestionLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#6b7280',
-    marginBottom: 4,
+  sggstionabl {
+    ontiz ,
+    ontight '',
+    color '#b',
+    marginottom ,
   },
-  suggestionText: {
-    fontSize: 14,
-    color: '#111827',
-    lineHeight: 20,
+  sggstionxt {
+    ontiz ,
+    color '#',
+    linight ,
   },
-  applyButton: {
-    marginTop: 8,
-    alignSelf: 'flex-start',
+  applytton {
+    marginop ,
+    alignl 'lx-start',
   },
-  uploadCard: {
-    marginBottom: 16,
+  ploadard {
+    marginottom ,
   },
-  uploadTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
-    marginBottom: 12,
+  ploaditl {
+    ontiz ,
+    ontight '',
+    color '#',
+    marginottom ,
   },
-  uploadButtons: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+  ploadttons {
+    lxirction 'row',
+    lxrap 'wrap',
+    gap ,
   },
-  uploadButton: {
-    flex: 1,
-    minWidth: 100,
+  ploadtton {
+    lx ,
+    minidth ,
   },
-  uploadedFiles: {
-    marginTop: 12,
+  ploaddils {
+    marginop ,
   },
-  uploadedFilesTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 8,
+  ploaddilsitl {
+    ontiz ,
+    ontight '',
+    color '#',
+    marginottom ,
   },
-  uploadedFile: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 8,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 6,
-    marginBottom: 4,
+  ploaddil {
+    lxirction 'row',
+    jstiyontnt 'spac-btwn',
+    aligntms 'cntr',
+    padding ,
+    backgrondolor '#',
+    bordradis ,
+    marginottom ,
   },
-  uploadedFileName: {
-    fontSize: 14,
-    color: '#111827',
-    flex: 1,
+  ploaddilam {
+    ontiz ,
+    color '#',
+    lx ,
   },
-  uploadedFileType: {
-    fontSize: 12,
-    color: '#6b7280',
+  ploaddilyp {
+    ontiz ,
+    color '#b',
   },
-  infoCard: {
-    backgroundColor: '#f8fafc',
+  inoard {
+    backgrondolor '#ac',
   },
-  infoTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
-    marginBottom: 12,
+  inoitl {
+    ontiz ,
+    ontight '',
+    color '#',
+    marginottom ,
   },
-  infoRow: {
-    flexDirection: 'row',
-    marginBottom: 8,
+  inoow {
+    lxirction 'row',
+    marginottom ,
   },
-  infoLabel: {
-    fontSize: 14,
-    color: '#6b7280',
-    minWidth: 80,
+  inoabl {
+    ontiz ,
+    color '#b',
+    minidth ,
   },
-  infoValue: {
-    fontSize: 14,
-    color: '#111827',
-    flex: 1,
+  inoal {
+    ontiz ,
+    color '#',
+    lx ,
   },
-});
+})

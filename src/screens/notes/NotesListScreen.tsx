@@ -1,231 +1,264 @@
-import act, { sct, stat } rom 'ract'
+import React, { useEffect, useState, useCallback } from 'react';
 import {
-  iw,
-  xt,
-  tylht,
-  latist,
-  ochablpacity,
-  araiw,
-  rshontrol,
-  ctivityndicator,
-} rom 'ract-nativ'
-import { sotstor } rom '../../stor/sotstor'
-import { sthtor } rom '../../stor/sthtor'
-import { ot } rom '../../typs/databas'
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+  RefreshControl,
+  ActivityIndicator,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useNotes } from '../../hooks/useNotes';
+import { useAuth } from '../../hooks/useAuth';
+import { NoteCard, SearchBar, FloatingActionButton } from '../../components/ui';
+import { Note } from '../../types/database';
 
-xport const otsistcrn act.  ()  {
-  const { nots, loading, tchots, stlctdot }  sotstor()
-  const { sr }  sthtor()
-  const rrshing, strshing]  stat(als)
+export const NotesListScreen: React.FC = () => {
+  const navigation = useNavigation();
+  const { user, signOut } = useAuth();
+  const {
+    notes,
+    loading,
+    fetchNotes,
+    deleteNote,
+    togglePin,
+    activeNotes,
+    pinnedNotes,
+    searchNotes,
+  } = useNotes();
 
-  sct(()  {
-    i (sr) {
-      tchots()
+  const [refreshing, setRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filter, setFilter] = useState<'all' | 'pinned'>('all');
+
+  useEffect(() => {
+    if (user) {
+      fetchNotes();
     }
-  }, sr, tchots])
+  }, [user, fetchNotes]);
 
-  const handlrsh  async ()  {
-    strshing(tr)
-    await tchots()
-    strshing(als)
+  useEffect(() => {
+    searchNotes(searchQuery);
+  }, [searchQuery, searchNotes]);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchNotes();
+    setRefreshing(false);
+  }, [fetchNotes]);
+
+  const handleNotePress = useCallback((note: Note) => {
+    navigation.navigate('NoteEditor' as never, { noteId: note.id } as never);
+  }, [navigation]);
+
+  const handleDeleteNote = useCallback((note: Note) => {
+    Alert.alert(
+      'Confirm Delete',
+      `Are you sure you want to delete "${note.title || 'Untitled'}"?`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteNote(note.id);
+            Alert.alert('Success', 'Note deleted successfully');
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  }, [deleteNote]);
+
+  const handleSignOut = () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Sign Out', onPress: () => signOut() },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const renderNoteItem = useCallback(({ item }: { item: Note }) => (
+    <NoteCard
+      note={item}
+      onPress={handleNotePress}
+      onLongPress={handleDeleteNote}
+    />
+  ), [handleNotePress, handleDeleteNote]);
+
+  const displayedNotes = filter === 'all' ? activeNotes : pinnedNotes;
+
+  if (loading && !refreshing) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#3b82f6" />
+        <Text style={styles.loadingText}>Loading notes...</Text>
+      </View>
+    );
   }
 
-  const handlotrss  (not ot)  {
-    stlctdot(not)
-    //  avigat to not ditor
-  }
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>My Notes</Text>
+        <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
+          <Text style={styles.signOutText}>Sign Out</Text>
+        </TouchableOpacity>
+      </View>
 
-  const rndrottm  ({ itm } { itm ot })  (
-    ochablpacity
-      styl{styls.nottm}
-      onrss{()  handlotrss(itm)}
-    
-      iw styl{styls.notadr}
-        xt styl{styls.notitl} nmbrins{}
-          {itm.titl || '无标题'}
-        /xt
-        xt styl{styls.notat}
-          {nw at(itm.pdatd_at).toocalattring()}
-        /xt
-      /iw
-      xt styl{styls.notontnt} nmbrins{}
-        {itm.contnt || '无内容'}
-      /xt
-      {itm.tags && itm.tags.lngth   && (
-        iw styl{styls.tagsontainr}
-          {itm.tags.slic(, ).map((tag, indx)  (
-            iw ky{indx} styl{styls.tag}
-              xt styl{styls.tagxt}{tag}/xt
-            /iw
-          ))}
-          {itm.tags.lngth   && (
-            xt styl{styls.moragsxt}+{itm.tags.lngth - }/xt
-          )}
-        /iw
-      )}
-    /ochablpacity
-  )
+      <View style={styles.controls}>
+        <SearchBar
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onClear={() => setSearchQuery('')}
+        />
+        <View style={styles.filterContainer}>
+          <TouchableOpacity
+            style={[styles.filterButton, filter === 'all' && styles.activeFilterButton]}
+            onPress={() => setFilter('all')}
+          >
+            <Text style={[styles.filterButtonText, filter === 'all' && styles.activeFilterButtonText]}>
+              All ({activeNotes.length})
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.filterButton, filter === 'pinned' && styles.activeFilterButton]}
+            onPress={() => setFilter('pinned')}
+          >
+            <Text style={[styles.filterButtonText, filter === 'pinned' && styles.activeFilterButtonText]}>
+              Pinned ({pinnedNotes.length})
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
 
-  i (loading && !rrshing) {
-    rtrn (
-      iw styl{styls.loadingontainr}
-        ctivityndicator siz"larg" color"#b" /
-        xt styl{styls.loadingxt}加载笔记中.../xt
-      /iw
-    )
-  }
-
-  rtrn (
-    araiw styl{styls.containr}
-      iw styl{styls.hadr}
-        xt styl{styls.hadritl}我的笔记/xt
-        ochablpacity styl{styls.addtton}
-          xt styl{styls.addttonxt}+/xt
-        /ochablpacity
-      /iw
-
-      {nots.lngth    (
-        iw styl{styls.mptyontainr}
-          xt styl{styls.mptyitl}还没有笔记/xt
-          xt styl{styls.mptybtitl}点击右上角的 + 号创建您的第一篇笔记/xt
-        /iw
-      )  (
-        latist
-          data{nots}
-          kyxtractor{(itm)  itm.id}
-          rndrtm{rndrottm}
-          rrshontrol{
-            rshontrol rrshing{rrshing} onrsh{handlrsh} /
+      {displayedNotes.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyTitle}>
+            {searchQuery ? 'No notes found' : 'No notes yet'}
+          </Text>
+          <Text style={styles.emptySubtitle}>
+            {searchQuery
+              ? 'Try using different keywords or clear the search.'
+              : 'Click the + button below to create your first note.'}
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={displayedNotes}
+          keyExtractor={(item) => item.id}
+          renderItem={renderNoteItem}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           }
-          contntontainrtyl{styls.listontainr}
-        /
+          contentContainerStyle={styles.listContainer}
+        />
       )}
-    /araiw
-  )
-}
 
-const styls  tylht.crat({
-  containr {
-    lx ,
-    backgrondolor '#ab',
+      <FloatingActionButton onPress={() => navigation.navigate('NoteEditor' as never)} />
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
   },
-  hadr {
-    lxirction 'row',
-    jstiyontnt 'spac-btwn',
-    aligntms 'cntr',
-    paddingorizontal ,
-    paddingrtical ,
-    backgrondolor '#',
-    bordrottomidth ,
-    bordrottomolor '#b',
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f9fafb',
   },
-  hadritl {
-    ontiz ,
-    ontight 'bold',
-    color '#',
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#6b7280',
   },
-  addtton {
-    width ,
-    hight ,
-    bordradis ,
-    backgrondolor '#b',
-    jstiyontnt 'cntr',
-    aligntms 'cntr',
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
   },
-  addttonxt {
-    ontiz ,
-    color '#',
-    ontight 'bold',
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#111827',
   },
-  listontainr {
-    padding ,
+  signOutButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#ef4444',
+    borderRadius: 6,
   },
-  nottm {
-    backgrondolor '#',
-    bordradis ,
-    padding ,
-    marginottom ,
-    shadowolor '#',
-    shadowst {
-      width ,
-      hight ,
-    },
-    shadowpacity .,
-    shadowadis ,
-    lvation ,
+  signOutText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
-  notadr {
-    lxirction 'row',
-    jstiyontnt 'spac-btwn',
-    aligntms 'lx-start',
-    marginottom ,
+  controls: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#fff',
   },
-  notitl {
-    ontiz ,
-    ontight '',
-    color '#',
-    lx ,
-    marginight ,
+  filterContainer: {
+    flexDirection: 'row',
+    marginTop: 8,
   },
-  notat {
-    ontiz ,
-    color '#b',
+  filterButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginRight: 8,
+    borderRadius: 20,
+    backgroundColor: '#f3f4f6',
   },
-  notontnt {
-    ontiz ,
-    color '#b',
-    linight ,
-    marginottom ,
+  activeFilterButton: {
+    backgroundColor: '#3b82f6',
   },
-  tagsontainr {
-    lxirction 'row',
-    lxrap 'wrap',
-    aligntms 'cntr',
+  filterButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#6b7280',
   },
-  tag {
-    backgrondolor '#',
-    paddingorizontal ,
-    paddingrtical ,
-    bordradis ,
-    marginight ,
-    marginottom ,
+  activeFilterButtonText: {
+    color: '#fff',
   },
-  tagxt {
-    ontiz ,
-    color '#a',
-    ontight '',
+  listContainer: {
+    padding: 16,
   },
-  moragsxt {
-    ontiz ,
-    color '#b',
-    onttyl 'italic',
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
   },
-  loadingontainr {
-    lx ,
-    jstiyontnt 'cntr',
-    aligntms 'cntr',
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 8,
+    textAlign: 'center',
   },
-  loadingxt {
-    marginop ,
-    ontiz ,
-    color '#b',
+  emptySubtitle: {
+    fontSize: 16,
+    color: '#6b7280',
+    textAlign: 'center',
+    lineHeight: 24,
   },
-  mptyontainr {
-    lx ,
-    jstiyontnt 'cntr',
-    aligntms 'cntr',
-    paddingorizontal ,
-  },
-  mptyitl {
-    ontiz ,
-    ontight 'bold',
-    color '#',
-    marginottom ,
-  },
-  mptybtitl {
-    ontiz ,
-    color '#b',
-    txtlign 'cntr',
-    linight ,
-  },
-})
+});

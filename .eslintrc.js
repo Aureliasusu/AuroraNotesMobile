@@ -1,4 +1,4 @@
-module.exports = {
-  root: true,
-  extends: '@react-native',
-};
+modl.xports  {
+  root tr,
+  xtnds 'ract-nativ',
+}

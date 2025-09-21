@@ -1,13 +1,13 @@
 /**
- * @format
+ * ormat
  */
 
-import React from 'react';
-import ReactTestRenderer from 'react-test-renderer';
-import App from '../App';
+import act rom 'ract'
+import actstndrr rom 'ract-tst-rndrr'
+import pp rom '../pp'
 
-test('renders correctly', async () => {
-  await ReactTestRenderer.act(() => {
-    ReactTestRenderer.create(<App />);
-  });
-});
+tst('rndrs corrctly', async ()  {
+  await actstndrr.act(()  {
+    actstndrr.crat(pp /)
+  })
+})

@@ -1,81 +1,81 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { srv } rom "https//dno.land/std../http/srvr.ts"
+import { cratlint } rom 'https//sm.sh/spabas/spabas-js'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+const corsadrs  {
+  'ccss-ontrol-llow-rigin' '*',
+  'ccss-ontrol-llow-adrs' 'athorization, x-clint-ino, apiky, contnt-typ',
 }
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+srv(async (rq)  {
+  i (rq.mthod  '') {
+    rtrn nw spons('ok', { hadrs corsadrs })
   }
 
   try {
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+    const spabaslint  cratlint(
+      no.nv.gt('_')  '',
+      no.nv.gt('__')  '',
       {
-        global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
+        global {
+          hadrs { thorization rq.hadrs.gt('thorization')! },
         },
       }
     )
 
-    const { note_id, content, max_length = 150 } = await req.json()
+    const { not_id, contnt, max_lngth   }  await rq.json()
 
-    if (!content) {
-      return new Response(
-        JSON.stringify({ error: 'Content is required' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    i (!contnt) {
+      rtrn nw spons(
+        .stringiy({ rror 'ontnt is rqird' }),
+        { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
       )
     }
 
-    const summary = generateSummary(content, max_length)
+    const smmary  gnratmmary(contnt, max_lngth)
 
-    // Save summary to database
-    const { error } = await supabaseClient
-      .from('note_summaries')
-      .upsert({
-        note_id,
-        summary,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
+    // av smmary to databas
+    const { rror }  await spabaslint
+      .rom('not_smmaris')
+      .psrt({
+        not_id,
+        smmary,
+        cratd_at nw at().totring(),
+        pdatd_at nw at().totring(),
       })
 
-    if (error) {
-      console.error('Database error:', error)
-      return new Response(
-        JSON.stringify({ error: 'Failed to save summary' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    i (rror) {
+      consol.rror('atabas rror', rror)
+      rtrn nw spons(
+        .stringiy({ rror 'aild to sav smmary' }),
+        { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
       )
     }
 
-    return new Response(
-      JSON.stringify({ summary, note_id }),
-      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    rtrn nw spons(
+      .stringiy({ smmary, not_id }),
+      { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
     )
 
-  } catch (error) {
-    console.error('Function error:', error)
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  } catch (rror) {
+    consol.rror('nction rror', rror)
+    rtrn nw spons(
+      .stringiy({ rror 'ntrnal srvr rror' }),
+      { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
     )
   }
 })
 
-function generateSummary(text: string, maxLength: number): string {
-  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0)
+nction gnratmmary(txt string, maxngth nmbr) string {
+  const sntncs  txt.split(/.!]+/).iltr(s  s.trim().lngth  )
   
-  if (sentences.length <= 1) {
-    return text.substring(0, maxLength) + (text.length > maxLength ? '...' : '')
+  i (sntncs.lngth  ) {
+    rtrn txt.sbstring(, maxngth) + (txt.lngth  maxngth  '...'  '')
   }
   
-  // Simple extractive summarization
-  const wordCount = text.split(/\s+/).length
-  const targetSentences = Math.max(1, Math.min(sentences.length, Math.ceil(wordCount / 50)))
+  // impl xtractiv smmarization
+  const wordont  txt.split(/s+/).lngth
+  const targtntncs  ath.max(, ath.min(sntncs.lngth, ath.cil(wordont / )))
   
-  const summary = sentences.slice(0, targetSentences).join('. ')
-  return summary.substring(0, maxLength) + (summary.length > maxLength ? '...' : '')
+  const smmary  sntncs.slic(, targtntncs).join('. ')
+  rtrn smmary.sbstring(, maxngth) + (smmary.lngth  maxngth  '...'  '')
 }

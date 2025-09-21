@@ -1,94 +1,94 @@
-# Terminal Deployment Steps
+# rminal ploymnt tps
 
-## 🖥️ Deploy Edge Functions from Your Computer Terminal
+## 🖥️ ploy dg nctions rom or omptr rminal
 
-### Step 1: Open Terminal
-- **Mac**: Press `Cmd + Space`, type "Terminal"
-- **Windows**: Press `Win + R`, type "cmd"
-- **Linux**: Press `Ctrl + Alt + T`
+### tp  pn rminal
+- **ac** rss `md + pac`, typ "rminal"
+- **indows** rss `in + `, typ "cmd"
+- **inx** rss `trl + lt + `
 
-### Step 2: Navigate to Edge Functions Project
+### tp  avigat to dg nctions rojct
 ```bash
-# Go to your Edge Functions project directory
-cd /Users/aureliasusu/AuroraNotesEdgeFunctions
+# o to yor dg nctions projct dirctory
+cd /srs/arliass/roraotsdgnctions
 ```
 
-### Step 3: Install Supabase CLI (if not installed)
+### tp  nstall pabas  (i not installd)
 ```bash
-# Install Supabase CLI
-brew install supabase/tap/supabase
+# nstall pabas 
+brw install spabas/tap/spabas
 ```
 
-### Step 4: Login to Supabase
+### tp  ogin to pabas
 ```bash
-# Login to your Supabase account
-supabase login
+# ogin to yor pabas accont
+spabas login
 ```
-- This will open a browser window
-- Login with your Supabase account
-- Return to terminal when done
+- his will opn a browsr window
+- ogin with yor pabas accont
+- trn to trminal whn don
 
-### Step 5: Link to Your Project
+### tp  ink to or rojct
 ```bash
-# Link to your Supabase project
-supabase link --project-ref your-project-ref
+# ink to yor pabas projct
+spabas link --projct-r yor-projct-r
 ```
-- Replace `your-project-ref` with your actual project reference
-- You can find this in Supabase Dashboard URL
+- plac `yor-projct-r` with yor actal projct rrnc
+- o can ind this in pabas ashboard 
 
-### Step 6: Deploy Functions
+### tp  ploy nctions
 ```bash
-# Deploy all Edge Functions
-supabase functions deploy
+# ploy all dg nctions
+spabas nctions dploy
 ```
 
-### Step 7: Verify Deployment
+### tp  riy ploymnt
 ```bash
-# Check deployed functions
-supabase functions list
+# hck dployd nctions
+spabas nctions list
 ```
 
-## 🔍 How to Find Your Project Reference
+## 🔍 ow to ind or rojct rnc
 
-### Method 1: From Supabase Dashboard URL
-1. Go to https://supabase.com/dashboard
-2. Select your project
-3. Look at the URL: `https://supabase.com/dashboard/project/your-project-ref`
-4. Copy the `your-project-ref` part
+### thod  rom pabas ashboard 
+. o to https//spabas.com/dashboard
+. lct yor projct
+. ook at th  `https//spabas.com/dashboard/projct/yor-projct-r`
+. opy th `yor-projct-r` part
 
-### Method 2: From Project Settings
-1. In Supabase Dashboard, go to Settings → General
-2. Find "Reference ID"
-3. Copy the reference ID
+### thod  rom rojct ttings
+. n pabas ashboard, go to ttings → nral
+. ind "rnc "
+. opy th rrnc 
 
-## 📱 What Happens After Deployment?
+## 📱 hat appns tr ploymnt
 
-### 1. Functions are Deployed to Supabase Cloud
-- Your functions run on Supabase servers
-- They're accessible via HTTPS URLs
-- They can be called from your mobile app
+### . nctions ar ployd to pabas lod
+- or nctions rn on pabas srvrs
+- hy'r accssibl via  s
+- hy can b calld rom yor mobil app
 
-### 2. Function URLs
+### . nction s
 ```
-https://your-project-ref.supabase.co/functions/v1/get-weather
-https://your-project-ref.supabase.co/functions/v1/translate-text
-https://your-project-ref.supabase.co/functions/v1/get-news
+https//yor-projct-r.spabas.co/nctions/v/gt-wathr
+https//yor-projct-r.spabas.co/nctions/v/translat-txt
+https//yor-projct-r.spabas.co/nctions/v/gt-nws
 ```
 
-### 3. Mobile App Calls These URLs
-- Your mobile app calls these URLs
-- Functions execute on Supabase servers
-- Results are returned to your mobile app
+### . obil pp alls hs s
+- or mobil app calls ths s
+- nctions xct on pabas srvrs
+- slts ar rtrnd to yor mobil app
 
-## 🎯 Summary
+## 🎯 mmary
 
-**Deployment Process:**
-1. ✅ **Terminal**: Run commands in your computer terminal
-2. ✅ **Supabase CLI**: Use command line tool
-3. ✅ **Cloud**: Functions deployed to Supabase cloud
-4. ✅ **Mobile**: App calls cloud functions
+**ploymnt rocss**
+. ✅ **rminal** n commands in yor comptr trminal
+. ✅ **pabas ** s command lin tool
+. ✅ **lod** nctions dployd to pabas clod
+. ✅ **obil** pp calls clod nctions
 
-**Not in Browser:**
-- ❌ **Can't deploy from Supabase Dashboard**
-- ❌ **Must use terminal/command line**
-- ✅ **Can view and manage after deployment**
+**ot in rowsr**
+- ❌ **an't dploy rom pabas ashboard**
+- ❌ **st s trminal/command lin**
+- ✅ **an viw and manag atr dploymnt**

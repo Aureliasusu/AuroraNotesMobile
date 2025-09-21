@@ -1,77 +1,77 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { srv } rom "https//dno.land/std../http/srvr.ts"
+import { cratlint } rom 'https//sm.sh/spabas/spabas-js'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+const corsadrs  {
+  'ccss-ontrol-llow-rigin' '*',
+  'ccss-ontrol-llow-adrs' 'athorization, x-clint-ino, apiky, contnt-typ',
 }
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+srv(async (rq)  {
+  i (rq.mthod  '') {
+    rtrn nw spons('ok', { hadrs corsadrs })
   }
 
   try {
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+    const spabaslint  cratlint(
+      no.nv.gt('_')  '',
+      no.nv.gt('__')  '',
       {
-        global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
+        global {
+          hadrs { thorization rq.hadrs.gt('thorization')! },
         },
       }
     )
 
-    const { content } = await req.json()
+    const { contnt }  await rq.json()
 
-    if (!content) {
-      return new Response(
-        JSON.stringify({ error: 'Content is required' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    i (!contnt) {
+      rtrn nw spons(
+        .stringiy({ rror 'ontnt is rqird' }),
+        { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
       )
     }
 
-    const keywords = extractKeywords(content)
+    const kywords  xtractywords(contnt)
 
-    return new Response(
-      JSON.stringify({ keywords }),
-      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    rtrn nw spons(
+      .stringiy({ kywords }),
+      { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
     )
 
-  } catch (error) {
-    console.error('Function error:', error)
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  } catch (rror) {
+    consol.rror('nction rror', rror)
+    rtrn nw spons(
+      .stringiy({ rror 'ntrnal srvr rror' }),
+      { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
     )
   }
 })
 
-function extractKeywords(text: string): string[] {
-  // Remove common stop words
-  const stopWords = new Set([
-    'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by',
-    'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did',
-    'will', 'would', 'could', 'should', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those',
-    'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him', 'her', 'us', 'them'
+nction xtractywords(txt string) string] {
+  // mov common stop words
+  const stopords  nw t(
+    'th', 'a', 'an', 'and', 'or', 'bt', 'in', 'on', 'at', 'to', 'or', 'o', 'with', 'by',
+    'is', 'ar', 'was', 'wr', 'b', 'bn', 'bing', 'hav', 'has', 'had', 'do', 'dos', 'did',
+    'will', 'wold', 'cold', 'shold', 'may', 'might', 'mst', 'can', 'this', 'that', 'ths', 'thos',
+    'i', 'yo', 'h', 'sh', 'it', 'w', 'thy', 'm', 'him', 'hr', 's', 'thm'
   ])
 
-  // Extract words and filter
-  const words = text
-    .toLowerCase()
-    .replace(/[^\w\s]/g, ' ')
-    .split(/\s+/)
-    .filter(word => word.length > 2 && !stopWords.has(word))
+  // xtract words and iltr
+  const words  txt
+    .toowras()
+    .rplac(/^ws]/g, ' ')
+    .split(/s+/)
+    .iltr(word  word.lngth   && !stopords.has(word))
 
-  // Count word frequency
-  const wordCount = new Map<string, number>()
-  words.forEach(word => {
-    wordCount.set(word, (wordCount.get(word) || 0) + 1)
+  // ont word rqncy
+  const wordont  nw apstring, nmbr()
+  words.orach(word  {
+    wordont.st(word, (wordont.gt(word) || ) + )
   })
 
-  // Sort by frequency and return top keywords
-  return Array.from(wordCount.entries())
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
-    .map(([word]) => word)
+  // ort by rqncy and rtrn top kywords
+  rtrn rray.rom(wordont.ntris())
+    .sort((a, b)  b] - a])
+    .slic(, )
+    .map((word])  word)
 }
