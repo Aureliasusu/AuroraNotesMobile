@@ -9,12 +9,15 @@ import {
   ActivityIndicator,
   Alert,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useNotes } from '../../hooks/useNotes';
 import { useAuth } from '../../hooks/useAuth';
-import { NoteCard, SearchBar, FloatingActionButton } from '../../components/ui';
+import { useFolders } from '../../hooks/useFolders';
+import { NoteCard, SearchBar, FloatingActionButton, FolderManager } from '../../components/ui';
 import { Note } from '../../types/database';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export const NotesListScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -29,10 +32,13 @@ export const NotesListScreen: React.FC = () => {
     pinnedNotes,
     searchNotes,
   } = useNotes();
+  const { folders } = useFolders();
 
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filter, setFilter] = useState<'all' | 'pinned'>('all');
+  const [filter, setFilter] = useState<'all' | 'pinned' | 'folder'>('all');
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const [showFolderManager, setShowFolderManager] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -51,7 +57,7 @@ export const NotesListScreen: React.FC = () => {
   }, [fetchNotes]);
 
   const handleNotePress = useCallback((note: Note) => {
-    navigation.navigate('NoteEditor' as never, { noteId: note.id } as never);
+    (navigation as any).navigate('NoteEditor', { noteId: note.id });
   }, [navigation]);
 
   const handleDeleteNote = useCallback((note: Note) => {
@@ -88,6 +94,33 @@ export const NotesListScreen: React.FC = () => {
     );
   };
 
+  // Handle folder selection
+  const handleFolderSelect = useCallback((folderId: string | null) => {
+    setSelectedFolderId(folderId);
+    if (folderId === 'starred') {
+      setFilter('pinned');
+    } else if (folderId === null) {
+      setFilter('all');
+    } else {
+      setFilter('folder');
+    }
+  }, []);
+
+  // Handle add notes to folder
+  const handleAddNotesToFolder = useCallback((folderId: string, folderName: string) => {
+    Alert.alert(
+      'Add Notes to Folder',
+      `Are you sure you want to add selected notes to "${folderName}" folder?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Confirm', onPress: () => {
+          // TODO: Implement batch move notes to folder functionality
+          Alert.alert('Info', 'This feature will be implemented in future versions');
+        }},
+      ]
+    );
+  }, []);
+
   const renderNoteItem = useCallback(({ item }: { item: Note }) => (
     <NoteCard
       note={item}
@@ -96,7 +129,18 @@ export const NotesListScreen: React.FC = () => {
     />
   ), [handleNotePress, handleDeleteNote]);
 
-  const displayedNotes = filter === 'all' ? activeNotes : pinnedNotes;
+  // Display notes based on current filter conditions
+  const getDisplayedNotes = useCallback(() => {
+    if (filter === 'pinned') {
+      return pinnedNotes;
+    } else if (filter === 'folder' && selectedFolderId) {
+      return activeNotes.filter((note: Note) => note.folder_id === selectedFolderId);
+    } else {
+      return activeNotes;
+    }
+  }, [filter, selectedFolderId, activeNotes, pinnedNotes]);
+
+  const displayedNotes = getDisplayedNotes();
 
   if (loading && !refreshing) {
     return (
@@ -110,7 +154,15 @@ export const NotesListScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>My Notes</Text>
+        <View style={styles.headerLeft}>
+          <Text style={styles.headerTitle}>My Notes</Text>
+          <TouchableOpacity 
+            onPress={() => setShowFolderManager(true)} 
+            style={styles.folderButton}
+          >
+            <Icon name="folder" size={20} color="#3b82f6" />
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
@@ -125,7 +177,7 @@ export const NotesListScreen: React.FC = () => {
         <View style={styles.filterContainer}>
           <TouchableOpacity
             style={[styles.filterButton, filter === 'all' && styles.activeFilterButton]}
-            onPress={() => setFilter('all')}
+            onPress={() => handleFolderSelect(null)}
           >
             <Text style={[styles.filterButtonText, filter === 'all' && styles.activeFilterButtonText]}>
               All ({activeNotes.length})
@@ -133,23 +185,37 @@ export const NotesListScreen: React.FC = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.filterButton, filter === 'pinned' && styles.activeFilterButton]}
-            onPress={() => setFilter('pinned')}
+            onPress={() => handleFolderSelect('starred')}
           >
             <Text style={[styles.filterButtonText, filter === 'pinned' && styles.activeFilterButtonText]}>
-              Pinned ({pinnedNotes.length})
+              Starred ({pinnedNotes.length})
             </Text>
           </TouchableOpacity>
+          {filter === 'folder' && selectedFolderId && (
+            <TouchableOpacity
+              style={[styles.filterButton, styles.activeFilterButton]}
+              onPress={() => setShowFolderManager(true)}
+            >
+              <Text style={[styles.filterButtonText, styles.activeFilterButtonText]}>
+                {folders.find(f => f.id === selectedFolderId)?.name || 'Folder'}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 
       {displayedNotes.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyTitle}>
-            {searchQuery ? 'No notes found' : 'No notes yet'}
+            {searchQuery ? 'No notes found' : 
+             filter === 'pinned' ? 'No starred notes' :
+             filter === 'folder' ? 'No notes in this folder' : 'No notes yet'}
           </Text>
           <Text style={styles.emptySubtitle}>
             {searchQuery
               ? 'Try using different keywords or clear the search.'
+              : filter === 'pinned' ? 'Click the star on notes to star them.'
+              : filter === 'folder' ? 'Move notes to this folder or create new notes.'
               : 'Click the + button below to create your first note.'}
           </Text>
         </View>
@@ -165,7 +231,35 @@ export const NotesListScreen: React.FC = () => {
         />
       )}
 
-      <FloatingActionButton onPress={() => navigation.navigate('NoteEditor' as never)} />
+      <FloatingActionButton onPress={() => (navigation as any).navigate('NoteEditor')} />
+
+      {/* Folder management modal */}
+      <Modal
+        visible={showFolderManager}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setShowFolderManager(false)}
+      >
+        <SafeAreaView style={styles.modalContainer}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Folder Management</Text>
+            <TouchableOpacity
+              onPress={() => setShowFolderManager(false)}
+              style={styles.closeButton}
+            >
+              <Icon name="close" size={24} color="#6b7280" />
+            </TouchableOpacity>
+          </View>
+          <FolderManager
+            selectedFolderId={selectedFolderId}
+            onFolderSelect={(folderId) => {
+              handleFolderSelect(folderId);
+              setShowFolderManager(false);
+            }}
+            onAddNotesToFolder={handleAddNotesToFolder}
+          />
+        </SafeAreaView>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -196,10 +290,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
   },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#111827',
+  },
+  folderButton: {
+    marginLeft: 12,
+    padding: 8,
+    borderRadius: 6,
+    backgroundColor: '#f3f4f6',
   },
   signOutButton: {
     paddingHorizontal: 12,
@@ -260,5 +364,29 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     textAlign: 'center',
     lineHeight: 24,
+  },
+  
+  // Modal styles
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#111827',
+  },
+  closeButton: {
+    padding: 8,
   },
 });

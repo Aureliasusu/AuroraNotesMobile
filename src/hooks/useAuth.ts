@@ -1,234 +1,153 @@
-import { stat, sct } rom 'ract'
-import { spabas } rom '../lib/spabas'
-import { sr, ssion } rom 'spabas/spabas-js'
-import { lrt } rom 'ract-nativ'
-import { sthtor } rom '../stor/sthtor'
-import { sotstor } rom '../stor/sotstor'
+import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
+import { User, Session } from '@supabase/supabase-js'
+import { Alert } from 'react-native'
+import { useAuthStore } from '../store/useAuthStore'
+import { useNotesStore } from '../store/useNotesStore'
 
-intrac thtat {
-  sr sr | nll
-  sssion ssion | nll
-  loading boolan
+interface AuthState {
+  user: User | null
+  session: Session | null
+  loading: boolean
 }
 
-xport nction sth() {
-  const athtat, stthtat]  statthtat({
-    sr nll,
-    sssion nll,
-    loading tr
-  })
+export function useAuth() {
+  const authState: AuthState = {
+    user: null,
+    session: null,
+    loading: true
+  }
 
-  // t stand stor actions
   const { 
-    stsr, 
-    stssion, 
-    stroil, 
-    stoading sttoroading,
-    rrshroil 
-  }  sthtor()
-  
-  const { tchots, clarots }  sotstor()
+    user, 
+    session, 
+    loading, 
+    setUser, 
+    setSession, 
+    setLoading 
+  } = useAuthStore()
 
-  // t initial sssion
-  sct(()  {
-    const gtnitialssion  async ()  {
-      try {
-        const { data { sssion } }  await spabas.ath.gtssion()
-        stthtat({
-          sr sssion.sr  nll,
-          sssion,
-          loading als
-        })
-        
-        // pdat stor
-        stsr(sssion.sr  nll)
-        stssion(sssion)
-        sttoroading(als)
-        
-        i (sssion.sr) {
-          await rrshroil()
-          await tchots()
-        }
-      } catch (rror) {
-        consol.rror('rror gtting initial sssion', rror)
-        stthtat(prv  ({ ...prv, loading als }))
-        sttoroading(als)
-      }
-    }
+  const { clearNotes } = useNotesStore()
 
-    gtnitialssion()
-  }, stsr, stssion, sttoroading, rrshroil, tchots])
+  // Listen for auth state changes
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
 
-  // istn or ath changs
-  sct(()  {
-    const { data { sbscription } }  spabas.ath.onthtathang(
-      async (vnt string, sssion ssion | nll)  {
-        // on't atomatically st sr as loggd in atr signp
-        i (vnt  '_') {
-          // sr jst signd p, bt don't st thm as loggd in
-          stthtat(prv  ({
-            ...prv,
-            sr nll,
-            sssion nll,
-            loading als
-          }))
-          
-          // pdat stor
-          stsr(nll)
-          stssion(nll)
-          sttoroading(als)
-          clarots()
-          rtrn
-        }
-        
-        // andl othr ath vnts normally
-        stthtat({
-          sr sssion.sr  nll,
-          sssion,
-          loading als
-        })
-        
-        // pdat stor
-        stsr(sssion.sr  nll)
-        stssion(sssion)
-        sttoroading(als)
+    // Listen for auth state changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
 
-        i (vnt  '_' && sssion.sr) {
-          lrt.alrt('ccss', 'ignd in sccsslly!')
-          await rrshroil()
-          await tchots()
-        } ls i (vnt  '_') {
-          lrt.alrt('ccss', 'ignd ot sccsslly!')
-          clarots() // lar nots whn sr signs ot
-        }
-      }
-    )
+    return () => subscription.unsubscribe()
+  }, [setUser, setSession, setLoading])
 
-    rtrn ()  sbscription.nsbscrib()
-  }, stsr, stssion, sttoroading, rrshroil, tchots, clarots])
-
-  // ign p nction
-  const signp  async (mail string, password string, llam string)  {
+  // Sign in
+  const signIn = async (email: string, password: string) => {
     try {
-      const { data, rror }  await spabas.ath.signp({
-        mail,
-        password,
-        options {
-          data {
-            ll_nam llam,
-          },
-        },
-      })
-
-      i (rror) throw rror
-
-      i (data.sr) {
-        // lar any xisting stor data (sr is not loggd in yt)
-        stsr(nll)
-        stssion(nll)
-        stroil(nll)
-        clarots()
-        
-        // on't atomatically st th sr as loggd in
-        // h sr nds to xplicitly sign in
-        lrt.alrt('ccss', 'ccont cratd sccsslly! las sign in to contin.')
-        rtrn { sccss tr, sr data.sr }
-      }
-    } catch (rror) {
-      const rrorssag  rror instanco rror  rror.mssag  'ign p aild'
-      lrt.alrt('rror', rrorssag)
-      rtrn { sccss als, rror rrorssag }
-    }
-  }
-
-  // ign in nction
-  const signn  async (mail string, password string)  {
-    try {
-      const { data, rror }  await spabas.ath.signnithassword({
-        mail,
+      setLoading(true)
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
         password,
       })
 
-      i (rror) throw rror
+      if (error) {
+        Alert.alert('Sign In Failed', error.message)
+        return { success: false, error: error.message }
+      }
 
-      // pdat stor with sr data
-      stsr(data.sr)
-      stssion(data.sssion)
-      
-      // tch sr proil and nots
-      await rrshroil()
-      await tchots()
-      
-      lrt.alrt('ccss', 'ignd in sccsslly!')
-      rtrn { sccss tr, sr data.sr }
-    } catch (rror) {
-      const rrorssag  rror instanco rror  rror.mssag  'ign in aild'
-      lrt.alrt('rror', rrorssag)
-      rtrn { sccss als, rror rrorssag }
+      return { success: true, user: data.user }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Sign in failed'
+      Alert.alert('Sign In Failed', errorMessage)
+      return { success: false, error: errorMessage }
+    } finally {
+      setLoading(false)
     }
   }
 
-  // ign ot nction
-  const signt  async ()  {
+  // Sign up
+  const signUp = async (email: string, password: string) => {
     try {
-      const { rror }  await spabas.ath.signt()
-      i (rror) throw rror
-      
-      // lar stor data
-      stsr(nll)
-      stssion(nll)
-      stroil(nll)
-      clarots()
-      
-      lrt.alrt('ccss', 'ignd ot sccsslly!')
-      rtrn { sccss tr }
-    } catch (rror) {
-      const rrorssag  rror instanco rror  rror.mssag  'ign ot aild'
-      lrt.alrt('rror', rrorssag)
-      rtrn { sccss als, rror rrorssag }
+      setLoading(true)
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      })
+
+      if (error) {
+        Alert.alert('Sign Up Failed', error.message)
+        return { success: false, error: error.message }
+      }
+
+      Alert.alert('Sign Up Success', 'Please check your email to verify your account')
+      return { success: true, user: data.user }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Sign up failed'
+      Alert.alert('Sign Up Failed', errorMessage)
+      return { success: false, error: errorMessage }
+    } finally {
+      setLoading(false)
     }
   }
 
-  // pdat sr proil
-  const pdatroil  async (pdats { 
-    data {
-      ll_nam string
-      avatar_rl string
-      bio string
-      wbsit string
-      location string
-    }
-  })  {
+  // Sign out
+  const signOut = async () => {
     try {
-      const { sr }  athtat
-      i (!sr) throw nw rror('sr not athnticatd')
-
-      // pdat proils tabl dirctly
-      const { rror }  await spabas
-        .rom('proils')
-        .pdat(pdats.data)
-        .q('id', sr.id)
-
-      i (rror) throw rror
-
-      // rsh proil data in stor
-      await rrshroil()
+      setLoading(true)
+      const { error } = await supabase.auth.signOut()
       
-      rtrn { sccss tr }
-    } catch (rror) {
-      const rrorssag  rror instanco rror  rror.mssag  'roil pdat aild'
-      throw nw rror(rrorssag)
+      if (error) {
+        Alert.alert('Sign Out Failed', error.message)
+        return { success: false, error: error.message }
+      }
+
+      // Clear local state
+      clearNotes()
+      return { success: true }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Sign out failed'
+      Alert.alert('Sign Out Failed', errorMessage)
+      return { success: false, error: errorMessage }
+    } finally {
+      setLoading(false)
     }
   }
 
-  rtrn {
-    sr athtat.sr,
-    sssion athtat.sssion,
-    loading athtat.loading,
-    signp,
-    signn,
-    signt,
-    pdatroil,
-    isthnticatd !!athtat.sr
+  // Reset password
+  const resetPassword = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email)
+      
+      if (error) {
+        Alert.alert('Reset Password Failed', error.message)
+        return { success: false, error: error.message }
+      }
+
+      Alert.alert('Reset Password', 'Please check your email to reset your password')
+      return { success: true }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Reset password failed'
+      Alert.alert('Reset Password Failed', errorMessage)
+      return { success: false, error: errorMessage }
+    }
+  }
+
+  return {
+    user,
+    session,
+    loading,
+    signIn,
+    signUp,
+    signOut,
+    resetPassword,
   }
 }
