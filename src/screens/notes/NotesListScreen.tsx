@@ -15,7 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useNotes } from '../../hooks/useNotes';
 import { useAuth } from '../../hooks/useAuth';
 import { useFolders } from '../../hooks/useFolders';
-import { NoteCard, SearchBar, FloatingActionButton, FolderManager } from '../../components/ui';
+import { NoteCard, SearchBar, FloatingActionButton, FolderManager, AdvancedSearch } from '../../components/ui';
 import { Note } from '../../types/database';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -39,6 +39,7 @@ export const NotesListScreen: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'pinned' | 'folder'>('all');
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
   const [showFolderManager, setShowFolderManager] = useState(false);
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -158,9 +159,15 @@ export const NotesListScreen: React.FC = () => {
           <Text style={styles.headerTitle}>My Notes</Text>
           <TouchableOpacity 
             onPress={() => setShowFolderManager(true)} 
-            style={styles.folderButton}
+            style={styles.headerButton}
           >
             <Icon name="folder" size={20} color="#3b82f6" />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => setShowAdvancedSearch(true)} 
+            style={styles.headerButton}
+          >
+            <Icon name="search" size={20} color="#10b981" />
           </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
@@ -260,6 +267,15 @@ export const NotesListScreen: React.FC = () => {
           />
         </SafeAreaView>
       </Modal>
+
+      {/* Advanced search modal */}
+      <AdvancedSearch
+        visible={showAdvancedSearch}
+        onClose={() => setShowAdvancedSearch(false)}
+        onNoteSelect={(noteId) => {
+          (navigation as any).navigate('NoteEditor', { noteId });
+        }}
+      />
     </SafeAreaView>
   );
 };
@@ -299,8 +315,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#111827',
   },
-  folderButton: {
-    marginLeft: 12,
+  headerButton: {
+    marginLeft: 8,
     padding: 8,
     borderRadius: 6,
     backgroundColor: '#f3f4f6',

@@ -10,3 +10,4 @@ export { AdvancedCodeHighlighter } from './AdvancedCodeHighlighter';
 export { SimpleCodeHighlighter } from './SimpleCodeHighlighter';
 export { MarkdownRenderer } from './MarkdownRenderer';
 export { FolderManager } from './FolderManager';
+export { AdvancedSearch } from './AdvancedSearch';
