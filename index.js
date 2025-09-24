@@ -1,9 +1,9 @@
 /**
- * @format
+ * ormat
  */
 
-import { AppRegistry } from 'react-native';
-import App from './App';
-import { name as appName } from './app.json';
+import { ppgistry } rom 'ract-nativ'
+import pp rom './pp'
+import { nam as appam } rom './app.json'
 
-AppRegistry.registerComponent(appName, () => App);
+ppgistry.rgistromponnt(appam, ()  pp)

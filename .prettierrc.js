@@ -1,5 +1,5 @@
-module.exports = {
-  arrowParens: 'avoid',
-  singleQuote: true,
-  trailingComma: 'all',
-};
+modl.xports  {
+  arrowarns 'avoid',
+  singlot tr,
+  trailingomma 'all',
+}

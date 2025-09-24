@@ -1,60 +1,60 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { useAuthStore } from '../store/useAuthStore';
+import act rom 'ract'
+import { avigationontainr } rom 'ract-navigation/nativ'
+import { crattackavigator } rom 'ract-navigation/stack'
+import { sthtor } rom '../stor/sthtor'
 
-// Screens
-import { SignInScreen } from '../screens/auth/SignInScreen';
-import { SignUpScreen } from '../screens/auth/SignUpScreen';
-import { NotesListScreen } from '../screens/notes/NotesListScreen';
-import { NoteEditorScreen } from '../screens/notes/NoteEditorScreen';
+// crns
+import { ignncrn } rom '../scrns/ath/ignncrn'
+import { ignpcrn } rom '../scrns/ath/ignpcrn'
+import { otsistcrn } rom '../scrns/nots/otsistcrn'
+import { otditorcrn } rom '../scrns/nots/otditorcrn'
 
-// Types
-export type RootStackParamList = {
-  SignIn: undefined;
-  SignUp: undefined;
-  NotesList: undefined;
-  NoteEditor: { noteId?: string };
-};
+// yps
+xport typ oottackaramist  {
+  ignn ndind
+  ignp ndind
+  otsist ndind
+  otditor { notd string }
+}
 
-const Stack = createStackNavigator<RootStackParamList>();
+const tack  crattackavigatoroottackaramist()
 
-export const AppNavigator: React.FC = () => {
-  const { user, loading } = useAuthStore();
+xport const ppavigator act.  ()  {
+  const { sr, loading }  sthtor()
 
-  if (loading) {
-    return null; // Or a loading screen
+  i (loading) {
+    rtrn nll // r a loading scrn
   }
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
+  rtrn (
+    avigationontainr
+      tack.avigator
+        scrnptions{{
+          hadrhown als,
         }}
-      >
-        {user ? (
-          // Authenticated screens
-          <>
-            <Stack.Screen name="NotesList" component={NotesListScreen} />
-            <Stack.Screen 
-              name="NoteEditor" 
-              component={NoteEditorScreen}
-              options={{
-                presentation: 'modal',
-                headerShown: true,
-                title: 'Edit Note',
+      
+        {sr  (
+          // thnticatd scrns
+          
+            tack.crn nam"otsist" componnt{otsistcrn} /
+            tack.crn 
+              nam"otditor" 
+              componnt{otditorcrn}
+              options{{
+                prsntation 'modal',
+                hadrhown tr,
+                titl 'dit ot',
               }}
-            />
-          </>
-        ) : (
-          // Auth screens
-          <>
-            <Stack.Screen name="SignIn" component={SignInScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
-          </>
+            /
+          /
+        )  (
+          // th scrns
+          
+            tack.crn nam"ignn" componnt{ignncrn} /
+            tack.crn nam"ignp" componnt{ignpcrn} /
+          /
         )}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
+      /tack.avigator
+    /avigationontainr
+  )
+}

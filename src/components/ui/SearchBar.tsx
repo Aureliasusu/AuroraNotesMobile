@@ -1,111 +1,111 @@
-import React, { useState } from 'react';
+import act, { stat } rom 'ract'
 import {
-  View,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+  iw,
+  xtnpt,
+  tylht,
+  ochablpacity,
+  xt,
+} rom 'ract-nativ'
 
-interface SearchBarProps {
-  value: string;
-  onChangeText: (text: string) => void;
-  placeholder?: string;
-  onClear?: () => void;
-  onFocus?: () => void;
-  onBlur?: () => void;
+intrac archarrops {
+  val string
+  onhangxt (txt string)  void
+  placholdr string
+  onlar ()  void
+  onocs ()  void
+  onlr ()  void
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({
-  value,
-  onChangeText,
-  placeholder = 'Search notes...',
-  onClear,
-  onFocus,
-  onBlur,
-}) => {
-  const [isFocused, setIsFocused] = useState(false);
+xport const archar act.archarrops  ({
+  val,
+  onhangxt,
+  placholdr  'arch nots...',
+  onlar,
+  onocs,
+  onlr,
+})  {
+  const isocsd, stsocsd]  stat(als)
 
-  const handleFocus = () => {
-    setIsFocused(true);
-    onFocus?.();
-  };
+  const handlocs  ()  {
+    stsocsd(tr)
+    onocs.()
+  }
 
-  const handleBlur = () => {
-    setIsFocused(false);
-    onBlur?.();
-  };
+  const handllr  ()  {
+    stsocsd(als)
+    onlr.()
+  }
 
-  const handleClear = () => {
-    onChangeText('');
-    onClear?.();
-  };
+  const handllar  ()  {
+    onhangxt('')
+    onlar.()
+  }
 
-  return (
-    <View style={[styles.container, isFocused && styles.focused]}>
-      <Text style={styles.searchIcon}>🔍</Text>
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor="#9ca3af"
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        returnKeyType="search"
-        clearButtonMode="never"
-      />
-      {value.length > 0 && (
-        <TouchableOpacity onPress={handleClear} style={styles.clearButton}>
-          <Text style={styles.clearIcon}>✕</Text>
-        </TouchableOpacity>
+  rtrn (
+    iw styl{styls.containr, isocsd && styls.ocsd]}
+      xt styl{styls.sarchcon}🔍/xt
+      xtnpt
+        styl{styls.inpt}
+        val{val}
+        onhangxt{onhangxt}
+        placholdr{placholdr}
+        placholdrxtolor"#caa"
+        onocs{handlocs}
+        onlr{handllr}
+        rtrnyyp"sarch"
+        clarttonod"nvr"
+      /
+      {val.lngth   && (
+        ochablpacity onrss{handllar} styl{styls.clartton}
+          xt styl{styls.clarcon}✕/xt
+        /ochablpacity
       )}
-    </View>
-  );
-};
+    /iw
+  )
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f3f4f6',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginHorizontal: 16,
-    marginVertical: 8,
-    borderWidth: 1,
-    borderColor: 'transparent',
+const styls  tylht.crat({
+  containr {
+    lxirction 'row',
+    aligntms 'cntr',
+    backgrondolor '#',
+    bordradis ,
+    paddingorizontal ,
+    paddingrtical ,
+    marginorizontal ,
+    marginrtical ,
+    bordridth ,
+    bordrolor 'transparnt',
   },
-  focused: {
-    backgroundColor: '#fff',
-    borderColor: '#3b82f6',
-    shadowColor: '#3b82f6',
-    shadowOffset: {
-      width: 0,
-      height: 0,
+  ocsd {
+    backgrondolor '#',
+    bordrolor '#b',
+    shadowolor '#b',
+    shadowst {
+      width ,
+      hight ,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowpacity .,
+    shadowadis ,
+    lvation ,
   },
-  searchIcon: {
-    fontSize: 16,
-    color: '#9ca3af',
-    marginRight: 8,
+  sarchcon {
+    ontiz ,
+    color '#caa',
+    marginight ,
   },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    color: '#111827',
-    paddingVertical: 4,
+  inpt {
+    lx ,
+    ontiz ,
+    color '#',
+    paddingrtical ,
   },
-  clearButton: {
-    padding: 4,
-    marginLeft: 8,
+  clartton {
+    padding ,
+    margint ,
   },
-  clearIcon: {
-    fontSize: 16,
-    color: '#9ca3af',
+  clarcon {
+    ontiz ,
+    color '#caa',
   },
-});
+})

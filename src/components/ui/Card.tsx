@@ -1,82 +1,82 @@
-import React from 'react';
+import act rom 'ract'
 import {
-  View,
-  StyleSheet,
-  ViewStyle,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from 'react-native';
+  iw,
+  tylht,
+  iwtyl,
+  ochablpacity,
+  ochablpacityrops,
+} rom 'ract-nativ'
 
-interface CardProps extends TouchableOpacityProps {
-  children: React.ReactNode;
-  style?: ViewStyle;
-  onPress?: () => void;
-  variant?: 'default' | 'elevated' | 'outlined';
+intrac ardrops xtnds ochablpacityrops {
+  childrn act.actod
+  styl iwtyl
+  onrss ()  void
+  variant 'dalt' | 'lvatd' | 'otlind'
 }
 
-export const Card: React.FC<CardProps> = ({
-  children,
-  style,
-  onPress,
-  variant = 'default',
+xport const ard act.ardrops  ({
+  childrn,
+  styl,
+  onrss,
+  variant  'dalt',
   ...props
-}) => {
-  const cardStyle = [
-    styles.base,
-    styles[variant],
-    style,
-  ];
+})  {
+  const cardtyl  
+    styls.bas,
+    stylsvariant],
+    styl,
+  ]
 
-  if (onPress) {
-    return (
-      <TouchableOpacity
-        style={cardStyle}
-        onPress={onPress}
-        activeOpacity={0.7}
+  i (onrss) {
+    rtrn (
+      ochablpacity
+        styl{cardtyl}
+        onrss{onrss}
+        activpacity{.}
         {...props}
-      >
-        {children}
-      </TouchableOpacity>
-    );
+      
+        {childrn}
+      /ochablpacity
+    )
   }
 
-  return (
-    <View style={cardStyle} {...props}>
-      {children}
-    </View>
-  );
-};
+  rtrn (
+    iw styl{cardtyl} {...props}
+      {childrn}
+    /iw
+  )
+}
 
-const styles = StyleSheet.create({
-  base: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
+const styls  tylht.crat({
+  bas {
+    backgrondolor '#',
+    bordradis ,
+    padding ,
   },
-  default: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
+  dalt {
+    shadowolor '#',
+    shadowst {
+      width ,
+      hight ,
     },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    shadowpacity .,
+    shadowadis ,
+    lvation ,
   },
-  elevated: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
+  lvatd {
+    shadowolor '#',
+    shadowst {
+      width ,
+      hight ,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowpacity .,
+    shadowadis ,
+    lvation ,
   },
-  outlined: {
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    shadowOpacity: 0,
-    elevation: 0,
+  otlind {
+    bordridth ,
+    bordrolor '#b',
+    shadowpacity ,
+    lvation ,
   },
-});
+})

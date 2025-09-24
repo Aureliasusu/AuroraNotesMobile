@@ -1,14 +1,14 @@
-import { useState, useCallback } from 'react';
-import { Alert, Platform, PermissionsAndroid } from 'react-native';
-import { FileUploadService, FileUploadResult } from '../services/fileUpload';
+import { useState, useCallback } from 'react'
+import { Alert, Platform, PermissionsAndroid } from 'react-native'
+import { fileUploadService, FileUploadResult } from '../services/fileUpload'
 
 // Note: These libraries require native configuration, providing interface here
-// import { launchImageLibrary, launchCamera, ImagePickerResponse } from 'react-native-image-picker';
-// import { DocumentPickerResponse, pick } from 'react-native-document-picker';
+// import { launchImageLibrary, launchCamera, ImagePickerResponse } from 'react-native-image-picker'
+// import { DocumentPickerResponse, pick } from 'react-native-document-picker'
 
 export function useFileUpload() {
-  const [uploading, setUploading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<FileUploadResult[]>([]);
+  const [uploading, setUploading] = useState(false)
+  const [uploadedFiles, setUploadedFiles] = useState<FileUploadResult[]>([])
 
   // Request camera permission
   const requestCameraPermission = useCallback(async (): Promise<boolean> => {
@@ -23,15 +23,15 @@ export function useFileUpload() {
             buttonNegative: 'Cancel',
             buttonPositive: 'OK',
           }
-        );
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
+        )
+        return granted === PermissionsAndroid.RESULTS.GRANTED
       } catch (err) {
-        console.warn(err);
-        return false;
+        console.warn(err)
+        return false
       }
     }
-    return true;
-  }, []);
+    return true
+  }, [])
 
   // Request storage permission
   const requestStoragePermission = useCallback(async (): Promise<boolean> => {
@@ -46,32 +46,32 @@ export function useFileUpload() {
             buttonNegative: 'Cancel',
             buttonPositive: 'OK',
           }
-        );
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
+        )
+        return granted === PermissionsAndroid.RESULTS.GRANTED
       } catch (err) {
-        console.warn(err);
-        return false;
+        console.warn(err)
+        return false
       }
     }
-    return true;
-  }, []);
+    return true
+  }, [])
 
   // Pick image from gallery
   const pickImageFromGallery = useCallback(async (): Promise<FileUploadResult | null> => {
     try {
-      const hasPermission = await requestStoragePermission();
+      const hasPermission = await requestStoragePermission()
       if (!hasPermission) {
-        Alert.alert('Permission Denied', 'Storage permission is required to select images');
-        return null;
+        Alert.alert('Permission Needed', 'Storage permission is required to select images')
+        return null
       }
 
-      // Here needs actual image picker implementation
+      // You need actual image picker implementation
       // const result: ImagePickerResponse = await launchImageLibrary({
       //   mediaType: 'photo',
       //   quality: 0.8,
       //   maxWidth: 1920,
       //   maxHeight: 1080,
-      // });
+      // })
 
       // Mock implementation - replace when actually using
       Alert.alert(
@@ -80,47 +80,47 @@ export function useFileUpload() {
         [
           { text: 'OK' }
         ]
-      );
-      return null;
+      )
+      return null
 
-      // Actual implementation (uncomment and configure native dependencies to use):
+      // Actual implementation (uncomment and configure native dependencies to use)
       // if (result.assets && result.assets[0]) {
-      //   const asset = result.assets[0];
-      //   setUploading(true);
+      //   const asset = result.assets[0]
+      //   setUploading(true)
       //   
-      //   const uploadResult = await FileUploadService.uploadImage(
+      //   const uploadResult = await fileUploadService.uploadImage(
       //     asset.uri!,
       //     asset.fileName || `image_${Date.now()}.jpg`
-      //   );
+      //   )
       //   
-      //   setUploadedFiles(prev => [...prev, uploadResult]);
-      //   setUploading(false);
-      //   return uploadResult;
+      //   setUploadedFiles(prev => [...prev, uploadResult])
+      //   setUploading(false)
+      //   return uploadResult
       // }
     } catch (error) {
-      console.error('Image picker error:', error);
-      Alert.alert('Error', 'Failed to pick image');
-      setUploading(false);
-      return null;
+      console.error('Image picker error', error)
+      Alert.alert('Error', 'Failed to pick image')
+      setUploading(false)
+      return null
     }
-  }, [requestStoragePermission]);
+  }, [requestStoragePermission])
 
   // Take photo
   const takePhoto = useCallback(async (): Promise<FileUploadResult | null> => {
     try {
-      const hasPermission = await requestCameraPermission();
+      const hasPermission = await requestCameraPermission()
       if (!hasPermission) {
-        Alert.alert('Permission Denied', 'Camera permission is required to take photos');
-        return null;
+        Alert.alert('Permission Needed', 'Camera permission is required to take photos')
+        return null
       }
 
-      // Here needs actual camera implementation
+      // You need actual camera implementation
       // const result: ImagePickerResponse = await launchCamera({
       //   mediaType: 'photo',
       //   quality: 0.8,
       //   maxWidth: 1920,
       //   maxHeight: 1080,
-      // });
+      // })
 
       // Mock implementation
       Alert.alert(
@@ -129,45 +129,45 @@ export function useFileUpload() {
         [
           { text: 'OK' }
         ]
-      );
-      return null;
+      )
+      return null
 
-      // Actual implementation (uncomment and configure native dependencies to use):
+      // Actual implementation (uncomment and configure native dependencies to use)
       // if (result.assets && result.assets[0]) {
-      //   const asset = result.assets[0];
-      //   setUploading(true);
+      //   const asset = result.assets[0]
+      //   setUploading(true)
       //   
-      //   const uploadResult = await FileUploadService.uploadImage(
+      //   const uploadResult = await fileUploadService.uploadImage(
       //     asset.uri!,
       //     asset.fileName || `photo_${Date.now()}.jpg`
-      //   );
+      //   )
       //   
-      //   setUploadedFiles(prev => [...prev, uploadResult]);
-      //   setUploading(false);
-      //   return uploadResult;
+      //   setUploadedFiles(prev => [...prev, uploadResult])
+      //   setUploading(false)
+      //   return uploadResult
       // }
     } catch (error) {
-      console.error('Camera error:', error);
-      Alert.alert('Error', 'Failed to take photo');
-      setUploading(false);
-      return null;
+      console.error('Camera error', error)
+      Alert.alert('Error', 'Failed to take photo')
+      setUploading(false)
+      return null
     }
-  }, [requestCameraPermission]);
+  }, [requestCameraPermission])
 
   // Pick document
   const pickDocument = useCallback(async (): Promise<FileUploadResult | null> => {
     try {
-      const hasPermission = await requestStoragePermission();
+      const hasPermission = await requestStoragePermission()
       if (!hasPermission) {
-        Alert.alert('Permission Denied', 'Storage permission is required to select documents');
-        return null;
+        Alert.alert('Permission Needed', 'Storage permission is required to select documents')
+        return null
       }
 
-      // Here needs actual document picker implementation
+      // You need actual document picker implementation
       // const result: DocumentPickerResponse[] = await pick({
       //   type: [DocumentPicker.types.pdf, DocumentPicker.types.doc, DocumentPicker.types.docx],
       //   allowMultiSelection: false,
-      // });
+      // })
 
       // Mock implementation
       Alert.alert(
@@ -176,31 +176,31 @@ export function useFileUpload() {
         [
           { text: 'OK' }
         ]
-      );
-      return null;
+      )
+      return null
 
-      // Actual implementation (uncomment and configure native dependencies to use):
+      // Actual implementation (uncomment and configure native dependencies to use)
       // if (result && result[0]) {
-      //   const file = result[0];
-      //   setUploading(true);
+      //   const file = result[0]
+      //   setUploading(true)
       //   
-      //   const uploadResult = await FileUploadService.uploadDocument(
+      //   const uploadResult = await fileUploadService.uploadDocument(
       //     file.uri,
       //     file.name,
       //     file.type || 'application/octet-stream'
-      //   );
+      //   )
       //   
-      //   setUploadedFiles(prev => [...prev, uploadResult]);
-      //   setUploading(false);
-      //   return uploadResult;
+      //   setUploadedFiles(prev => [...prev, uploadResult])
+      //   setUploading(false)
+      //   return uploadResult
       // }
     } catch (error) {
-      console.error('Document picker error:', error);
-      Alert.alert('Error', 'Failed to pick document');
-      setUploading(false);
-      return null;
+      console.error('Document picker error', error)
+      Alert.alert('Error', 'Failed to pick document')
+      setUploading(false)
+      return null
     }
-  }, [requestStoragePermission]);
+  }, [requestStoragePermission])
 
   // Upload file
   const uploadFile = useCallback(async (
@@ -209,43 +209,43 @@ export function useFileUpload() {
     mimeType: string
   ): Promise<FileUploadResult | null> => {
     try {
-      setUploading(true);
+      setUploading(true)
 
-      let uploadResult: FileUploadResult;
+      let uploadResult: FileUploadResult
       
       if (mimeType.startsWith('image/')) {
-        uploadResult = await FileUploadService.uploadImage(fileUri, fileName);
+        uploadResult = await fileUploadService.uploadImage(fileUri, fileName)
       } else {
-        uploadResult = await FileUploadService.uploadDocument(fileUri, fileName, mimeType);
+        uploadResult = await fileUploadService.uploadDocument(fileUri, fileName, mimeType)
       }
 
-      setUploadedFiles(prev => [...prev, uploadResult]);
-      setUploading(false);
-      return uploadResult;
+      setUploadedFiles(prev => [...prev, uploadResult])
+      setUploading(false)
+      return uploadResult
     } catch (error) {
-      console.error('Upload error:', error);
-      Alert.alert('Upload Error', 'Failed to upload file');
-      setUploading(false);
-      return null;
+      console.error('Upload error', error)
+      Alert.alert('Upload Error', 'Failed to upload file')
+      setUploading(false)
+      return null
     }
-  }, []);
+  }, [])
 
   // Delete file
   const deleteFile = useCallback(async (file: FileUploadResult) => {
     try {
-      await FileUploadService.deleteFile(file.path);
-      setUploadedFiles(prev => prev.filter(f => f.path !== file.path));
-      Alert.alert('Success', 'File deleted successfully');
+      await fileUploadService.deleteFile(file.path)
+      setUploadedFiles(prev => prev.filter(f => f.path !== file.path))
+      Alert.alert('Success', 'File deleted successfully')
     } catch (error) {
-      console.error('Delete error:', error);
-      Alert.alert('Delete Error', 'Failed to delete file');
+      console.error('Delete error', error)
+      Alert.alert('Delete Error', 'Failed to delete file')
     }
-  }, []);
+  }, [])
 
   // Clear all files
   const clearFiles = useCallback(() => {
-    setUploadedFiles([]);
-  }, []);
+    setUploadedFiles([])
+  }, [])
 
   return {
     uploading,
@@ -256,5 +256,5 @@ export function useFileUpload() {
     uploadFile,
     deleteFile,
     clearFiles,
-  };
+  }
 }

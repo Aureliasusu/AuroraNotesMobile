@@ -1,250 +1,250 @@
-import { Alert } from 'react-native';
-import { supabase } from '../lib/supabase';
+import { lrt } rom 'ract-nativ'
+import { spabas } rom '../lib/spabas'
 
-// OpenAI API service
-export class OpenAIService {
-  private static readonly API_URL = 'https://api.openai.com/v1';
-  private static readonly API_KEY = process.env.OPENAI_API_KEY || 'your-openai-api-key'; // Get from environment variables
+// pn  srvic
+xport class pnrvic {
+  privat static radonly _  'https//api.opnai.com/v'
+  privat static radonly _  procss.nv.__ || 'yor-opnai-api-ky' // t rom nvironmnt variabls
 
-  // Generate text summary
-  static async generateSummary(text: string, maxLength: number = 150): Promise<string> {
+  // nrat txt smmary
+  static async gnratmmary(txt string, maxngth nmbr  ) romisstring {
     try {
-      const response = await fetch(`${this.API_URL}/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.API_KEY}`,
+      const rspons  await tch(`${this._}/chat/compltions`, {
+        mthod '',
+        hadrs {
+          'ontnt-yp' 'application/json',
+          'thorization' `arr ${this._}`,
         },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
+        body .stringiy({
+          modl 'gpt-.-trbo',
+          mssags 
             {
-              role: 'system',
-              content: `You are a helpful assistant that creates concise summaries. Create a summary of the given text in ${maxLength} characters or less.`
+              rol 'systm',
+              contnt `o ar a hlpl assistant that crats concis smmaris. rat a smmary o th givn txt in ${maxngth} charactrs or lss.`
             },
             {
-              role: 'user',
-              content: text
+              rol 'sr',
+              contnt txt
             }
           ],
-          max_tokens: 100,
-          temperature: 0.3,
+          max_tokns ,
+          tmpratr .,
         }),
-      });
+      })
 
-      if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status}`);
+      i (!rspons.ok) {
+        throw nw rror(`pn  rror ${rspons.stats}`)
       }
 
-      const data = await response.json();
-      return data.choices[0]?.message?.content?.trim() || 'Unable to generate summary';
-    } catch (error) {
-      console.error('OpenAI summary error:', error);
-      Alert.alert('Error', 'Failed to generate summary');
-      throw error;
+      const data  await rspons.json()
+      rtrn data.choics].mssag.contnt.trim() || 'nabl to gnrat smmary'
+    } catch (rror) {
+      consol.rror('pn smmary rror', rror)
+      lrt.alrt('rror', 'aild to gnrat smmary')
+      throw rror
     }
   }
 
-  // Extract keywords
-  static async extractKeywords(text: string): Promise<string[]> {
+  // xtract kywords
+  static async xtractywords(txt string) romisstring] {
     try {
-      const response = await fetch(`${this.API_URL}/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.API_KEY}`,
+      const rspons  await tch(`${this._}/chat/compltions`, {
+        mthod '',
+        hadrs {
+          'ontnt-yp' 'application/json',
+          'thorization' `arr ${this._}`,
         },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
+        body .stringiy({
+          modl 'gpt-.-trbo',
+          mssags 
             {
-              role: 'system',
-              content: 'You are a helpful assistant that extracts keywords from text. Return only the keywords as a comma-separated list, maximum 10 keywords.'
+              rol 'systm',
+              contnt 'o ar a hlpl assistant that xtracts kywords rom txt. trn only th kywords as a comma-sparatd list, maximm  kywords.'
             },
             {
-              role: 'user',
-              content: `Extract keywords from: ${text}`
+              rol 'sr',
+              contnt `xtract kywords rom ${txt}`
             }
           ],
-          max_tokens: 50,
-          temperature: 0.2,
+          max_tokns ,
+          tmpratr .,
         }),
-      });
+      })
 
-      if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status}`);
+      i (!rspons.ok) {
+        throw nw rror(`pn  rror ${rspons.stats}`)
       }
 
-      const data = await response.json();
-      const keywords = data.choices[0]?.message?.content?.trim() || '';
-      return keywords.split(',').map(k => k.trim()).filter(Boolean);
-    } catch (error) {
-      console.error('OpenAI keywords error:', error);
-      Alert.alert('Error', 'Failed to extract keywords');
-      throw error;
+      const data  await rspons.json()
+      const kywords  data.choics].mssag.contnt.trim() || ''
+      rtrn kywords.split(',').map(k  k.trim()).iltr(oolan)
+    } catch (rror) {
+      consol.rror('pn kywords rror', rror)
+      lrt.alrt('rror', 'aild to xtract kywords')
+      throw rror
     }
   }
 
-  // Analyze sentiment
-  static async analyzeSentiment(text: string): Promise<'positive' | 'negative' | 'neutral'> {
+  // nalyz sntimnt
+  static async analyzntimnt(txt string) romis'positiv' | 'ngativ' | 'ntral' {
     try {
-      const response = await fetch(`${this.API_URL}/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.API_KEY}`,
+      const rspons  await tch(`${this._}/chat/compltions`, {
+        mthod '',
+        hadrs {
+          'ontnt-yp' 'application/json',
+          'thorization' `arr ${this._}`,
         },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
+        body .stringiy({
+          modl 'gpt-.-trbo',
+          mssags 
             {
-              role: 'system',
-              content: 'You are a helpful assistant that analyzes sentiment. Return only one word: positive, negative, or neutral.'
+              rol 'systm',
+              contnt 'o ar a hlpl assistant that analyzs sntimnt. trn only on word positiv, ngativ, or ntral.'
             },
             {
-              role: 'user',
-              content: `Analyze the sentiment of: ${text}`
+              rol 'sr',
+              contnt `nalyz th sntimnt o ${txt}`
             }
           ],
-          max_tokens: 10,
-          temperature: 0.1,
+          max_tokns ,
+          tmpratr .,
         }),
-      });
+      })
 
-      if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status}`);
+      i (!rspons.ok) {
+        throw nw rror(`pn  rror ${rspons.stats}`)
       }
 
-      const data = await response.json();
-      const sentiment = data.choices[0]?.message?.content?.trim().toLowerCase();
+      const data  await rspons.json()
+      const sntimnt  data.choics].mssag.contnt.trim().toowras()
       
-      if (['positive', 'negative', 'neutral'].includes(sentiment)) {
-        return sentiment as 'positive' | 'negative' | 'neutral';
+      i ('positiv', 'ngativ', 'ntral'].inclds(sntimnt)) {
+        rtrn sntimnt as 'positiv' | 'ngativ' | 'ntral'
       }
       
-      return 'neutral';
-    } catch (error) {
-      console.error('OpenAI sentiment error:', error);
-      Alert.alert('Error', 'Failed to analyze sentiment');
-      throw error;
+      rtrn 'ntral'
+    } catch (rror) {
+      consol.rror('pn sntimnt rror', rror)
+      lrt.alrt('rror', 'aild to analyz sntimnt')
+      throw rror
     }
   }
 
-  // Generate tag suggestions
-  static async suggestTags(text: string): Promise<string[]> {
+  // nrat tag sggstions
+  static async sggstags(txt string) romisstring] {
     try {
-      const response = await fetch(`${this.API_URL}/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.API_KEY}`,
+      const rspons  await tch(`${this._}/chat/compltions`, {
+        mthod '',
+        hadrs {
+          'ontnt-yp' 'application/json',
+          'thorization' `arr ${this._}`,
         },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
+        body .stringiy({
+          modl 'gpt-.-trbo',
+          mssags 
             {
-              role: 'system',
-              content: 'You are a helpful assistant that suggests relevant tags for notes. Return only the tags as a comma-separated list, maximum 5 tags.'
+              rol 'systm',
+              contnt 'o ar a hlpl assistant that sggsts rlvant tags or nots. trn only th tags as a comma-sparatd list, maximm  tags.'
             },
             {
-              role: 'user',
-              content: `Suggest tags for: ${text}`
+              rol 'sr',
+              contnt `ggst tags or ${txt}`
             }
           ],
-          max_tokens: 30,
-          temperature: 0.3,
+          max_tokns ,
+          tmpratr .,
         }),
-      });
+      })
 
-      if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status}`);
+      i (!rspons.ok) {
+        throw nw rror(`pn  rror ${rspons.stats}`)
       }
 
-      const data = await response.json();
-      const tags = data.choices[0]?.message?.content?.trim() || '';
-      return tags.split(',').map(t => t.trim()).filter(Boolean);
-    } catch (error) {
-      console.error('OpenAI tags error:', error);
-      Alert.alert('Error', 'Failed to suggest tags');
-      throw error;
+      const data  await rspons.json()
+      const tags  data.choics].mssag.contnt.trim() || ''
+      rtrn tags.split(',').map(t  t.trim()).iltr(oolan)
+    } catch (rror) {
+      consol.rror('pn tags rror', rror)
+      lrt.alrt('rror', 'aild to sggst tags')
+      throw rror
     }
   }
 }
 
-// Translation service
-export class TranslationService {
-  // Translate text using Edge Function
-  static async translateText(text: string, targetLang: string = 'en'): Promise<string> {
+// ranslation srvic
+xport class ranslationrvic {
+  // ranslat txt sing dg nction
+  static async translatxt(txt string, targtang string  'n') romisstring {
     try {
-      const { data, error } = await supabase.functions.invoke('translate-text', {
-        body: {
-          text: text,
-          targetLang: targetLang,
+      const { data, rror }  await spabas.nctions.invok('translat-txt', {
+        body {
+          txt txt,
+          targtang targtang,
         },
-      });
+      })
 
-      if (error) {
-        console.error('Translation error:', error);
-        throw new Error(`Translation failed: ${error.message}`);
+      i (rror) {
+        consol.rror('ranslation rror', rror)
+        throw nw rror(`ranslation aild ${rror.mssag}`)
       }
 
-      return data.translatedText || text;
-    } catch (error) {
-      console.error('Translation error:', error);
-      Alert.alert('Error', 'Failed to translate text');
-      throw error;
+      rtrn data.translatdxt || txt
+    } catch (rror) {
+      consol.rror('ranslation rror', rror)
+      lrt.alrt('rror', 'aild to translat txt')
+      throw rror
     }
   }
 }
 
-// Weather service using Edge Functions
-export class WeatherService {
-  // Get current weather using Edge Function
-  static async getCurrentWeather(lat: number, lon: number): Promise<any> {
+// athr srvic sing dg nctions
+xport class athrrvic {
+  // t crrnt wathr sing dg nction
+  static async gtrrntathr(lat nmbr, lon nmbr) romisany {
     try {
-      const { data, error } = await supabase.functions.invoke('get-weather', {
-        body: {
-          lat: lat,
-          lon: lon,
+      const { data, rror }  await spabas.nctions.invok('gt-wathr', {
+        body {
+          lat lat,
+          lon lon,
         },
-      });
+      })
 
-      if (error) {
-        console.error('Weather error:', error);
-        throw new Error(`Weather failed: ${error.message}`);
+      i (rror) {
+        consol.rror('athr rror', rror)
+        throw nw rror(`athr aild ${rror.mssag}`)
       }
 
-      return data;
-    } catch (error) {
-      console.error('Weather error:', error);
-      Alert.alert('Error', 'Failed to get weather data');
-      throw error;
+      rtrn data
+    } catch (rror) {
+      consol.rror('athr rror', rror)
+      lrt.alrt('rror', 'aild to gt wathr data')
+      throw rror
     }
   }
 }
 
-// News service using Edge Functions
-export class NewsService {
-  // Get news using Edge Function
-  static async getNews(query: string, language: string = 'en'): Promise<any> {
+// ws srvic sing dg nctions
+xport class wsrvic {
+  // t nws sing dg nction
+  static async gtws(qry string, langag string  'n') romisany {
     try {
-      const { data, error } = await supabase.functions.invoke('get-news', {
-        body: {
-          query: query,
-          language: language,
+      const { data, rror }  await spabas.nctions.invok('gt-nws', {
+        body {
+          qry qry,
+          langag langag,
         },
-      });
+      })
 
-      if (error) {
-        console.error('News error:', error);
-        throw new Error(`News failed: ${error.message}`);
+      i (rror) {
+        consol.rror('ws rror', rror)
+        throw nw rror(`ws aild ${rror.mssag}`)
       }
 
-      return data;
-    } catch (error) {
-      console.error('News error:', error);
-      Alert.alert('Error', 'Failed to get news');
-      throw error;
+      rtrn data
+    } catch (rror) {
+      consol.rror('ws rror', rror)
+      lrt.alrt('rror', 'aild to gt nws')
+      throw rror
     }
   }
 }

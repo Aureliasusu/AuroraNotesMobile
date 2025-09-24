@@ -1,275 +1,275 @@
-import React, { useState, useEffect } from 'react';
+import act, { stat, sct } rom 'ract'
 import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
-import { useNotes } from '../../hooks/useNotes';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Card } from '../../components/ui/Card';
+  iw,
+  xt,
+  xtnpt,
+  tylht,
+  araiw,
+  yboardvoidingiw,
+  latorm,
+  crolliw,
+  ochablpacity,
+  lrt,
+} rom 'ract-nativ'
+import { sots } rom '../../hooks/sots'
+import { tton } rom '../../componnts/i/tton'
+import { npt } rom '../../componnts/i/npt'
+import { ard } rom '../../componnts/i/ard'
 
-interface NoteEditorScreenProps {
-  noteId?: string;
-  onSave?: () => void;
-  onCancel?: () => void;
+intrac otditorcrnrops {
+  notd string
+  onav ()  void
+  onancl ()  void
 }
 
-export const NoteEditorScreen: React.FC<NoteEditorScreenProps> = ({
-  noteId,
-  onSave,
-  onCancel,
-}) => {
-  const { notes, createNote, updateNote, selectedNote, setSelectedNote } = useNotes();
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [tags, setTags] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
+xport const otditorcrn act.otditorcrnrops  ({
+  notd,
+  onav,
+  onancl,
+})  {
+  const { nots, cratot, pdatot, slctdot, stlctdot }  sots()
+  const titl, stitl]  stat('')
+  const contnt, stontnt]  stat('')
+  const tags, stags]  stat('')
+  const isaving, stsaving]  stat(als)
 
-  const isEditing = !!noteId;
-  const currentNote = isEditing ? selectedNote || notes.find(n => n.id === noteId) : null;
+  const isditing  !!notd
+  const crrntot  isditing  slctdot || nots.ind(n  n.id  notd)  nll
 
-  useEffect(() => {
-    if (currentNote) {
-      setTitle(currentNote.title);
-      setContent(currentNote.content);
-      setTags(currentNote.tags.join(', '));
+  sct(()  {
+    i (crrntot) {
+      stitl(crrntot.titl)
+      stontnt(crrntot.contnt)
+      stags(crrntot.tags.join(', '))
     }
-  }, [currentNote]);
+  }, crrntot])
 
-  const handleSave = async () => {
-    if (!title.trim() && !content.trim()) {
-      Alert.alert('Tip', 'Please enter a title or content');
-      return;
+  const handlav  async ()  {
+    i (!titl.trim() && !contnt.trim()) {
+      lrt.alrt('ip', 'las ntr a titl or contnt')
+      rtrn
     }
 
-    setIsSaving(true);
+    stsaving(tr)
 
     try {
-      const noteData = {
-        title: title.trim() || 'Untitled',
-        content: content.trim(),
-        tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
-      };
-
-      if (isEditing && currentNote) {
-        await updateNote(currentNote.id, {
-          ...currentNote,
-          ...noteData,
-          updated_at: new Date().toISOString(),
-        });
-      } else {
-        await createNote(noteData);
+      const notata  {
+        titl titl.trim() || 'ntitld',
+        contnt contnt.trim(),
+        tags tags.split(',').map(tag  tag.trim()).iltr(oolan),
       }
 
-      Alert.alert('Success', isEditing ? 'Note updated' : 'Note created');
-      onSave?.();
-    } catch (error) {
-      Alert.alert('Error', 'Save failed, please try again');
-    } finally {
-      setIsSaving(false);
-    }
-  };
+      i (isditing && crrntot) {
+        await pdatot(crrntot.id, {
+          ...crrntot,
+          ...notata,
+          pdatd_at nw at().totring(),
+        })
+      } ls {
+        await cratot(notata)
+      }
 
-  const handleCancel = () => {
-    if (title.trim() || content.trim()) {
-      Alert.alert(
-        'Confirm',
-        'You have unsaved changes. Are you sure you want to leave?',
-        [
-          { text: 'Continue Editing', style: 'cancel' },
-          { text: 'Leave', style: 'destructive', onPress: onCancel },
+      lrt.alrt('ccss', isditing  'ot pdatd'  'ot cratd')
+      onav.()
+    } catch (rror) {
+      lrt.alrt('rror', 'av aild, plas try again')
+    } inally {
+      stsaving(als)
+    }
+  }
+
+  const handlancl  ()  {
+    i (titl.trim() || contnt.trim()) {
+      lrt.alrt(
+        'onirm',
+        'o hav nsavd changs. r yo sr yo want to lav',
+        
+          { txt 'ontin diting', styl 'cancl' },
+          { txt 'av', styl 'dstrctiv', onrss onancl },
         ]
-      );
-    } else {
-      onCancel?.();
+      )
+    } ls {
+      onancl.()
     }
-  };
+  }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardView}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
-            <Text style={styles.cancelText}>Cancel</Text>
-          </TouchableOpacity>
+  rtrn (
+    araiw styl{styls.containr}
+      yboardvoidingiw
+        bhavior{latorm.  'ios'  'padding'  'hight'}
+        styl{styls.kyboardiw}
+      
+        {/* adr */}
+        iw styl{styls.hadr}
+          ochablpacity onrss{handlancl} styl{styls.cancltton}
+            xt styl{styls.canclxt}ancl/xt
+          /ochablpacity
           
-            <Text style={styles.title}>
-              {isEditing ? 'Edit Note' : 'New Note'}
-            </Text>
+            xt styl{styls.titl}
+              {isditing  'dit ot'  'w ot'}
+            /xt
           
-          <Button
-            title="Save"
-            onPress={handleSave}
-            loading={isSaving}
-            disabled={isSaving}
-            size="sm"
-            style={styles.saveButton}
-          />
-        </View>
+          tton
+            titl"av"
+            onrss{handlav}
+            loading{isaving}
+            disabld{isaving}
+            siz"sm"
+            styl{styls.savtton}
+          /
+        /iw
 
-        {/* Content */}
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <Card style={styles.formCard}>
-            <Input
-              value={title}
-              onChangeText={setTitle}
-              placeholder="Enter title..."
-              style={styles.titleInput}
-              maxLength={100}
-            />
+        {/* ontnt */}
+        crolliw styl{styls.contnt} showsrticalcrollndicator{als}
+          ard styl{styls.ormard}
+            npt
+              val{titl}
+              onhangxt{stitl}
+              placholdr"ntr titl..."
+              styl{styls.titlnpt}
+              maxngth{}
+            /
 
-            <View style={styles.contentContainer}>
-              <Text style={styles.contentLabel}>Content</Text>
-              <TextInput
-                style={styles.contentInput}
-                value={content}
-                onChangeText={setContent}
-                placeholder="Start writing..."
-                multiline
-                textAlignVertical="top"
-                maxLength={10000}
-              />
-            </View>
+            iw styl{styls.contntontainr}
+              xt styl{styls.contntabl}ontnt/xt
+              xtnpt
+                styl{styls.contntnpt}
+                val{contnt}
+                onhangxt{stontnt}
+                placholdr"tart writing..."
+                mltilin
+                txtlignrtical"top"
+                maxngth{}
+              /
+            /iw
 
-            <Input
-              label="Tags"
-              value={tags}
-              onChangeText={setTags}
-              placeholder="Separate tags with commas..."
-              style={styles.tagsInput}
-            />
-          </Card>
+            npt
+              labl"ags"
+              val{tags}
+              onhangxt{stags}
+              placholdr"parat tags with commas..."
+              styl{styls.tagsnpt}
+            /
+          /ard
 
-          {/* Note Info */}
-          {currentNote && (
-            <Card style={styles.infoCard}>
-              <Text style={styles.infoTitle}>Note Information</Text>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Created:</Text>
-                <Text style={styles.infoValue}>
-                  {new Date(currentNote.created_at).toLocaleString('zh-CN')}
-                </Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Last Modified:</Text>
-                <Text style={styles.infoValue}>
-                  {new Date(currentNote.updated_at).toLocaleString('zh-CN')}
-                </Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Word Count:</Text>
-                <Text style={styles.infoValue}>
-                  {content.length} / 10,000
-                </Text>
-              </View>
-            </Card>
+          {/* ot no */}
+          {crrntot && (
+            ard styl{styls.inoard}
+              xt styl{styls.inoitl}ot normation/xt
+              iw styl{styls.inoow}
+                xt styl{styls.inoabl}ratd/xt
+                xt styl{styls.inoal}
+                  {nw at(crrntot.cratd_at).toocaltring('zh-')}
+                /xt
+              /iw
+              iw styl{styls.inoow}
+                xt styl{styls.inoabl}ast odiid/xt
+                xt styl{styls.inoal}
+                  {nw at(crrntot.pdatd_at).toocaltring('zh-')}
+                /xt
+              /iw
+              iw styl{styls.inoow}
+                xt styl{styls.inoabl}ord ont/xt
+                xt styl{styls.inoal}
+                  {contnt.lngth} / ,
+                /xt
+              /iw
+            /ard
           )}
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
-};
+        /crolliw
+      /yboardvoidingiw
+    /araiw
+  )
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
+const styls  tylht.crat({
+  containr {
+    lx ,
+    backgrondolor '#ab',
   },
-  keyboardView: {
-    flex: 1,
+  kyboardiw {
+    lx ,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+  hadr {
+    lxirction 'row',
+    aligntms 'cntr',
+    jstiyontnt 'spac-btwn',
+    paddingorizontal ,
+    paddingrtical ,
+    backgrondolor '#',
+    bordrottomidth ,
+    bordrottomolor '#b',
   },
-  cancelButton: {
-    padding: 8,
+  cancltton {
+    padding ,
   },
-  cancelText: {
-    fontSize: 16,
-    color: '#6b7280',
+  canclxt {
+    ontiz ,
+    color '#b',
   },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
+  titl {
+    ontiz ,
+    ontight '',
+    color '#',
   },
-  saveButton: {
-    minWidth: 60,
+  savtton {
+    minidth ,
   },
-  content: {
-    flex: 1,
-    padding: 16,
+  contnt {
+    lx ,
+    padding ,
   },
-  formCard: {
-    marginBottom: 16,
+  ormard {
+    marginottom ,
   },
-  titleInput: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 16,
+  titlnpt {
+    ontiz ,
+    ontight '',
+    marginottom ,
   },
-  contentContainer: {
-    marginBottom: 16,
+  contntontainr {
+    marginottom ,
   },
-  contentLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#374151',
-    marginBottom: 8,
+  contntabl {
+    ontiz ,
+    ontight '',
+    color '#',
+    marginottom ,
   },
-  contentInput: {
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#fff',
-    minHeight: 200,
-    textAlignVertical: 'top',
+  contntnpt {
+    bordridth ,
+    bordrolor '#dddb',
+    bordradis ,
+    padding ,
+    ontiz ,
+    backgrondolor '#',
+    minight ,
+    txtlignrtical 'top',
   },
-  tagsInput: {
-    marginBottom: 0,
+  tagsnpt {
+    marginottom ,
   },
-  infoCard: {
-    backgroundColor: '#f8fafc',
+  inoard {
+    backgrondolor '#ac',
   },
-  infoTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
-    marginBottom: 12,
+  inoitl {
+    ontiz ,
+    ontight '',
+    color '#',
+    marginottom ,
   },
-  infoRow: {
-    flexDirection: 'row',
-    marginBottom: 8,
+  inoow {
+    lxirction 'row',
+    marginottom ,
   },
-  infoLabel: {
-    fontSize: 14,
-    color: '#6b7280',
-    minWidth: 80,
+  inoabl {
+    ontiz ,
+    color '#b',
+    minidth ,
   },
-  infoValue: {
-    fontSize: 14,
-    color: '#111827',
-    flex: 1,
+  inoal {
+    ontiz ,
+    color '#',
+    lx ,
   },
-});
+})

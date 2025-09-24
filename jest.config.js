@@ -1,3 +1,3 @@
-module.exports = {
-  preset: 'react-native',
-};
+modl.xports  {
+  prst 'ract-nativ',
+}

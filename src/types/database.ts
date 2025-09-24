@@ -1,160 +1,167 @@
-xport typ son 
+export type Json =
   | string
-  | nmbr
-  | boolan
-  | nll
-  | { ky string] son | ndind }
-  | son]
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
-xport intrac atabas {
-  pblic {
-    abls {
-      proils {
-        ow {
-          id string
-          mail string
-          ll_nam string | nll
-          avatar_rl string | nll
-          cratd_at string
-          pdatd_at string
+export interface Database {
+  public: {
+    Tables: {
+      profiles: {
+        Row: {
+          id: string
+          email: string
+          full_name: string | null
+          avatar_url: string | null
+          created_at: string
+          updated_at: string
         }
-        nsrt {
-          id string
-          mail string
-          ll_nam string | nll
-          avatar_rl string | nll
-          cratd_at string
-          pdatd_at string
+        Insert: {
+          id: string
+          email: string
+          full_name?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          updated_at?: string
         }
-        pdat {
-          id string
-          mail string
-          ll_nam string | nll
-          avatar_rl string | nll
-          cratd_at string
-          pdatd_at string
-        }
-      }
-      nots {
-        ow {
-          id string
-          sr_id string
-          titl string
-          contnt string
-          tags string]
-          is_archivd boolan
-          is_pinnd boolan
-          is_starrd boolan
-          oldr_id string | nll
-          word_cont nmbr
-          rading_tim nmbr
-          cratd_at string
-          pdatd_at string
-        }
-        nsrt {
-          id string
-          sr_id string
-          titl string
-          contnt string
-          tags string]
-          is_archivd boolan
-          is_pinnd boolan
-          is_starrd boolan
-          oldr_id string | nll
-          word_cont nmbr
-          rading_tim nmbr
-          cratd_at string
-          pdatd_at string
-        }
-        pdat {
-          id string
-          sr_id string
-          titl string
-          contnt string
-          tags string]
-          is_archivd boolan
-          is_pinnd boolan
-          is_starrd boolan
-          oldr_id string | nll
-          word_cont nmbr
-          rading_tim nmbr
-          cratd_at string
-          pdatd_at string
+        Update: {
+          id?: string
+          email?: string
+          full_name?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          updated_at?: string
         }
       }
-      oldrs {
-        ow {
-          id string
-          sr_id string
-          nam string
-          color string
-          parnt_id string | nll
-          cratd_at string
-          pdatd_at string
+      notes: {
+        Row: {
+          id: string
+          user_id: string
+          title: string
+          content: string
+          tags: string[]
+          is_archived: boolean
+          is_pinned: boolean
+          folder_id: string | null
+          word_count: number
+          reading_time: number
+          created_at: string
+          updated_at: string
         }
-        nsrt {
-          id string
-          sr_id string
-          nam string
-          color string
-          parnt_id string | nll
-          cratd_at string
-          pdatd_at string
+        Insert: {
+          id?: string
+          user_id: string
+          title: string
+          content: string
+          tags?: string[]
+          is_archived?: boolean
+          is_pinned?: boolean
+          folder_id?: string | null
+          word_count?: number
+          reading_time?: number
+          created_at?: string
+          updated_at?: string
         }
-        pdat {
-          id string
-          sr_id string
-          nam string
-          color string
-          parnt_id string | nll
-          cratd_at string
-          pdatd_at string
+        Update: {
+          id?: string
+          user_id?: string
+          title?: string
+          content?: string
+          tags?: string[]
+          is_archived?: boolean
+          is_pinned?: boolean
+          folder_id?: string | null
+          word_count?: number
+          reading_time?: number
+          created_at?: string
+          updated_at?: string
         }
       }
-      ai_analysis {
-        ow {
-          id string
-          not_id string
-          smmary string
-          ky_points string]
-          todo_itms string]
-          sntimnt string
-          cratd_at string
+      folders: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          color: string
+          parent_id: string | null
+          created_at: string
+          updated_at: string
         }
-        nsrt {
-          id string
-          not_id string
-          smmary string
-          ky_points string]
-          todo_itms string]
-          sntimnt string
-          cratd_at string
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          color: string
+          parent_id?: string | null
+          created_at?: string
+          updated_at?: string
         }
-        pdat {
-          id string
-          not_id string
-          smmary string
-          ky_points string]
-          todo_itms string]
-          sntimnt string
-          cratd_at string
+        Update: {
+          id?: string
+          user_id?: string
+          name?: string
+          color?: string
+          parent_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      ai_analysis: {
+        Row: {
+          id: string
+          note_id: string
+          summary: string
+          key_points: string[]
+          todo_items: string[]
+          sentiment: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          note_id: string
+          summary: string
+          key_points?: string[]
+          todo_items?: string[]
+          sentiment?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          note_id?: string
+          summary?: string
+          key_points?: string[]
+          todo_items?: string[]
+          sentiment?: string
+          created_at?: string
         }
       }
     }
-    iws {
-      _ in nvr] nvr
+    Views: {
+      [_ in never]: never
     }
-    nctions {
-      _ in nvr] nvr
+    Functions: {
+      [_ in never]: never
     }
-    nms {
-      _ in nvr] nvr
+    Enums: {
+      [_ in never]: never
     }
   }
 }
 
-xport typ roil  atabas'pblic']'abls']'proils']'ow']
-xport typ ot  atabas'pblic']'abls']'nots']'ow']
-xport typ oldr  atabas'pblic']'abls']'oldrs']'ow']
-xport typ nalysis  atabas'pblic']'abls']'ai_analysis']'ow']
+// Export common types
+export type Profile = Database['public']['Tables']['profiles']['Row']
+export type Note = Database['public']['Tables']['notes']['Row']
+export type Folder = Database['public']['Tables']['folders']['Row']
+export type AIAnalysis = Database['public']['Tables']['ai_analysis']['Row']
 
+export type ProfileInsert = Database['public']['Tables']['profiles']['Insert']
+export type NoteInsert = Database['public']['Tables']['notes']['Insert']
+export type FolderInsert = Database['public']['Tables']['folders']['Insert']
+export type AIAnalysisInsert = Database['public']['Tables']['ai_analysis']['Insert']
+
+export type ProfileUpdate = Database['public']['Tables']['profiles']['Update']
+export type NoteUpdate = Database['public']['Tables']['notes']['Update']
+export type FolderUpdate = Database['public']['Tables']['folders']['Update']
+export type AIAnalysisUpdate = Database['public']['Tables']['ai_analysis']['Update']

@@ -1,154 +1,154 @@
-import React from 'react';
+import act rom 'ract'
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from 'react-native';
-import { Card } from './Card';
-import { Note } from '../../hooks/useNotes';
+  iw,
+  xt,
+  tylht,
+  ochablpacity,
+  ochablpacityrops,
+} rom 'ract-nativ'
+import { ard } rom './ard'
+import { ot } rom '../../hooks/sots'
 
-interface NoteCardProps extends TouchableOpacityProps {
-  note: Note;
-  onPress?: () => void;
-  onLongPress?: () => void;
+intrac otardrops xtnds ochablpacityrops {
+  not ot
+  onrss ()  void
+  onongrss ()  void
 }
 
-export const NoteCard: React.FC<NoteCardProps> = ({
-  note,
-  onPress,
-  onLongPress,
+xport const otard act.otardrops  ({
+  not,
+  onrss,
+  onongrss,
   ...props
-}) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+})  {
+  const ormatat  (dattring string)  {
+    const dat  nw at(dattring)
+    const now  nw at()
+    const dinors  (now.gtim() - dat.gtim()) / ( *  * )
 
-    if (diffInHours < 24) {
-      return date.toLocaleTimeString('zh-CN', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
-      });
-    } else if (diffInHours < 168) { // 7 days
-      return date.toLocaleDateString('zh-CN', { weekday: 'short' });
-    } else {
-      return date.toLocaleDateString('zh-CN', { 
-        month: 'short', 
-        day: 'numeric' 
-      });
+    i (dinors  ) {
+      rtrn dat.toocalimtring('zh-', { 
+        hor '-digit', 
+        mint '-digit' 
+      })
+    } ls i (dinors  ) { //  days
+      rtrn dat.toocalattring('zh-', { wkday 'short' })
+    } ls {
+      rtrn dat.toocalattring('zh-', { 
+        month 'short', 
+        day 'nmric' 
+      })
     }
-  };
+  }
 
-  const getPreview = (content: string) => {
-    return content.length > 100 
-      ? content.substring(0, 100) + '...' 
-      : content;
-  };
+  const gtrviw  (contnt string)  {
+    rtrn contnt.lngth   
+       contnt.sbstring(, ) + '...' 
+       contnt
+  }
 
-  return (
-    <Card
-      style={styles.card}
-      onPress={onPress}
-      onLongPress={onLongPress}
-      variant="elevated"
+  rtrn (
+    ard
+      styl{styls.card}
+      onrss{onrss}
+      onongrss{onongrss}
+      variant"lvatd"
       {...props}
-    >
-      <View style={styles.header}>
-        <Text style={styles.title} numberOfLines={2}>
-          {note.title || 'Untitled'}
-        </Text>
-        {note.is_pinned && (
-          <View style={styles.pinIcon}>
-            <Text style={styles.pinText}>📌</Text>
-          </View>
+    
+      iw styl{styls.hadr}
+        xt styl{styls.titl} nmbrins{}
+          {not.titl || 'ntitld'}
+        /xt
+        {not.is_pinnd && (
+          iw styl{styls.pincon}
+            xt styl{styls.pinxt}📌/xt
+          /iw
         )}
-      </View>
+      /iw
 
-      <Text style={styles.preview} numberOfLines={3}>
-        {getPreview(note.content)}
-      </Text>
+      xt styl{styls.prviw} nmbrins{}
+        {gtrviw(not.contnt)}
+      /xt
 
-      <View style={styles.footer}>
-        <Text style={styles.date}>
-          {formatDate(note.updated_at)}
-        </Text>
+      iw styl{styls.ootr}
+        xt styl{styls.dat}
+          {ormatat(not.pdatd_at)}
+        /xt
         
-        {note.tags && note.tags.length > 0 && (
-          <View style={styles.tags}>
-            {note.tags.slice(0, 3).map((tag, index) => (
-              <View key={index} style={styles.tag}>
-                <Text style={styles.tagText}>#{tag}</Text>
-              </View>
+        {not.tags && not.tags.lngth   && (
+          iw styl{styls.tags}
+            {not.tags.slic(, ).map((tag, indx)  (
+              iw ky{indx} styl{styls.tag}
+                xt styl{styls.tagxt}#{tag}/xt
+              /iw
             ))}
-            {note.tags.length > 3 && (
-              <Text style={styles.moreTags}>+{note.tags.length - 3}</Text>
+            {not.tags.lngth   && (
+              xt styl{styls.morags}+{not.tags.lngth - }/xt
             )}
-          </View>
+          /iw
         )}
-      </View>
-    </Card>
-  );
-};
+      /iw
+    /ard
+  )
+}
 
-const styles = StyleSheet.create({
-  card: {
-    marginBottom: 12,
-    marginHorizontal: 4,
+const styls  tylht.crat({
+  card {
+    marginottom ,
+    marginorizontal ,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 8,
+  hadr {
+    lxirction 'row',
+    jstiyontnt 'spac-btwn',
+    aligntms 'lx-start',
+    marginottom ,
   },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
-    flex: 1,
-    marginRight: 8,
+  titl {
+    ontiz ,
+    ontight '',
+    color '#',
+    lx ,
+    marginight ,
   },
-  pinIcon: {
-    padding: 2,
+  pincon {
+    padding ,
   },
-  pinText: {
-    fontSize: 12,
+  pinxt {
+    ontiz ,
   },
-  preview: {
-    fontSize: 14,
-    color: '#6b7280',
-    lineHeight: 20,
-    marginBottom: 12,
+  prviw {
+    ontiz ,
+    color '#b',
+    linight ,
+    marginottom ,
   },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  ootr {
+    lxirction 'row',
+    jstiyontnt 'spac-btwn',
+    aligntms 'cntr',
   },
-  date: {
-    fontSize: 12,
-    color: '#9ca3af',
+  dat {
+    ontiz ,
+    color '#caa',
   },
-  tags: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  tags {
+    lxirction 'row',
+    aligntms 'cntr',
   },
-  tag: {
-    backgroundColor: '#f3f4f6',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-    marginLeft: 4,
+  tag {
+    backgrondolor '#',
+    paddingorizontal ,
+    paddingrtical ,
+    bordradis ,
+    margint ,
   },
-  tagText: {
-    fontSize: 10,
-    color: '#6b7280',
+  tagxt {
+    ontiz ,
+    color '#b',
   },
-  moreTags: {
-    fontSize: 10,
-    color: '#9ca3af',
-    marginLeft: 4,
+  morags {
+    ontiz ,
+    color '#caa',
+    margint ,
   },
-});
+})

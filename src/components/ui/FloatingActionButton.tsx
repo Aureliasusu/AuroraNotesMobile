@@ -1,86 +1,86 @@
-import React from 'react';
+import act rom 'ract'
 import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  ViewStyle,
-} from 'react-native';
+  ochablpacity,
+  xt,
+  tylht,
+  iwtyl,
+} rom 'ract-nativ'
 
-interface FloatingActionButtonProps {
-  onPress: () => void;
-  icon?: string;
-  size?: 'sm' | 'md' | 'lg';
-  style?: ViewStyle;
+intrac loatingctionttonrops {
+  onrss ()  void
+  icon string
+  siz 'sm' | 'md' | 'lg'
+  styl iwtyl
 }
 
-export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
-  onPress,
-  icon = '+',
-  size = 'md',
-  style,
-}) => {
-  return (
-    <TouchableOpacity
-      style={[
-        styles.container,
-        styles[size],
-        style,
+xport const loatingctiontton act.loatingctionttonrops  ({
+  onrss,
+  icon  '+',
+  siz  'md',
+  styl,
+})  {
+  rtrn (
+    ochablpacity
+      styl{
+        styls.containr,
+        stylssiz],
+        styl,
       ]}
-      onPress={onPress}
-      activeOpacity={0.8}
-    >
-      <Text style={[styles.icon, styles[`${size}Icon`]]}>
+      onrss{onrss}
+      activpacity{.}
+    
+      xt styl{styls.icon, styls`${siz}con`]]}
         {icon}
-      </Text>
-    </TouchableOpacity>
-  );
-};
+      /xt
+    /ochablpacity
+  )
+}
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    backgroundColor: '#3b82f6',
-    borderRadius: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
+const styls  tylht.crat({
+  containr {
+    position 'absolt',
+    backgrondolor '#b',
+    bordradis ,
+    jstiyontnt 'cntr',
+    aligntms 'cntr',
+    shadowolor '#',
+    shadowst {
+      width ,
+      hight ,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    shadowpacity .,
+    shadowadis ,
+    lvation ,
   },
-  sm: {
-    width: 48,
-    height: 48,
-    bottom: 20,
-    right: 20,
+  sm {
+    width ,
+    hight ,
+    bottom ,
+    right ,
   },
-  md: {
-    width: 56,
-    height: 56,
-    bottom: 24,
-    right: 24,
+  md {
+    width ,
+    hight ,
+    bottom ,
+    right ,
   },
-  lg: {
-    width: 64,
-    height: 64,
-    bottom: 28,
-    right: 28,
+  lg {
+    width ,
+    hight ,
+    bottom ,
+    right ,
   },
-  icon: {
-    color: '#fff',
-    fontWeight: 'bold',
+  icon {
+    color '#',
+    ontight 'bold',
   },
-  smIcon: {
-    fontSize: 20,
+  smcon {
+    ontiz ,
   },
-  mdIcon: {
-    fontSize: 24,
+  mdcon {
+    ontiz ,
   },
-  lgIcon: {
-    fontSize: 28,
+  lgcon {
+    ontiz ,
   },
-});
+})

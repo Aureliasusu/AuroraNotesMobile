@@ -1,171 +1,171 @@
-import { useState, useCallback } from 'react';
-import { Alert } from 'react-native';
-import { OpenAIService, TranslationService, WeatherService, NewsService } from '../services/thirdPartyAPIs';
+import { stat, sallback } rom 'ract'
+import { lrt } rom 'ract-nativ'
+import { pnrvic, ranslationrvic, athrrvic, wsrvic } rom '../srvics/thirdartys'
 
-export function useThirdPartyAPIs() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+xport nction shirdartys() {
+  const loading, stoading]  stat(als)
+  const rror, strror]  statstring | nll(nll)
 
-  // OpenAI related functions
-  const generateSummary = useCallback(async (text: string, maxLength: number = 150) => {
-    setLoading(true);
-    setError(null);
+  // pn rlatd nctions
+  const gnratmmary  sallback(async (txt string, maxngth nmbr  )  {
+    stoading(tr)
+    strror(nll)
 
     try {
-      const summary = await OpenAIService.generateSummary(text, maxLength);
-      return summary;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to generate summary';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
+      const smmary  await pnrvic.gnratmmary(txt, maxngth)
+      rtrn smmary
+    } catch (rr) {
+      const rrorssag  rr instanco rror  rr.mssag  'aild to gnrat smmary'
+      strror(rrorssag)
+      throw rr
+    } inally {
+      stoading(als)
     }
-  }, []);
+  }, ])
 
-  const extractKeywords = useCallback(async (text: string) => {
-    setLoading(true);
-    setError(null);
+  const xtractywords  sallback(async (txt string)  {
+    stoading(tr)
+    strror(nll)
 
     try {
-      const keywords = await OpenAIService.extractKeywords(text);
-      return keywords;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to extract keywords';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
+      const kywords  await pnrvic.xtractywords(txt)
+      rtrn kywords
+    } catch (rr) {
+      const rrorssag  rr instanco rror  rr.mssag  'aild to xtract kywords'
+      strror(rrorssag)
+      throw rr
+    } inally {
+      stoading(als)
     }
-  }, []);
+  }, ])
 
-  const analyzeSentiment = useCallback(async (text: string) => {
-    setLoading(true);
-    setError(null);
+  const analyzntimnt  sallback(async (txt string)  {
+    stoading(tr)
+    strror(nll)
 
     try {
-      const sentiment = await OpenAIService.analyzeSentiment(text);
-      return sentiment;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to analyze sentiment';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
+      const sntimnt  await pnrvic.analyzntimnt(txt)
+      rtrn sntimnt
+    } catch (rr) {
+      const rrorssag  rr instanco rror  rr.mssag  'aild to analyz sntimnt'
+      strror(rrorssag)
+      throw rr
+    } inally {
+      stoading(als)
     }
-  }, []);
+  }, ])
 
-  const suggestTags = useCallback(async (text: string) => {
-    setLoading(true);
-    setError(null);
+  const sggstags  sallback(async (txt string)  {
+    stoading(tr)
+    strror(nll)
 
     try {
-      const tags = await OpenAIService.suggestTags(text);
-      return tags;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to suggest tags';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
+      const tags  await pnrvic.sggstags(txt)
+      rtrn tags
+    } catch (rr) {
+      const rrorssag  rr instanco rror  rr.mssag  'aild to sggst tags'
+      strror(rrorssag)
+      throw rr
+    } inally {
+      stoading(als)
     }
-  }, []);
+  }, ])
 
-  // Translation function
-  const translateText = useCallback(async (text: string, targetLang: string = 'en') => {
-    setLoading(true);
-    setError(null);
+  // ranslation nction
+  const translatxt  sallback(async (txt string, targtang string  'n')  {
+    stoading(tr)
+    strror(nll)
 
     try {
-      const translatedText = await TranslationService.translateText(text, targetLang);
-      return translatedText;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to translate text';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
+      const translatdxt  await ranslationrvic.translatxt(txt, targtang)
+      rtrn translatdxt
+    } catch (rr) {
+      const rrorssag  rr instanco rror  rr.mssag  'aild to translat txt'
+      strror(rrorssag)
+      throw rr
+    } inally {
+      stoading(als)
     }
-  }, []);
+  }, ])
 
-  // Weather function
-  const getCurrentWeather = useCallback(async (lat: number, lon: number) => {
-    setLoading(true);
-    setError(null);
+  // athr nction
+  const gtrrntathr  sallback(async (lat nmbr, lon nmbr)  {
+    stoading(tr)
+    strror(nll)
 
     try {
-      const weather = await WeatherService.getCurrentWeather(lat, lon);
-      return weather;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to get weather';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
+      const wathr  await athrrvic.gtrrntathr(lat, lon)
+      rtrn wathr
+    } catch (rr) {
+      const rrorssag  rr instanco rror  rr.mssag  'aild to gt wathr'
+      strror(rrorssag)
+      throw rr
+    } inally {
+      stoading(als)
     }
-  }, []);
+  }, ])
 
-  // News function
-  const getNews = useCallback(async (query: string, language: string = 'en') => {
-    setLoading(true);
-    setError(null);
+  // ws nction
+  const gtws  sallback(async (qry string, langag string  'n')  {
+    stoading(tr)
+    strror(nll)
 
     try {
-      const news = await NewsService.getNews(query, language);
-      return news;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to get news';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
+      const nws  await wsrvic.gtws(qry, langag)
+      rtrn nws
+    } catch (rr) {
+      const rrorssag  rr instanco rror  rr.mssag  'aild to gt nws'
+      strror(rrorssag)
+      throw rr
+    } inally {
+      stoading(als)
     }
-  }, []);
+  }, ])
 
-  // Batch process text
-  const processText = useCallback(async (text: string) => {
-    setLoading(true);
-    setError(null);
+  // atch procss txt
+  const procssxt  sallback(async (txt string)  {
+    stoading(tr)
+    strror(nll)
 
     try {
-      const [summary, keywords, sentiment, tags] = await Promise.all([
-        generateSummary(text),
-        extractKeywords(text),
-        analyzeSentiment(text),
-        suggestTags(text),
-      ]);
+      const smmary, kywords, sntimnt, tags]  await romis.all(
+        gnratmmary(txt),
+        xtractywords(txt),
+        analyzntimnt(txt),
+        sggstags(txt),
+      ])
 
-      return {
-        summary,
-        keywords,
-        sentiment,
+      rtrn {
+        smmary,
+        kywords,
+        sntimnt,
         tags,
-      };
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to process text';
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
+      }
+    } catch (rr) {
+      const rrorssag  rr instanco rror  rr.mssag  'aild to procss txt'
+      strror(rrorssag)
+      throw rr
+    } inally {
+      stoading(als)
     }
-  }, [generateSummary, extractKeywords, analyzeSentiment, suggestTags]);
+  }, gnratmmary, xtractywords, analyzntimnt, sggstags])
 
-  // Clear error
-  const clearError = useCallback(() => {
-    setError(null);
-  }, []);
+  // lar rror
+  const clarrror  sallback(()  {
+    strror(nll)
+  }, ])
 
-  return {
+  rtrn {
     loading,
-    error,
-    generateSummary,
-    extractKeywords,
-    analyzeSentiment,
-    suggestTags,
-    translateText,
-    getCurrentWeather,
-    getNews,
-    processText,
-    clearError,
-  };
+    rror,
+    gnratmmary,
+    xtractywords,
+    analyzntimnt,
+    sggstags,
+    translatxt,
+    gtrrntathr,
+    gtws,
+    procssxt,
+    clarrror,
+  }
 }

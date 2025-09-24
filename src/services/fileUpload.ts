@@ -1,139 +1,181 @@
-import { spabas } rom '../lib/spabas'
-import { latorm, lrt } rom 'ract-nativ'
+import { supabase } from '../lib/supabase'
+import { Platform, Alert } from 'react-native'
 
-xport intrac ilploadslt {
-  rl string
-  path string
-  siz nmbr
-  typ string
-  nam string
+export interface FileUploadResult {
+  url: string
+  path: string
+  size: number
+  type: string
+  name: string
 }
 
-xport class ilploadrvic {
-  // pload imag to pabas torag
-  static async ploadmag(
-    ilri string,
-    ilam string,
-    bckt string  'not-attachmnts'
-  ) romisilploadslt {
+export class FileUploadService {
+  // Upload image to Supabase storage
+  static async uploadImage(
+    fileUri: string,
+    fileName: string,
+    bucket: string = 'note-attachments'
+  ): Promise<FileUploadResult> {
     try {
-      // ad il contnt
-      const rspons  await tch(ilri)
-      const blob  await rspons.blob()
+      // Read file content
+      const response = await fetch(fileUri)
+      const blob = await response.blob()
       
-      // nrat niq ilnam
-      const timstamp  at.now()
-      const ilxtnsion  ilam.split('.').pop() || 'jpg'
-      const niqilam  `imags/${timstamp}-${ilam}`
+      // Generate unique filename
+      const timestamp = Date.now()
+      const fileExtension = fileName.split('.').pop() || 'jpg'
+      const uniqueFileName = `images/${timestamp}-${fileName}`
 
-      // pload to pabas torag
-      const { data, rror }  await spabas.storag
-        .rom(bckt)
-        .pload(niqilam, blob, {
-          cachontrol '',
-          psrt als,
-          contntyp `imag/${ilxtnsion}`,
+      // Upload to Supabase storage
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .upload(uniqueFileName, blob, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: `image/${fileExtension}`,
         })
 
-      i (rror) {
-        consol.rror('pload rror', rror)
-        throw nw rror(`pload aild ${rror.mssag}`)
+      if (error) {
+        console.error('Upload error', error)
+        throw new Error(`Upload failed: ${error.message}`)
       }
 
-      // t pblic 
-      const { data rlata }  spabas.storag
-        .rom(bckt)
-        .gtblicrl(data.path)
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from(bucket)
+        .getPublicUrl(data.path)
 
-      rtrn {
-        rl rlata.pblicrl,
-        path data.path,
-        siz blob.siz,
-        typ `imag/${ilxtnsion}`,
-        nam ilam,
+      return {
+        url: urlData.publicUrl,
+        path: data.path,
+        size: blob.size,
+        type: `image/${fileExtension}`,
+        name: fileName,
       }
-    } catch (rror) {
-      consol.rror('mag pload aild', rror)
-      lrt.alrt('pload rror', 'aild to pload imag')
-      throw rror
+    } catch (error) {
+      console.error('Image upload failed', error)
+      Alert.alert('Upload Error', 'Failed to upload image')
+      throw error
     }
   }
 
-  // pload docmnt to pabas torag
-  static async ploadocmnt(
-    ilri string,
-    ilam string,
-    mimyp string,
-    bckt string  'not-attachmnts'
-  ) romisilploadslt {
+  // Upload document to Supabase storage
+  static async uploadDocument(
+    fileUri: string,
+    fileName: string,
+    mimeType: string,
+    bucket: string = 'note-attachments'
+  ): Promise<FileUploadResult> {
     try {
-      // ad il contnt
-      const rspons  await tch(ilri)
-      const blob  await rspons.blob()
+      // Read file content
+      const response = await fetch(fileUri)
+      const blob = await response.blob()
       
-      // nrat niq ilnam
-      const timstamp  at.now()
-      const ilxtnsion  ilam.split('.').pop() || 'pd'
-      const niqilam  `docmnts/${timstamp}-${ilam}`
+      // Generate unique filename
+      const timestamp = Date.now()
+      const fileExtension = fileName.split('.').pop() || 'pdf'
+      const uniqueFileName = `documents/${timestamp}-${fileName}`
 
-      const { data, rror }  await spabas.storag
-        .rom(bckt)
-        .pload(niqilam, blob, {
-          cachontrol '',
-          psrt als,
-          contntyp mimyp,
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .upload(uniqueFileName, blob, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: mimeType,
         })
 
-      i (rror) {
-        consol.rror('ocmnt pload rror', rror)
-        throw nw rror(`ocmnt pload aild ${rror.mssag}`)
+      if (error) {
+        console.error('Document upload error', error)
+        throw new Error(`Document upload failed: ${error.message}`)
       }
 
-      const { data rlata }  spabas.storag
-        .rom(bckt)
-        .gtblicrl(data.path)
+      const { data: urlData } = supabase.storage
+        .from(bucket)
+        .getPublicUrl(data.path)
 
-      rtrn {
-        rl rlata.pblicrl,
-        path data.path,
-        siz blob.siz,
-        typ mimyp,
-        nam ilam,
+      return {
+        url: urlData.publicUrl,
+        path: data.path,
+        size: blob.size,
+        type: mimeType,
+        name: fileName,
       }
-    } catch (rror) {
-      consol.rror('ocmnt pload aild', rror)
-      lrt.alrt('pload rror', 'aild to pload docmnt')
-      throw rror
+    } catch (error) {
+      console.error('Document upload failed', error)
+      Alert.alert('Upload Error', 'Failed to upload document')
+      throw error
     }
   }
 
-  // st il pload nctionality
-  static async tstpload() romisboolan {
+  // Delete file from Supabase storage
+  static async deleteFile(filePath: string, bucket: string = 'note-attachments'): Promise<void> {
     try {
-      consol.log('sting il pload nctionality...')
-      
-      // st i bckt xists and is accssibl
-      const { data bckts, rror bcktsrror }  await spabas.storag.listckts()
-      
-      i (bcktsrror) {
-        consol.rror('rror listing bckts', bcktsrror)
-        rtrn als
+      const { error } = await supabase.storage
+        .from(bucket)
+        .remove([filePath])
+
+      if (error) {
+        console.error('Delete error', error)
+        throw new Error(`Delete failed: ${error.message}`)
+      }
+    } catch (error) {
+      console.error('File delete failed', error)
+      Alert.alert('Delete Error', 'Failed to delete file')
+      throw error
+    }
+  }
+
+  // Get file info
+  static async getFileInfo(filePath: string, bucket: string = 'note-attachments') {
+    try {
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .list(filePath.split('/')[0], {
+          search: filePath.split('/').pop()
+        })
+
+      if (error) {
+        console.error('Get file info error', error)
+        throw new Error(`Get file info failed: ${error.message}`)
       }
 
-      const notttachmntsckt  bckts.ind(bckt  bckt.nam  'not-attachmnts')
+      return data?.[0] || null
+    } catch (error) {
+      console.error('Get file info failed', error)
+      throw error
+    }
+  }
+
+  // Test file upload functionality
+  static async testUpload(): Promise<boolean> {
+    try {
+      console.log('Testing file upload functionality...')
       
-      i (!notttachmntsckt) {
-        consol.rror('not-attachmnts bckt not ond')
-        rtrn als
+      // Test if bucket exists and is accessible
+      const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets()
+      
+      if (bucketsError) {
+        console.error('Error listing buckets', bucketsError)
+        return false
       }
 
-      consol.log('✅ not-attachmnts bckt ond')
-      consol.log('✅ il pload srvic is rady')
+      const noteAttachmentsBucket = buckets.find(bucket => bucket.name === 'note-attachments')
       
-      rtrn tr
-    } catch (rror) {
-      consol.rror('il pload tst aild', rror)
-      rtrn als
+      if (!noteAttachmentsBucket) {
+        console.error('note-attachments bucket not found')
+        return false
+      }
+
+      console.log('✅ note-attachments bucket found')
+      console.log('✅ File upload service is ready')
+      
+      return true
+    } catch (error) {
+      console.error('File upload test failed', error)
+      return false
     }
   }
 }
+
+// Export singleton instance
+export const fileUploadService = new FileUploadService()

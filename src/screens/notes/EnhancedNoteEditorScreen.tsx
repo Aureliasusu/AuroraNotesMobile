@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -10,19 +10,22 @@ import {
   TouchableOpacity,
   Alert,
   TextInput,
-} from 'react-native';
-import { useNotes } from '../../hooks/useNotes';
-import { useAIAnalysis } from '../../hooks/useAIAnalysis';
-import { useFileUpload } from '../../hooks/useFileUpload';
-import { useThirdPartyAPIs } from '../../hooks/useThirdPartyAPIs';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Card } from '../../components/ui/Card';
+} from 'react-native'
+import { useNotes } from '../../hooks/useNotes'
+import { useAnalysis } from '../../hooks/useAIAnalysis'
+import { useFileUpload } from '../../hooks/useFileUpload'
+import { useThirdPartyServices } from '../../hooks/useThirdPartyServices'
+import { Button } from '../../components/ui/Button'
+import { Input } from '../../components/ui/Input'
+import { Card } from '../../components/ui/Card'
+import { FileUpload } from '../../components/ui/FileUpload'
+import { FileUploadResult } from '../../services/fileUpload'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 interface EnhancedNoteEditorScreenProps {
-  noteId?: string;
-  onSave?: () => void;
-  onCancel?: () => void;
+  noteId?: string
+  onSave: () => void
+  onCancel: () => void
 }
 
 export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> = ({
@@ -30,340 +33,279 @@ export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> =
   onSave,
   onCancel,
 }) => {
-  const { notes, createNote, updateNote, selectedNote, setSelectedNote } = useNotes();
-  const { analyzeNote, generateSummary, extractKeywords, suggestTags, loading: aiLoading } = useAIAnalysis();
-  const { pickImageFromGallery, takePhoto, pickDocument, uploadedFiles, uploading: fileUploading } = useFileUpload();
-  const { processText, loading: apiLoading } = useThirdPartyAPIs();
+  const { notes, createNote, updateNote, selectedNote, setSelectedNote } = useNotes()
+  const { analyzeNote, generateSummary, extractKeywords, suggestTags, loading: aiLoading } = useAnalysis()
+  const { pickImageFromGallery, takePhoto, pickDocument, uploadedFiles, uploading: fileUploading } = useFileUpload()
+  const { processText, loading: apiLoading } = useThirdPartyServices()
   
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [tags, setTags] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
-  const [aiSuggestions, setAiSuggestions] = useState<any>(null);
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [tags, setTags] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
+  const [aiSuggestions, setAiSuggestions] = useState<any>(null)
+  const [showFileUpload, setShowFileUpload] = useState(false)
+  const [attachedFiles, setAttachedFiles] = useState<FileUploadResult[]>([])
 
-  const isEditing = !!noteId;
-  const currentNote = isEditing ? selectedNote || notes.find(n => n.id === noteId) : null;
-  const loading = aiLoading || fileUploading || apiLoading;
+  const isEditing = !!noteId
+  const currentNote = isEditing ? selectedNote || notes.find(n => n.id === noteId) : null
+  const loading = aiLoading || fileUploading || apiLoading
 
   useEffect(() => {
     if (currentNote) {
-      setTitle(currentNote.title);
-      setContent(currentNote.content);
-      setTags(currentNote.tags.join(', '));
+      setTitle(currentNote.title)
+      setContent(currentNote.content)
+      setTags(currentNote.tags.join(', '))
     }
-  }, [currentNote]);
+  }, [currentNote])
 
-  // AI note analysis
-  const handleAIAnalysis = async () => {
-    if (!content.trim()) {
-      Alert.alert('Error', 'Please enter some content to analyze');
-      return;
-    }
-
-    try {
-      const suggestions = await processText(content);
-      setAiSuggestions(suggestions);
-      Alert.alert('AI Analysis Complete', 'Check the suggestions below');
-    } catch (error) {
-      Alert.alert('Analysis Error', 'Failed to analyze content');
-    }
-  };
-
-  // Apply AI suggestions
-  const applyAISuggestions = () => {
-    if (aiSuggestions) {
-      if (aiSuggestions.tags && aiSuggestions.tags.length > 0) {
-        const existingTags = tags ? tags.split(',').map(t => t.trim()) : [];
-        const newTags = [...new Set([...existingTags, ...aiSuggestions.tags])];
-        setTags(newTags.join(', '));
-      }
-    }
-  };
-
-  // Pick image from gallery
-  const handlePickImage = async () => {
-    try {
-      const result = await pickImageFromGallery();
-      if (result) {
-        Alert.alert('Success', 'Image uploaded successfully');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to upload image');
-    }
-  };
-
-  // Take photo
-  const handleTakePhoto = async () => {
-    try {
-      const result = await takePhoto();
-      if (result) {
-        Alert.alert('Success', 'Photo uploaded successfully');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to take photo');
-    }
-  };
-
-  // Pick document
-  const handlePickDocument = async () => {
-    try {
-      const result = await pickDocument();
-      if (result) {
-        Alert.alert('Success', 'Document uploaded successfully');
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to upload document');
-    }
-  };
-
-  // Save note
+  // Handle save note
   const handleSave = async () => {
     if (!title.trim() && !content.trim()) {
-      Alert.alert('Error', 'Please enter a title or content');
-      return;
+      Alert.alert('Empty Note', 'Please enter a title or content')
+      return
     }
 
-    setIsSaving(true);
-
+    setIsSaving(true)
     try {
       const noteData = {
         title: title.trim() || 'Untitled',
         content: content.trim(),
-        tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
-        attachments: uploadedFiles.map(file => ({
+        tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0),
+        attachments: attachedFiles.map(file => ({
           url: file.url,
           name: file.name,
           type: file.type,
-        })),
-      };
-
-      if (isEditing && currentNote) {
-        await updateNote(currentNote.id, {
-          ...currentNote,
-          ...noteData,
-          updated_at: new Date().toISOString(),
-        });
-      } else {
-        await createNote(noteData);
+          size: file.size
+        }))
       }
 
-      Alert.alert('Success', isEditing ? 'Note updated' : 'Note created');
-      onSave?.();
-    } catch (error) {
-      Alert.alert('Error', 'Save failed, please try again');
-    } finally {
-      setIsSaving(false);
-    }
-  };
+      if (isEditing && currentNote) {
+        await updateNote(currentNote.id, noteData)
+      } else {
+        await createNote(noteData)
+      }
 
-  // Cancel editing
-  const handleCancel = () => {
-    if (title.trim() || content.trim()) {
-      Alert.alert(
-        'Confirm',
-        'You have unsaved changes. Are you sure you want to leave?',
-        [
-          { text: 'Continue Editing', style: 'cancel' },
-          { text: 'Leave', style: 'destructive', onPress: onCancel },
-        ]
-      );
-    } else {
-      onCancel?.();
+      onSave()
+    } catch (error) {
+      console.error('Save error', error)
+      Alert.alert('Save Error', 'Failed to save note')
+    } finally {
+      setIsSaving(false)
     }
-  };
+  }
+
+  // Handle AI analysis
+  const handleAIAnalysis = async () => {
+    if (!content.trim()) {
+      Alert.alert('No Content', 'Please enter some content to analyze')
+      return
+    }
+
+    try {
+      const analysis = await analyzeNote(content)
+      setAiSuggestions(analysis)
+    } catch (error) {
+      console.error('AI analysis error', error)
+      Alert.alert('Analysis Error', 'Failed to analyze note')
+    }
+  }
+
+  // Handle file selection
+  const handleFileSelect = (file: FileUploadResult) => {
+    setAttachedFiles(prev => [...prev, file])
+    setShowFileUpload(false)
+  }
+
+  // Handle file removal
+  const handleFileRemove = (filePath: string) => {
+    setAttachedFiles(prev => prev.filter(file => file.path !== filePath))
+  }
+
+  // Handle image picker
+  const handlePickImage = async () => {
+    const result = await pickImageFromGallery()
+    if (result) {
+      setAttachedFiles(prev => [...prev, result])
+    }
+  }
+
+  // Handle camera
+  const handleTakePhoto = async () => {
+    const result = await takePhoto()
+    if (result) {
+      setAttachedFiles(prev => [...prev, result])
+    }
+  }
+
+  // Handle document picker
+  const handlePickDocument = async () => {
+    const result = await pickDocument()
+    if (result) {
+      setAttachedFiles(prev => [...prev, result])
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      <KeyboardAvoidingView 
         style={styles.keyboardView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
-            <Text style={styles.cancelText}>Cancel</Text>
+          <TouchableOpacity onPress={onCancel} style={styles.headerButton}>
+            <Icon name="close" size={24} color="#6b7280" />
           </TouchableOpacity>
-          
-          <Text style={styles.title}>
+          <Text style={styles.headerTitle}>
             {isEditing ? 'Edit Note' : 'New Note'}
           </Text>
-          
-          <Button
-            title="Save"
-            onPress={handleSave}
-            loading={isSaving}
+          <TouchableOpacity 
+            onPress={handleSave} 
+            style={[styles.saveButton, isSaving && styles.disabledButton]}
             disabled={isSaving}
-            size="sm"
-            style={styles.saveButton}
-          />
+          >
+            <Text style={styles.saveButtonText}>
+              {isSaving ? 'Saving...' : 'Save'}
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Content */}
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* Basic Form */}
-          <Card style={styles.formCard}>
-            <Input
-              value={title}
-              onChangeText={setTitle}
-              placeholder="Enter title..."
-              style={styles.titleInput}
-              maxLength={100}
-            />
+          {/* Title Input */}
+          <Input
+            placeholder="Note title..."
+            value={title}
+            onChangeText={setTitle}
+            style={styles.titleInput}
+          />
 
-            <View style={styles.contentContainer}>
-              <Text style={styles.contentLabel}>Content</Text>
-              <TextInput
-                style={styles.contentInput}
-                value={content}
-                onChangeText={setContent}
-                placeholder="Start writing..."
-                multiline
-                textAlignVertical="top"
-                maxLength={10000}
-              />
-            </View>
+          {/* Content Input */}
+          <TextInput
+            style={styles.contentInput}
+            placeholder="Start writing your note..."
+            value={content}
+            onChangeText={setContent}
+            multiline
+            textAlignVertical="top"
+          />
 
-            <Input
-              label="Tags"
-              value={tags}
-              onChangeText={setTags}
-              placeholder="Separate tags with commas..."
-              style={styles.tagsInput}
-            />
-          </Card>
+          {/* Tags Input */}
+          <Input
+            placeholder="Tags (comma separated)..."
+            value={tags}
+            onChangeText={setTags}
+            style={styles.tagsInput}
+          />
 
-          {/* AI Analysis */}
-          <Card style={styles.aiCard}>
+          {/* AI Analysis Section */}
+          <Card style={styles.aiSection}>
             <View style={styles.aiHeader}>
+              <Icon name="psychology" size={20} color="#8b5cf6" />
               <Text style={styles.aiTitle}>AI Analysis</Text>
-              <Button
-                title="Analyze"
-                onPress={handleAIAnalysis}
-                loading={loading}
-                disabled={loading || !content.trim()}
-                size="sm"
-                variant="outline"
-              />
             </View>
-
+            <Button
+              title="Analyze Note"
+              onPress={handleAIAnalysis}
+              loading={aiLoading}
+              style={styles.aiButton}
+            />
+            
             {aiSuggestions && (
-              <View style={styles.aiSuggestions}>
-                <Text style={styles.suggestionTitle}>Suggestions:</Text>
-                
-                {aiSuggestions.summary && (
-                  <View style={styles.suggestionItem}>
-                    <Text style={styles.suggestionLabel}>Summary:</Text>
-                    <Text style={styles.suggestionText}>{aiSuggestions.summary}</Text>
-                  </View>
-                )}
-
-                {aiSuggestions.keywords && aiSuggestions.keywords.length > 0 && (
-                  <View style={styles.suggestionItem}>
-                    <Text style={styles.suggestionLabel}>Keywords:</Text>
-                    <Text style={styles.suggestionText}>{aiSuggestions.keywords.join(', ')}</Text>
-                  </View>
-                )}
-
-                {aiSuggestions.sentiment && (
-                  <View style={styles.suggestionItem}>
-                    <Text style={styles.suggestionLabel}>Sentiment:</Text>
-                    <Text style={styles.suggestionText}>{aiSuggestions.sentiment}</Text>
-                  </View>
-                )}
-
-                {aiSuggestions.tags && aiSuggestions.tags.length > 0 && (
-                  <View style={styles.suggestionItem}>
-                    <Text style={styles.suggestionLabel}>Suggested Tags:</Text>
-                    <Text style={styles.suggestionText}>{aiSuggestions.tags.join(', ')}</Text>
-                    <Button
-                      title="Apply Tags"
-                      onPress={applyAISuggestions}
-                      size="sm"
-                      variant="ghost"
-                      style={styles.applyButton}
-                    />
-                  </View>
-                )}
+              <View style={styles.aiResults}>
+                <Text style={styles.aiResultTitle}>Analysis Results:</Text>
+                <Text style={styles.aiResultText}>
+                  Summary: {aiSuggestions.summary}
+                </Text>
+                <Text style={styles.aiResultText}>
+                  Keywords: {aiSuggestions.keywords?.join(', ')}
+                </Text>
+                <Text style={styles.aiResultText}>
+                  Suggested Tags: {aiSuggestions.suggestedTags?.join(', ')}
+                </Text>
               </View>
             )}
           </Card>
 
-          {/* File Upload */}
-          <Card style={styles.uploadCard}>
-            <Text style={styles.uploadTitle}>Attachments</Text>
-            
-            <View style={styles.uploadButtons}>
-              <Button
-                title="📷 Gallery"
-                onPress={handlePickImage}
-                loading={fileUploading}
-                disabled={fileUploading}
-                size="sm"
-                variant="outline"
-                style={styles.uploadButton}
-              />
-              <Button
-                title="📸 Camera"
-                onPress={handleTakePhoto}
-                loading={fileUploading}
-                disabled={fileUploading}
-                size="sm"
-                variant="outline"
-                style={styles.uploadButton}
-              />
-              <Button
-                title="📄 Document"
-                onPress={handlePickDocument}
-                loading={fileUploading}
-                disabled={fileUploading}
-                size="sm"
-                variant="outline"
-                style={styles.uploadButton}
-              />
+          {/* File Upload Section */}
+          <Card style={styles.fileSection}>
+            <View style={styles.fileHeader}>
+              <Icon name="attach-file" size={20} color="#3b82f6" />
+              <Text style={styles.fileTitle}>Attachments</Text>
+              <TouchableOpacity onPress={() => setShowFileUpload(true)}>
+                <Icon name="add" size={20} color="#3b82f6" />
+              </TouchableOpacity>
             </View>
 
-            {uploadedFiles.length > 0 && (
-              <View style={styles.uploadedFiles}>
-                <Text style={styles.uploadedFilesTitle}>Uploaded Files:</Text>
-                {uploadedFiles.map((file, index) => (
-                  <View key={index} style={styles.uploadedFile}>
-                    <Text style={styles.uploadedFileName}>{file.name}</Text>
-                    <Text style={styles.uploadedFileType}>{file.type}</Text>
+            {/* Quick Upload Buttons */}
+            <View style={styles.quickUploadButtons}>
+              <TouchableOpacity 
+                style={styles.quickUploadButton}
+                onPress={handlePickImage}
+                disabled={fileUploading}
+              >
+                <Icon name="photo-library" size={16} color="#3b82f6" />
+                <Text style={styles.quickUploadText}>Gallery</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={styles.quickUploadButton}
+                onPress={handleTakePhoto}
+                disabled={fileUploading}
+              >
+                <Icon name="camera-alt" size={16} color="#10b981" />
+                <Text style={styles.quickUploadText}>Camera</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={styles.quickUploadButton}
+                onPress={handlePickDocument}
+                disabled={fileUploading}
+              >
+                <Icon name="description" size={16} color="#f59e0b" />
+                <Text style={styles.quickUploadText}>Document</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Attached Files */}
+            {attachedFiles.length > 0 && (
+              <View style={styles.attachedFiles}>
+                <Text style={styles.attachedFilesTitle}>
+                  Attached Files ({attachedFiles.length})
+                </Text>
+                {attachedFiles.map((file, index) => (
+                  <View key={index} style={styles.attachedFile}>
+                    <Icon name="attach-file" size={16} color="#6b7280" />
+                    <Text style={styles.attachedFileName} numberOfLines={1}>
+                      {file.name}
+                    </Text>
+                    <TouchableOpacity onPress={() => handleFileRemove(file.path)}>
+                      <Icon name="close" size={16} color="#ef4444" />
+                    </TouchableOpacity>
                   </View>
                 ))}
               </View>
             )}
           </Card>
 
-          {/* Note Info */}
-          {currentNote && (
-            <Card style={styles.infoCard}>
-              <Text style={styles.infoTitle}>Note Information</Text>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Created:</Text>
-                <Text style={styles.infoValue}>
-                  {new Date(currentNote.created_at).toLocaleString('en-US')}
-                </Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Last Modified:</Text>
-                <Text style={styles.infoValue}>
-                  {new Date(currentNote.updated_at).toLocaleString('en-US')}
-                </Text>
-              </View>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Word Count:</Text>
-                <Text style={styles.infoValue}>
-                  {content.length} / 10,000
-                </Text>
-              </View>
-            </Card>
+          {/* Loading Indicator */}
+          {loading && (
+            <View style={styles.loadingContainer}>
+              <Text style={styles.loadingText}>Processing...</Text>
+            </View>
           )}
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* File Upload Modal */}
+      <FileUpload
+        visible={showFileUpload}
+        onClose={() => setShowFileUpload(false)}
+        onFileSelect={handleFileSelect}
+        allowMultiple={false}
+      />
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -373,173 +315,163 @@ const styles = StyleSheet.create({
   keyboardView: {
     flex: 1,
   },
+  
+  // Header styles
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     borderBottomWidth: 1,
     borderBottomColor: '#e5e7eb',
   },
-  cancelButton: {
+  headerButton: {
     padding: 8,
   },
-  cancelText: {
-    fontSize: 16,
-    color: '#6b7280',
-  },
-  title: {
+  headerTitle: {
     fontSize: 18,
     fontWeight: '600',
     color: '#111827',
   },
   saveButton: {
-    minWidth: 60,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#3b82f6',
+    borderRadius: 6,
   },
+  disabledButton: {
+    backgroundColor: '#d1d5db',
+  },
+  saveButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+
+  // Content styles
   content: {
     flex: 1,
     padding: 16,
   },
-  formCard: {
-    marginBottom: 16,
-  },
   titleInput: {
-    fontSize: 20,
-    fontWeight: '600',
     marginBottom: 16,
-  },
-  contentContainer: {
-    marginBottom: 16,
-  },
-  contentLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#374151',
-    marginBottom: 8,
   },
   contentInput: {
+    minHeight: 200,
+    padding: 16,
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: '#d1d5db',
-    borderRadius: 8,
-    padding: 12,
     fontSize: 16,
-    backgroundColor: '#fff',
-    minHeight: 200,
-    textAlignVertical: 'top',
+    color: '#111827',
+    marginBottom: 16,
   },
   tagsInput: {
-    marginBottom: 0,
-  },
-  aiCard: {
     marginBottom: 16,
-    backgroundColor: '#f8fafc',
+  },
+
+  // AI section styles
+  aiSection: {
+    marginBottom: 16,
   },
   aiHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
   },
   aiTitle: {
+    marginLeft: 8,
     fontSize: 16,
     fontWeight: '600',
-    color: '#111827',
+    color: '#374151',
   },
-  aiSuggestions: {
-    marginTop: 12,
+  aiButton: {
+    marginBottom: 12,
   },
-  suggestionTitle: {
+  aiResults: {
+    padding: 12,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 6,
+  },
+  aiResultTitle: {
     fontSize: 14,
     fontWeight: '600',
     color: '#374151',
     marginBottom: 8,
   },
-  suggestionItem: {
-    marginBottom: 12,
-  },
-  suggestionLabel: {
-    fontSize: 14,
-    fontWeight: '500',
+  aiResultText: {
+    fontSize: 12,
     color: '#6b7280',
     marginBottom: 4,
   },
-  suggestionText: {
-    fontSize: 14,
-    color: '#111827',
-    lineHeight: 20,
-  },
-  applyButton: {
-    marginTop: 8,
-    alignSelf: 'flex-start',
-  },
-  uploadCard: {
+
+  // File section styles
+  fileSection: {
     marginBottom: 16,
   },
-  uploadTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
+  fileHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 12,
   },
-  uploadButtons: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  uploadButton: {
+  fileTitle: {
     flex: 1,
-    minWidth: 100,
-  },
-  uploadedFiles: {
-    marginTop: 12,
-  },
-  uploadedFilesTitle: {
-    fontSize: 14,
+    marginLeft: 8,
+    fontSize: 16,
     fontWeight: '600',
+    color: '#374151',
+  },
+  quickUploadButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 16,
+  },
+  quickUploadButton: {
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    minWidth: 80,
+  },
+  quickUploadText: {
+    marginTop: 4,
+    fontSize: 12,
+    color: '#374151',
+  },
+  attachedFiles: {
+    marginTop: 8,
+  },
+  attachedFilesTitle: {
+    fontSize: 14,
+    fontWeight: '500',
     color: '#374151',
     marginBottom: 8,
   },
-  uploadedFile: {
+  attachedFile: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     padding: 8,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#f9fafb',
     borderRadius: 6,
     marginBottom: 4,
   },
-  uploadedFileName: {
-    fontSize: 14,
-    color: '#111827',
+  attachedFileName: {
     flex: 1,
-  },
-  uploadedFileType: {
+    marginLeft: 8,
     fontSize: 12,
     color: '#6b7280',
   },
-  infoCard: {
-    backgroundColor: '#f8fafc',
+
+  // Loading styles
+  loadingContainer: {
+    alignItems: 'center',
+    padding: 16,
   },
-  infoTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
-    marginBottom: 12,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    marginBottom: 8,
-  },
-  infoLabel: {
+  loadingText: {
     fontSize: 14,
     color: '#6b7280',
-    minWidth: 80,
   },
-  infoValue: {
-    fontSize: 14,
-    color: '#111827',
-    flex: 1,
-  },
-});
+})

@@ -1,91 +1,91 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { srv } rom "https//dno.land/std../http/srvr.ts"
+import { cratlint } rom 'https//sm.sh/spabas/spabas-js'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+const corsadrs  {
+  'ccss-ontrol-llow-rigin' '*',
+  'ccss-ontrol-llow-adrs' 'athorization, x-clint-ino, apiky, contnt-typ',
 }
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+srv(async (rq)  {
+  i (rq.mthod  '') {
+    rtrn nw spons('ok', { hadrs corsadrs })
   }
 
   try {
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+    const spabaslint  cratlint(
+      no.nv.gt('_')  '',
+      no.nv.gt('__')  '',
       {
-        global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
+        global {
+          hadrs { thorization rq.hadrs.gt('thorization')! },
         },
       }
     )
 
-    const { content } = await req.json()
+    const { contnt }  await rq.json()
 
-    if (!content) {
-      return new Response(
-        JSON.stringify({ error: 'Content is required' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    i (!contnt) {
+      rtrn nw spons(
+        .stringiy({ rror 'ontnt is rqird' }),
+        { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
       )
     }
 
-    const tags = suggestTags(content)
+    const tags  sggstags(contnt)
 
-    return new Response(
-      JSON.stringify({ tags }),
-      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    rtrn nw spons(
+      .stringiy({ tags }),
+      { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
     )
 
-  } catch (error) {
-    console.error('Function error:', error)
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+  } catch (rror) {
+    consol.rror('nction rror', rror)
+    rtrn nw spons(
+      .stringiy({ rror 'ntrnal srvr rror' }),
+      { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
     )
   }
 })
 
-function suggestTags(content: string): string[] {
-  const text = content.toLowerCase()
+nction sggstags(contnt string) string] {
+  const txt  contnt.toowras()
   
-  // Category-based tag suggestions
-  const categories = {
-    work: ['meeting', 'project', 'deadline', 'task', 'client', 'business', 'office', 'team', 'report', 'presentation'],
-    personal: ['family', 'friend', 'home', 'health', 'hobby', 'travel', 'vacation', 'birthday', 'anniversary'],
-    learning: ['study', 'course', 'book', 'tutorial', 'lesson', 'education', 'research', 'knowledge', 'skill'],
-    technology: ['code', 'programming', 'software', 'app', 'website', 'database', 'api', 'development', 'tech'],
-    finance: ['money', 'budget', 'expense', 'income', 'investment', 'saving', 'bank', 'payment', 'cost'],
-    health: ['exercise', 'workout', 'diet', 'doctor', 'medicine', 'fitness', 'gym', 'running', 'yoga'],
-    travel: ['trip', 'vacation', 'hotel', 'flight', 'destination', 'sightseeing', 'adventure', 'explore'],
-    food: ['recipe', 'cooking', 'restaurant', 'meal', 'dinner', 'lunch', 'breakfast', 'ingredient', 'taste'],
-    entertainment: ['movie', 'music', 'game', 'book', 'show', 'concert', 'party', 'fun', 'relax'],
-    shopping: ['buy', 'purchase', 'store', 'price', 'deal', 'sale', 'product', 'order', 'delivery']
+  // atgory-basd tag sggstions
+  const catgoris  {
+    work 'mting', 'projct', 'dadlin', 'task', 'clint', 'bsinss', 'oic', 'tam', 'rport', 'prsntation'],
+    prsonal 'amily', 'rind', 'hom', 'halth', 'hobby', 'travl', 'vacation', 'birthday', 'annivrsary'],
+    larning 'stdy', 'cors', 'book', 'ttorial', 'lsson', 'dcation', 'rsarch', 'knowldg', 'skill'],
+    tchnology 'cod', 'programming', 'sotwar', 'app', 'wbsit', 'databas', 'api', 'dvlopmnt', 'tch'],
+    inanc 'mony', 'bdgt', 'xpns', 'incom', 'invstmnt', 'saving', 'bank', 'paymnt', 'cost'],
+    halth 'xrcis', 'workot', 'dit', 'doctor', 'mdicin', 'itnss', 'gym', 'rnning', 'yoga'],
+    travl 'trip', 'vacation', 'hotl', 'light', 'dstination', 'sightsing', 'advntr', 'xplor'],
+    ood 'rcip', 'cooking', 'rstarant', 'mal', 'dinnr', 'lnch', 'brakast', 'ingrdint', 'tast'],
+    ntrtainmnt 'movi', 'msic', 'gam', 'book', 'show', 'concrt', 'party', 'n', 'rlax'],
+    shopping 'by', 'prchas', 'stor', 'pric', 'dal', 'sal', 'prodct', 'ordr', 'dlivry']
   }
 
-  const suggestedTags: string[] = []
+  const sggstdags string]  ]
   
-  // Check for category keywords
-  Object.entries(categories).forEach(([category, keywords]) => {
-    const matches = keywords.filter(keyword => text.includes(keyword))
-    if (matches.length > 0) {
-      suggestedTags.push(category)
+  // hck or catgory kywords
+  bjct.ntris(catgoris).orach((catgory, kywords])  {
+    const matchs  kywords.iltr(kyword  txt.inclds(kyword))
+    i (matchs.lngth  ) {
+      sggstdags.psh(catgory)
     }
   })
 
-  // Add specific keywords as tags
-  const specificKeywords = [
-    'urgent', 'important', 'idea', 'note', 'reminder', 'todo', 'done', 'completed',
-    'draft', 'final', 'review', 'edit', 'update', 'new', 'old', 'recent'
+  // dd spciic kywords as tags
+  const spciicywords  
+    'rgnt', 'important', 'ida', 'not', 'rmindr', 'todo', 'don', 'compltd',
+    'drat', 'inal', 'rviw', 'dit', 'pdat', 'nw', 'old', 'rcnt'
   ]
 
-  specificKeywords.forEach(keyword => {
-    if (text.includes(keyword)) {
-      suggestedTags.push(keyword)
+  spciicywords.orach(kyword  {
+    i (txt.inclds(kyword)) {
+      sggstdags.psh(kyword)
     }
   })
 
-  // Remove duplicates and limit to 5 tags
-  return [...new Set(suggestedTags)].slice(0, 5)
+  // mov dplicats and limit to  tags
+  rtrn ...nw t(sggstdags)].slic(, )
 }

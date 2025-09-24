@@ -1,55 +1,55 @@
-# AuroraNotes Mobile - Complete Setup Guide
+# AuroraNotes Mobile - Complete Top IDE
 
-> AI-Powered Cross-Platform Note-Taking App with Advanced Features
+A powerful cross-platform note-taking app with advanced features
 
-[![React Native](https://img.shields.io/badge/React%20Native-0.81-blue.svg)](https://reactnative.dev/)
+[![React Native](https://img.shields.io/badge/React%20Native-0.72-blue.svg)](https://reactnative.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-green.svg)](https://supabase.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Icons](https://img.shields.io/badge/Icons-Material%20Icons-yellow.svg)]()
 
-## 🎯 What is Aurora Notes Mobile?
+## 🎯 What is Aurora Notes Mobile
 
 Aurora Notes Mobile is a **modern, AI-powered note-taking application** built with React Native that runs on both iOS and Android. It's designed to be your intelligent digital companion for capturing, organizing, and enhancing your thoughts and ideas.
 
 ### 🌟 Key Highlights
 
-- **🤖 AI-Powered**: Smart note analysis, summarization, and tag suggestions
-- **📁 File Management**: Upload images, documents, and multimedia attachments
-- **🌐 Real-time Sync**: Cloud synchronization across all your devices
-- **🔍 Advanced Search**: Find notes instantly with intelligent search
-- **🎨 Beautiful UI**: Modern, intuitive interface designed for productivity
-- **🔒 Secure**: End-to-end encryption and secure cloud storage
+- **🤖 AI-Powered** Smart note analysis, summarization, and tag suggestions
+- **📁 File Management** Upload images, documents, and multimedia attachments
+- **🌐 Real-time Sync** Cloud synchronization across all your devices
+- **🔍 Advanced Search** Find notes instantly with intelligent search
+- **🎨 Beautiful UI** Modern, intuitive interface designed for productivity
+- **🔒 Secure** End-to-end encryption and secure cloud storage
 
 ## ✨ Features
 
 ### Core Functionality
-- **📝 Rich Text Editor**: Create and edit notes with formatting options
-- **🏷️ Smart Tagging**: AI-powered tag suggestions based on content
-- **📌 Pin Notes**: Keep important notes easily accessible
-- **🔍 Search & Filter**: Find notes by content, tags, or date
-- **☁️ Cloud Sync**: Automatic synchronization with Supabase backend
+- **📝 Rich Text Editor** Create and edit notes with formatting options
+- **🏷️ Smart Tagging** AI-powered tag suggestions based on content
+- **📌 Pin Notes** Keep important notes easily accessible
+- **🔍 Search & Filter** Find notes by content, tags, or date
+- **☁️ Cloud Sync** Automatic synchronization with Supabase backend
 
 ### AI Features
-- **📊 Content Analysis**: Get insights about your note content
-- **📋 Auto-Summarization**: Generate summaries of long notes
-- **🏷️ Smart Tags**: AI suggests relevant tags for better organization
-- **🔗 Similar Notes**: Discover related content automatically
+- **📊 Content Analysis** Get insights about your note content
+- **📋 Auto-summarization** Generate summaries of long notes
+- **🏷️ Smart Tags** AI suggests relevant tags for better organization
+- **🔗 Similar Notes** Discover related content automatically
 
 ### File Management
-- **📷 Image Upload**: Take photos or select from gallery
-- **📄 Document Support**: Upload PDFs, Word docs, and more
-- **☁️ Cloud Storage**: Secure file storage with Supabase Storage
-- **🔗 Link Integration**: Embed file links directly in notes
+- **📷 Image Upload** Take photos or select from gallery
+- **📄 Document Support** Upload PDFs, Word docs, and more
+- **☁️ Cloud Storage** Secure file storage with Supabase storage
+- **🔗 Link Integration** Embed file links directly in notes
 
-### Third-Party Integrations
-- **🌤️ Weather Data**: Add current weather to your notes
-- **🌍 Translation**: Translate text between multiple languages
-- **📰 News Integration**: Search and reference relevant news articles
+### Third-party Integrations
+- **🌤️ Weather Data** Add current weather to your notes
+- **🌍 Translation** Translate text between multiple languages
+- **📰 News Integration** Search and reference relevant news articles
 
 ## 🏗️ Technical Architecture
 
 ### Frontend (Mobile App)
-- **React Native 0.81** - Cross-platform mobile development
+- **React Native 0.72** - Cross-platform mobile development
 - **TypeScript** - Type-safe development
 - **React Navigation** - Screen navigation
 - **Zustand** - State management
@@ -64,15 +64,15 @@ Aurora Notes Mobile is a **modern, AI-powered note-taking application** built wi
   - Cloud Storage for files
 
 ### AI & External APIs
-- **OpenAI GPT** - Content analysis and summarization
-- **OpenWeatherMap** - Weather data
-- **MyMemory** - Translation services
-- **NewsAPI** - News articles
+- **OpenAI** - Content analysis and summarization
+- **OpenWeather** - Weather data
+- **Memory** - Translation services
+- **News** - News articles
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v16 or higher)
+- Node.js (v18 or higher)
 - React Native development environment
 - iOS Simulator (for iOS development)
 - Android Studio (for Android development)
@@ -92,12 +92,12 @@ Aurora Notes Mobile is a **modern, AI-powered note-taking application** built wi
    yarn install
    ```
 
-3. **iOS Setup** (macOS only)
+3. **iOS setup** (macOS only)
    ```bash
    cd ios && pod install && cd ..
    ```
 
-4. **Environment Configuration**
+4. **Environment configuration**
    ```bash
    # Copy environment template
    cp .env.example .env
@@ -133,7 +133,7 @@ Aurora Notes Mobile is a **modern, AI-powered note-taking application** built wi
 ### Project Structure
 ```
 src/
-├── components/          # Reusable UI components
+├── components/          # Reusable components
 │   └── ui/             # Basic UI elements (Button, Input, etc.)
 ├── screens/            # Screen components
 │   ├── auth/           # Authentication screens
@@ -146,13 +146,13 @@ src/
 ```
 
 ### Key Technologies
-- **React Native**: Cross-platform mobile framework
-- **TypeScript**: Static type checking
-- **Supabase**: Backend services and database
-- **React Navigation**: Screen navigation
-- **Zustand**: Lightweight state management
-- **React Native Image Picker**: File selection
-- **React Native Document Picker**: Document handling
+- **React Native** Cross-platform mobile framework
+- **TypeScript** Static type checking
+- **Supabase** Backend services and database
+- **React Navigation** Screen navigation
+- **Zustand** Lightweight state management
+- **React Native Image Picker** File selection
+- **React Native Document Picker** Document handling
 
 ## 🔧 Configuration
 
@@ -161,28 +161,28 @@ src/
 2. Set up database tables (profiles, notes)
 3. Configure Row Level Security policies
 4. Deploy Edge Functions for AI features
-5. Set up Storage buckets for file uploads
+5. Set up storage buckets for file uploads
 
 ### API Keys Required
-- **Supabase**: Project URL and anonymous key
-- **OpenAI**: For AI-powered features
-- **OpenWeatherMap**: For weather integration
-- **NewsAPI**: For news features
-- **MyMemory**: For translation services
+- **Supabase** Project URL and anonymous key
+- **OpenAI** for AI-powered features
+- **OpenWeather** for weather integration
+- **News** for news features
+- **Memory** for translation services
 
 ## 📊 Performance
 
-- **Fast Loading**: Optimized bundle size and lazy loading
-- **Smooth Animations**: 60fps animations and transitions
-- **Efficient Sync**: Real-time updates without performance impact
-- **Memory Management**: Optimized for mobile devices
+- **Fast Loading** Optimized bundle size and lazy loading
+- **Smooth Animations** 60fps animations and transitions
+- **Efficient Sync** Real-time updates without performance impact
+- **Memory Management** Optimized for mobile devices
 
 ## 🔒 Security
 
-- **End-to-End Encryption**: All data encrypted in transit and at rest
-- **Row Level Security**: Database-level access control
-- **Secure API Keys**: Server-side key management
-- **User Authentication**: Secure login and session management
+- **End-to-end Encryption** All data encrypted in transit and at rest
+- **Row Level Security** Database-level access control
+- **Secure Keys** Server-side key management
+- **User Authentication** Secure login and session management
 
 ## 🤝 Contributing
 
@@ -207,12 +207,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- **Developer**: [@aureliasusu](https://github.com/aureliasusu)
-- **Project Link**: [https://github.com/aureliasusu/AuroraNotesMobile](https://github.com/aureliasusu/AuroraNotesMobile)
-- **Issues**: [GitHub Issues](https://github.com/aureliasusu/AuroraNotesMobile/issues)
+- **Developer** [aureliasusu](https://github.com/aureliasusu)
+- **Project Link** [https://github.com/aureliasusu/AuroraNotesMobile](https://github.com/aureliasusu/AuroraNotesMobile)
+- **Issues** [GitHub Issues](https://github.com/aureliasusu/AuroraNotesMobile/issues)
 
 ---
 
 **Built with ❤️ using React Native and modern web technologies**
 
-*Last updated: September 2024*
+*Last updated September 2024*

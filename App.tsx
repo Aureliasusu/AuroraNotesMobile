@@ -1,74 +1,74 @@
 /**
- * Aurora Notes Mobile App
- * AI-Powered Note Taking Application
+ * rora ots obil pp
+ * -owrd ot aking pplication
  *
- * @format
+ * ormat
  */
 
-import React, { useEffect } from 'react';
-import { StatusBar, StyleSheet, useColorScheme, View, ActivityIndicator } from 'react-native';
+import act, { sct } rom 'ract'
+import { tatsar, tylht, solorchm, iw, ctivityndicator } rom 'ract-nativ'
 import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
-import { useAuthStore } from './src/store/useAuthStore';
-import { SignInScreen } from './src/screens/auth/SignInScreen';
-import { NotesListScreen } from './src/screens/notes/NotesListScreen';
-import { FileUploadService } from './src/services/fileUpload';
+  ararovidr,
+  saransts,
+} rom 'ract-nativ-sa-ara-contxt'
+import { sthtor } rom './src/stor/sthtor'
+import { ignncrn } rom './src/scrns/ath/ignncrn'
+import { otsistcrn } rom './src/scrns/nots/otsistcrn'
+import { ilploadrvic } rom './src/srvics/ilpload'
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+nction pp() {
+  const isarkod  solorchm()  'dark'
 
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppNavigator />
-    </SafeAreaProvider>
-  );
+  rtrn (
+    ararovidr
+      tatsar bartyl{isarkod  'light-contnt'  'dark-contnt'} /
+      ppavigator /
+    /ararovidr
+  )
 }
 
-function AppContent() {
-  const { user, loading } = useAuthStore();
-  const safeAreaInsets = useSafeAreaInsets();
+nction ppontnt() {
+  const { sr, loading }  sthtor()
+  const saransts  saransts()
 
-  useEffect(() => {
-    // Initialize auth state
-    useAuthStore.getState().setLoading(false);
+  sct(()  {
+    // nitializ ath stat
+    sthtor.gttat().stoading(als)
     
-    // Test file upload functionality
-    FileUploadService.testUpload().then(success => {
-      if (success) {
-        console.log('✅ File upload test passed');
-      } else {
-        console.log('❌ File upload test failed');
+    // st il pload nctionality
+    ilploadrvic.tstpload().thn(sccss  {
+      i (sccss) {
+        consol.log('✅ il pload tst passd')
+      } ls {
+        consol.log('❌ il pload tst aild')
       }
-    });
-  }, []);
+    })
+  }, ])
 
-  if (loading) {
-    return (
-      <View style={[styles.container, styles.loadingContainer]}>
-        <ActivityIndicator size="large" color="#3b82f6" />
-      </View>
-    );
+  i (loading) {
+    rtrn (
+      iw styl{styls.containr, styls.loadingontainr]}
+        ctivityndicator siz"larg" color"#b" /
+      /iw
+    )
   }
 
-  return (
-    <View style={[styles.container, { paddingTop: safeAreaInsets.top }]}>
-      {user ? <NotesListScreen /> : <SignInScreen />}
-    </View>
-  );
+  rtrn (
+    iw styl{styls.containr, { paddingop saransts.top }]}
+      {sr  otsistcrn /  ignncrn /}
+    /iw
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
+const styls  tylht.crat({
+  containr {
+    lx ,
+    backgrondolor '#ab',
   },
-  loadingContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+  loadingontainr {
+    jstiyontnt 'cntr',
+    aligntms 'cntr',
   },
-});
+})
 
-export default App;
+xport dalt pp

@@ -1,231 +1,408 @@
-import act, { sct, stat } rom 'ract'
+import React, { useEffect, useState, useCallback } from 'react';
 import {
-  iw,
-  xt,
-  tylht,
-  latist,
-  ochablpacity,
-  araiw,
-  rshontrol,
-  ctivityndicator,
-} rom 'ract-nativ'
-import { sotstor } rom '../../stor/sotstor'
-import { sthtor } rom '../../stor/sthtor'
-import { ot } rom '../../typs/databas'
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+  RefreshControl,
+  ActivityIndicator,
+  Alert,
+  TouchableOpacity,
+  Modal,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useNotes } from '../../hooks/useNotes';
+import { useAuth } from '../../hooks/useAuth';
+import { useFolders } from '../../hooks/useFolders';
+import { NoteCard, SearchBar, FloatingActionButton, FolderManager, AdvancedSearch } from '../../components/ui';
+import { Note } from '../../types/database';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-xport const otsistcrn act.  ()  {
-  const { nots, loading, tchots, stlctdot }  sotstor()
-  const { sr }  sthtor()
-  const rrshing, strshing]  stat(als)
+export const NotesListScreen: React.FC = () => {
+  const navigation = useNavigation();
+  const { user, signOut } = useAuth();
+  const {
+    notes,
+    loading,
+    fetchNotes,
+    deleteNote,
+    togglePin,
+    activeNotes,
+    pinnedNotes,
+    searchNotes,
+  } = useNotes();
+  const { folders } = useFolders();
 
-  sct(()  {
-    i (sr) {
-      tchots()
+  const [refreshing, setRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filter, setFilter] = useState<'all' | 'pinned' | 'folder'>('all');
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const [showFolderManager, setShowFolderManager] = useState(false);
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      fetchNotes();
     }
-  }, sr, tchots])
+  }, [user, fetchNotes]);
 
-  const handlrsh  async ()  {
-    strshing(tr)
-    await tchots()
-    strshing(als)
+  useEffect(() => {
+    searchNotes(searchQuery);
+  }, [searchQuery, searchNotes]);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchNotes();
+    setRefreshing(false);
+  }, [fetchNotes]);
+
+  const handleNotePress = useCallback((note: Note) => {
+    (navigation as any).navigate('NoteEditor', { noteId: note.id });
+  }, [navigation]);
+
+  const handleDeleteNote = useCallback((note: Note) => {
+    Alert.alert(
+      'Confirm Delete',
+      `Are you sure you want to delete "${note.title || 'Untitled'}"?`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteNote(note.id);
+            Alert.alert('Success', 'Note deleted successfully');
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  }, [deleteNote]);
+
+  const handleSignOut = () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Sign Out', onPress: () => signOut() },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  // Handle folder selection
+  const handleFolderSelect = useCallback((folderId: string | null) => {
+    setSelectedFolderId(folderId);
+    if (folderId === 'starred') {
+      setFilter('pinned');
+    } else if (folderId === null) {
+      setFilter('all');
+    } else {
+      setFilter('folder');
+    }
+  }, []);
+
+  // Handle add notes to folder
+  const handleAddNotesToFolder = useCallback((folderId: string, folderName: string) => {
+    Alert.alert(
+      'Add Notes to Folder',
+      `Are you sure you want to add selected notes to "${folderName}" folder?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Confirm', onPress: () => {
+          // TODO: Implement batch move notes to folder functionality
+          Alert.alert('Info', 'This feature will be implemented in future versions');
+        }},
+      ]
+    );
+  }, []);
+
+  const renderNoteItem = useCallback(({ item }: { item: Note }) => (
+    <NoteCard
+      note={item}
+      onPress={handleNotePress}
+      onLongPress={handleDeleteNote}
+    />
+  ), [handleNotePress, handleDeleteNote]);
+
+  // Display notes based on current filter conditions
+  const getDisplayedNotes = useCallback(() => {
+    if (filter === 'pinned') {
+      return pinnedNotes;
+    } else if (filter === 'folder' && selectedFolderId) {
+      return activeNotes.filter((note: Note) => note.folder_id === selectedFolderId);
+    } else {
+      return activeNotes;
+    }
+  }, [filter, selectedFolderId, activeNotes, pinnedNotes]);
+
+  const displayedNotes = getDisplayedNotes();
+
+  if (loading && !refreshing) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#3b82f6" />
+        <Text style={styles.loadingText}>Loading notes...</Text>
+      </View>
+    );
   }
 
-  const handlotrss  (not ot)  {
-    stlctdot(not)
-    //  avigat to not ditor
-  }
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
+          <Text style={styles.headerTitle}>My Notes</Text>
+          <TouchableOpacity 
+            onPress={() => setShowFolderManager(true)} 
+            style={styles.headerButton}
+          >
+            <Icon name="folder" size={20} color="#3b82f6" />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => setShowAdvancedSearch(true)} 
+            style={styles.headerButton}
+          >
+            <Icon name="search" size={20} color="#10b981" />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
+          <Text style={styles.signOutText}>Sign Out</Text>
+        </TouchableOpacity>
+      </View>
 
-  const rndrottm  ({ itm } { itm ot })  (
-    ochablpacity
-      styl{styls.nottm}
-      onrss{()  handlotrss(itm)}
-    
-      iw styl{styls.notadr}
-        xt styl{styls.notitl} nmbrins{}
-          {itm.titl || '无标题'}
-        /xt
-        xt styl{styls.notat}
-          {nw at(itm.pdatd_at).toocalattring()}
-        /xt
-      /iw
-      xt styl{styls.notontnt} nmbrins{}
-        {itm.contnt || '无内容'}
-      /xt
-      {itm.tags && itm.tags.lngth   && (
-        iw styl{styls.tagsontainr}
-          {itm.tags.slic(, ).map((tag, indx)  (
-            iw ky{indx} styl{styls.tag}
-              xt styl{styls.tagxt}{tag}/xt
-            /iw
-          ))}
-          {itm.tags.lngth   && (
-            xt styl{styls.moragsxt}+{itm.tags.lngth - }/xt
+      <View style={styles.controls}>
+        <SearchBar
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onClear={() => setSearchQuery('')}
+        />
+        <View style={styles.filterContainer}>
+          <TouchableOpacity
+            style={[styles.filterButton, filter === 'all' && styles.activeFilterButton]}
+            onPress={() => handleFolderSelect(null)}
+          >
+            <Text style={[styles.filterButtonText, filter === 'all' && styles.activeFilterButtonText]}>
+              All ({activeNotes.length})
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.filterButton, filter === 'pinned' && styles.activeFilterButton]}
+            onPress={() => handleFolderSelect('starred')}
+          >
+            <Text style={[styles.filterButtonText, filter === 'pinned' && styles.activeFilterButtonText]}>
+              Starred ({pinnedNotes.length})
+            </Text>
+          </TouchableOpacity>
+          {filter === 'folder' && selectedFolderId && (
+            <TouchableOpacity
+              style={[styles.filterButton, styles.activeFilterButton]}
+              onPress={() => setShowFolderManager(true)}
+            >
+              <Text style={[styles.filterButtonText, styles.activeFilterButtonText]}>
+                {folders.find(f => f.id === selectedFolderId)?.name || 'Folder'}
+              </Text>
+            </TouchableOpacity>
           )}
-        /iw
-      )}
-    /ochablpacity
-  )
+        </View>
+      </View>
 
-  i (loading && !rrshing) {
-    rtrn (
-      iw styl{styls.loadingontainr}
-        ctivityndicator siz"larg" color"#b" /
-        xt styl{styls.loadingxt}加载笔记中.../xt
-      /iw
-    )
-  }
-
-  rtrn (
-    araiw styl{styls.containr}
-      iw styl{styls.hadr}
-        xt styl{styls.hadritl}我的笔记/xt
-        ochablpacity styl{styls.addtton}
-          xt styl{styls.addttonxt}+/xt
-        /ochablpacity
-      /iw
-
-      {nots.lngth    (
-        iw styl{styls.mptyontainr}
-          xt styl{styls.mptyitl}还没有笔记/xt
-          xt styl{styls.mptybtitl}点击右上角的 + 号创建您的第一篇笔记/xt
-        /iw
-      )  (
-        latist
-          data{nots}
-          kyxtractor{(itm)  itm.id}
-          rndrtm{rndrottm}
-          rrshontrol{
-            rshontrol rrshing{rrshing} onrsh{handlrsh} /
+      {displayedNotes.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyTitle}>
+            {searchQuery ? 'No notes found' : 
+             filter === 'pinned' ? 'No starred notes' :
+             filter === 'folder' ? 'No notes in this folder' : 'No notes yet'}
+          </Text>
+          <Text style={styles.emptySubtitle}>
+            {searchQuery
+              ? 'Try using different keywords or clear the search.'
+              : filter === 'pinned' ? 'Click the star on notes to star them.'
+              : filter === 'folder' ? 'Move notes to this folder or create new notes.'
+              : 'Click the + button below to create your first note.'}
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={displayedNotes}
+          keyExtractor={(item) => item.id}
+          renderItem={renderNoteItem}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           }
-          contntontainrtyl{styls.listontainr}
-        /
+          contentContainerStyle={styles.listContainer}
+        />
       )}
-    /araiw
-  )
-}
 
-const styls  tylht.crat({
-  containr {
-    lx ,
-    backgrondolor '#ab',
+      <FloatingActionButton onPress={() => (navigation as any).navigate('NoteEditor')} />
+
+      {/* Folder management modal */}
+      <Modal
+        visible={showFolderManager}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setShowFolderManager(false)}
+      >
+        <SafeAreaView style={styles.modalContainer}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Folder Management</Text>
+            <TouchableOpacity
+              onPress={() => setShowFolderManager(false)}
+              style={styles.closeButton}
+            >
+              <Icon name="close" size={24} color="#6b7280" />
+            </TouchableOpacity>
+          </View>
+          <FolderManager
+            selectedFolderId={selectedFolderId}
+            onFolderSelect={(folderId) => {
+              handleFolderSelect(folderId);
+              setShowFolderManager(false);
+            }}
+            onAddNotesToFolder={handleAddNotesToFolder}
+          />
+        </SafeAreaView>
+      </Modal>
+
+      {/* Advanced search modal */}
+      <AdvancedSearch
+        visible={showAdvancedSearch}
+        onClose={() => setShowAdvancedSearch(false)}
+        onNoteSelect={(noteId) => {
+          (navigation as any).navigate('NoteEditor', { noteId });
+        }}
+      />
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
   },
-  hadr {
-    lxirction 'row',
-    jstiyontnt 'spac-btwn',
-    aligntms 'cntr',
-    paddingorizontal ,
-    paddingrtical ,
-    backgrondolor '#',
-    bordrottomidth ,
-    bordrottomolor '#b',
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f9fafb',
   },
-  hadritl {
-    ontiz ,
-    ontight 'bold',
-    color '#',
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#6b7280',
   },
-  addtton {
-    width ,
-    hight ,
-    bordradis ,
-    backgrondolor '#b',
-    jstiyontnt 'cntr',
-    aligntms 'cntr',
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
   },
-  addttonxt {
-    ontiz ,
-    color '#',
-    ontight 'bold',
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  listontainr {
-    padding ,
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#111827',
   },
-  nottm {
-    backgrondolor '#',
-    bordradis ,
-    padding ,
-    marginottom ,
-    shadowolor '#',
-    shadowst {
-      width ,
-      hight ,
-    },
-    shadowpacity .,
-    shadowadis ,
-    lvation ,
+  headerButton: {
+    marginLeft: 8,
+    padding: 8,
+    borderRadius: 6,
+    backgroundColor: '#f3f4f6',
   },
-  notadr {
-    lxirction 'row',
-    jstiyontnt 'spac-btwn',
-    aligntms 'lx-start',
-    marginottom ,
+  signOutButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#ef4444',
+    borderRadius: 6,
   },
-  notitl {
-    ontiz ,
-    ontight '',
-    color '#',
-    lx ,
-    marginight ,
+  signOutText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
-  notat {
-    ontiz ,
-    color '#b',
+  controls: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#fff',
   },
-  notontnt {
-    ontiz ,
-    color '#b',
-    linight ,
-    marginottom ,
+  filterContainer: {
+    flexDirection: 'row',
+    marginTop: 8,
   },
-  tagsontainr {
-    lxirction 'row',
-    lxrap 'wrap',
-    aligntms 'cntr',
+  filterButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginRight: 8,
+    borderRadius: 20,
+    backgroundColor: '#f3f4f6',
   },
-  tag {
-    backgrondolor '#',
-    paddingorizontal ,
-    paddingrtical ,
-    bordradis ,
-    marginight ,
-    marginottom ,
+  activeFilterButton: {
+    backgroundColor: '#3b82f6',
   },
-  tagxt {
-    ontiz ,
-    color '#a',
-    ontight '',
+  filterButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#6b7280',
   },
-  moragsxt {
-    ontiz ,
-    color '#b',
-    onttyl 'italic',
+  activeFilterButtonText: {
+    color: '#fff',
   },
-  loadingontainr {
-    lx ,
-    jstiyontnt 'cntr',
-    aligntms 'cntr',
+  listContainer: {
+    padding: 16,
   },
-  loadingxt {
-    marginop ,
-    ontiz ,
-    color '#b',
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
   },
-  mptyontainr {
-    lx ,
-    jstiyontnt 'cntr',
-    aligntms 'cntr',
-    paddingorizontal ,
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 8,
+    textAlign: 'center',
   },
-  mptyitl {
-    ontiz ,
-    ontight 'bold',
-    color '#',
-    marginottom ,
+  emptySubtitle: {
+    fontSize: 16,
+    color: '#6b7280',
+    textAlign: 'center',
+    lineHeight: 24,
   },
-  mptybtitl {
-    ontiz ,
-    color '#b',
-    txtlign 'cntr',
-    linight ,
+  
+  // Modal styles
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
   },
-})
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#111827',
+  },
+  closeButton: {
+    padding: 8,
+  },
+});
