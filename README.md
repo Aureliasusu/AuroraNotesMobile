@@ -1,218 +1,218 @@
-# roraots obil - omplt tp id
+# AuroraNotes Mobile - Complete Top IDE
 
- -owrd ross-latorm ot-aking pp with dvancd atrs
+A powerful cross-platform note-taking app with advanced features
 
-!act ativ](https//img.shilds.io/badg/act%ativ-.-bl.svg)](https//ractnativ.dv/)
-!ypcript](https//img.shilds.io/badg/ypcript-.-bl.svg)](https//www.typscriptlang.org/)
-!pabas](https//img.shilds.io/badg/pabas-acknd-grn.svg)](https//spabas.com/)
-!icns](https//img.shilds.io/badg/icns--yllow.svg)]()
+[![React Native](https://img.shields.io/badge/React%20Native-0.72-blue.svg)](https://reactnative.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Backend-green.svg)](https://supabase.com/)
+[![Icons](https://img.shields.io/badge/Icons-Material%20Icons-yellow.svg)]()
 
-## 🎯 hat is rora ots obil
+## 🎯 What is Aurora Notes Mobile
 
-rora ots obil is a **modrn, -powrd not-taking application** bilt with act ativ that rns on both i and ndroid. t's dsignd to b yor intllignt digital companion or captring, organizing, and nhancing yor thoghts and idas.
+Aurora Notes Mobile is a **modern, AI-powered note-taking application** built with React Native that runs on both iOS and Android. It's designed to be your intelligent digital companion for capturing, organizing, and enhancing your thoughts and ideas.
 
-### 🌟 y ighlights
+### 🌟 Key Highlights
 
-- **🤖 -owrd** mart not analysis, smmarization, and tag sggstions
-- **📁 il anagmnt** pload imags, docmnts, and mltimdia attachmnts
-- **🌐 al-tim ync** lod synchronization across all yor dvics
-- **🔍 dvancd arch** ind nots instantly with intllignt sarch
-- **🎨 atil ** odrn, intitiv intrac dsignd or prodctivity
-- **🔒 cr** nd-to-nd ncryption and scr clod storag
+- **🤖 AI-Powered** Smart note analysis, summarization, and tag suggestions
+- **📁 File Management** Upload images, documents, and multimedia attachments
+- **🌐 Real-time Sync** Cloud synchronization across all your devices
+- **🔍 Advanced Search** Find notes instantly with intelligent search
+- **🎨 Beautiful UI** Modern, intuitive interface designed for productivity
+- **🔒 Secure** End-to-end encryption and secure cloud storage
 
-## ✨ atrs
+## ✨ Features
 
-### or nctionality
-- **📝 ich xt ditor** rat and dit nots with ormatting options
-- **🏷️ mart agging** -powrd tag sggstions basd on contnt
-- **📌 in ots** p important nots asily accssibl
-- **🔍 arch & iltr** ind nots by contnt, tags, or dat
-- **☁️ lod ync** tomatic synchronization with pabas backnd
+### Core Functionality
+- **📝 Rich Text Editor** Create and edit notes with formatting options
+- **🏷️ Smart Tagging** AI-powered tag suggestions based on content
+- **📌 Pin Notes** Keep important notes easily accessible
+- **🔍 Search & Filter** Find notes by content, tags, or date
+- **☁️ Cloud Sync** Automatic synchronization with Supabase backend
 
-###  atrs
-- **📊 ontnt nalysis** t insights abot yor not contnt
-- **📋 to-mmarization** nrat smmaris o long nots
-- **🏷️ mart ags**  sggsts rlvant tags or bttr organization
-- **🔗 imilar ots** iscovr rlatd contnt atomatically
+### AI Features
+- **📊 Content Analysis** Get insights about your note content
+- **📋 Auto-summarization** Generate summaries of long notes
+- **🏷️ Smart Tags** AI suggests relevant tags for better organization
+- **🔗 Similar Notes** Discover related content automatically
 
-### il anagmnt
-- **📷 mag pload** ak photos or slct rom gallry
-- **📄 ocmnt pport** pload s, ord docs, and mor
-- **☁️ lod torag** cr il storag with pabas torag
-- **🔗 ink ntgration** mbd il links dirctly in nots
+### File Management
+- **📷 Image Upload** Take photos or select from gallery
+- **📄 Document Support** Upload PDFs, Word docs, and more
+- **☁️ Cloud Storage** Secure file storage with Supabase storage
+- **🔗 Link Integration** Embed file links directly in notes
 
-### hird-arty ntgrations
-- **🌤️ athr ata** dd crrnt wathr to yor nots
-- **🌍 ranslation** ranslat txt btwn mltipl langags
-- **📰 ws ntgration** arch and rrnc rlvant nws articls
+### Third-party Integrations
+- **🌤️ Weather Data** Add current weather to your notes
+- **🌍 Translation** Translate text between multiple languages
+- **📰 News Integration** Search and reference relevant news articles
 
-## 🏗️ chnical rchitctr
+## 🏗️ Technical Architecture
 
-### rontnd (obil pp)
-- **act ativ .** - ross-platorm mobil dvlopmnt
-- **ypcript** - yp-sa dvlopmnt
-- **act avigation** - crn navigation
-- **stand** - tat managmnt
-- **act ativ ctor cons** - con library
+### Frontend (Mobile App)
+- **React Native 0.72** - Cross-platform mobile development
+- **TypeScript** - Type-safe development
+- **React Navigation** - Screen navigation
+- **Zustand** - State management
+- **React Native Vector Icons** - Icon library
 
-### acknd rvics
-- **pabas** - acknd-as-a-rvic
-  - ostgr atabas
-  - al-tim sbscriptions
-  - ow vl crity ()
-  - dg nctions or  procssing
-  - lod torag or ils
+### Backend Services
+- **Supabase** - Backend-as-a-Service
+  - PostgreSQL Database
+  - Real-time subscriptions
+  - Row Level Security (RLS)
+  - Edge Functions for AI processing
+  - Cloud Storage for files
 
-###  & xtrnal s
-- **pn ** - ontnt analysis and smmarization
-- **pnathrap** - athr data
-- **ymory** - ranslation srvics
-- **ws** - ws articls
+### AI & External APIs
+- **OpenAI** - Content analysis and summarization
+- **OpenWeather** - Weather data
+- **Memory** - Translation services
+- **News** - News articles
 
-## 🚀 tting tartd
+## 🚀 Getting Started
 
-### rrqisits
-- od.js (v or highr)
-- act ativ dvlopmnt nvironmnt
-- i imlator (or i dvlopmnt)
-- ndroid tdio (or ndroid dvlopmnt)
+### Prerequisites
+- Node.js (v18 or higher)
+- React Native development environment
+- iOS Simulator (for iOS development)
+- Android Studio (for Android development)
 
-### nstallation
+### Installation
 
-. **lon th rpository**
+1. **Clone the repository**
    ```bash
-   git clon https//githb.com/arliass/roraotsobil.git
-   cd roraotsobil
+   git clone https://github.com/aureliasusu/AuroraNotesMobile.git
+   cd AuroraNotesMobile
    ```
 
-. **nstall dpndncis**
+2. **Install dependencies**
    ```bash
    npm install
    # or
    yarn install
    ```
 
-. **i tp** (mac only)
+3. **iOS setup** (macOS only)
    ```bash
    cd ios && pod install && cd ..
    ```
 
-. **nvironmnt onigration**
+4. **Environment configuration**
    ```bash
-   # opy nvironmnt tmplat
-   cp .nv.xampl .nv
+   # Copy environment template
+   cp .env.example .env
    
-   # dit .nv with yor  kys
-   # _yor_spabas_rl
-   # __yor_spabas_anon_ky
-   # __yor_opnai_api_ky
+   # Edit .env with your API keys
+   # SUPABASE_URL=your_supabase_url
+   # SUPABASE_ANON_KEY=your_supabase_anon_key
+   # OPENAI_API_KEY=your_openai_api_key
    ```
 
-. **tart th dvlopmnt srvr**
+5. **Start the development server**
    ```bash
    npm start
    # or
    yarn start
    ```
 
-. **n on dvic/simlator**
+6. **Run on device/simulator**
    ```bash
-   # i
-   npm rn ios
+   # iOS
+   npm run ios
    
-   # ndroid
-   npm rn android
+   # Android
+   npm run android
    ```
 
-## 📱 crnshots
+## 📱 Screenshots
 
-*crnshots coming soon - showcasing th batil  and sr xprinc*
+*Screenshots coming soon - showcasing the beautiful UI and user experience*
 
-## 🛠️ vlopmnt
+## 🛠️ Development
 
-### rojct trctr
+### Project Structure
 ```
 src/
-├── componnts/          # sabl  componnts
-│   └── i/             # asic  lmnts (tton, npt, tc.)
-├── scrns/            # crn componnts
-│   ├── ath/           # thntication scrns
-│   └── nots/          # ot-rlatd scrns
-├── hooks/              # stom act hooks
-├── srvics/           #  and xtrnal srvic intgrations
-├── stor/              # tat managmnt (stand)
-├── typs/              # ypcript typ dinitions
-└── lib/                # tility libraris and conigrations
+├── components/          # Reusable components
+│   └── ui/             # Basic UI elements (Button, Input, etc.)
+├── screens/            # Screen components
+│   ├── auth/           # Authentication screens
+│   └── notes/          # Note-related screens
+├── hooks/              # Custom React hooks
+├── services/           # API and external service integrations
+├── store/              # State management (Zustand)
+├── types/              # TypeScript type definitions
+└── lib/                # Utility libraries and configurations
 ```
 
-### y chnologis
-- **act ativ** ross-platorm mobil ramwork
-- **ypcript** tatic typ chcking
-- **pabas** acknd srvics and databas
-- **act avigation** crn navigation
-- **stand** ightwight stat managmnt
-- **act ativ mag ickr** il slction
-- **act ativ ocmnt ickr** ocmnt handling
+### Key Technologies
+- **React Native** Cross-platform mobile framework
+- **TypeScript** Static type checking
+- **Supabase** Backend services and database
+- **React Navigation** Screen navigation
+- **Zustand** Lightweight state management
+- **React Native Image Picker** File selection
+- **React Native Document Picker** Document handling
 
-## 🔧 onigration
+## 🔧 Configuration
 
-### pabas tp
-. rat a nw pabas projct
-. t p databas tabls (proils, nots)
-. onigr ow vl crity policis
-. ploy dg nctions or  atrs
-. t p torag bckts or il ploads
+### Supabase Setup
+1. Create a new Supabase project
+2. Set up database tables (profiles, notes)
+3. Configure Row Level Security policies
+4. Deploy Edge Functions for AI features
+5. Set up storage buckets for file uploads
 
-###  ys qird
-- **pabas** rojct  and anonymos ky
-- **pn** or -powrd atrs
-- **pnathrap** or wathr intgration
-- **ws** or nws atrs
-- **ymory** or translation srvics
+### API Keys Required
+- **Supabase** Project URL and anonymous key
+- **OpenAI** for AI-powered features
+- **OpenWeather** for weather integration
+- **News** for news features
+- **Memory** for translation services
 
-## 📊 rormanc
+## 📊 Performance
 
-- **ast oading** ptimizd bndl siz and lazy loading
-- **mooth nimations** ps animations and transitions
-- **icint ync** al-tim pdats withot prormanc impact
-- **mory anagmnt** ptimizd or mobil dvics
+- **Fast Loading** Optimized bundle size and lazy loading
+- **Smooth Animations** 60fps animations and transitions
+- **Efficient Sync** Real-time updates without performance impact
+- **Memory Management** Optimized for mobile devices
 
-## 🔒 crity
+## 🔒 Security
 
-- **nd-to-nd ncryption** ll data ncryptd in transit and at rst
-- **ow vl crity** atabas-lvl accss control
-- **cr  ys** rvr-sid ky managmnt
-- **sr thntication** cr login and sssion managmnt
+- **End-to-end Encryption** All data encrypted in transit and at rest
+- **Row Level Security** Database-level access control
+- **Secure Keys** Server-side key management
+- **User Authentication** Secure login and session management
 
-## 🤝 ontribting
+## 🤝 Contributing
 
- wlcom contribtions! las s or ontribting idlins](.md) or dtails.
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
-. ork th rpository
-. rat a atr branch (`git chckot -b atr/amazing-atr`)
-. ommit yor changs (`git commit -m 'dd amazing atr'`)
-. sh to th branch (`git psh origin atr/amazing-atr`)
-. pn a ll qst
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📄 icns
+## 📄 License
 
-his projct is licnsd ndr th  icns - s th ]() il or dtails.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 cknowldgmnts
+## 🙏 Acknowledgments
 
-- act ativ commnity or th amazing ramwork
-- pabas tam or th xcllnt backnd srvics
-- pn or  capabilitis
-- ll contribtors and tstrs
+- React Native community for the amazing framework
+- Supabase team for the excellent backend services
+- OpenAI for AI capabilities
+- All contributors and testers
 
-## 📞 ontact
+## 📞 Contact
 
-- **vlopr** arliass](https//githb.com/arliass)
-- **rojct ink** https//githb.com/arliass/roraotsobil](https//githb.com/arliass/roraotsobil)
-- **sss** itb sss](https//githb.com/arliass/roraotsobil/isss)
+- **Developer** [aureliasusu](https://github.com/aureliasusu)
+- **Project Link** [https://github.com/aureliasusu/AuroraNotesMobile](https://github.com/aureliasusu/AuroraNotesMobile)
+- **Issues** [GitHub Issues](https://github.com/aureliasusu/AuroraNotesMobile/issues)
 
 ---
 
-**ilt with ❤️ sing act ativ and modrn wb tchnologis**
+**Built with ❤️ using React Native and modern web technologies**
 
-*ast pdatd ptmbr *
+*Last updated September 2024*

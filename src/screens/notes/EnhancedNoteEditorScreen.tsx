@@ -1,545 +1,477 @@
-import act, { stat, sct } rom 'ract'
+import React, { useState, useEffect } from 'react'
 import {
-  iw,
-  xt,
-  tylht,
-  araiw,
-  yboardvoidingiw,
-  latorm,
-  crolliw,
-  ochablpacity,
-  lrt,
-  xtnpt,
-} rom 'ract-nativ'
-import { sots } rom '../../hooks/sots'
-import { snalysis } rom '../../hooks/snalysis'
-import { silpload } rom '../../hooks/silpload'
-import { shirdartys } rom '../../hooks/shirdartys'
-import { tton } rom '../../componnts/i/tton'
-import { npt } rom '../../componnts/i/npt'
-import { ard } rom '../../componnts/i/ard'
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  TextInput,
+} from 'react-native'
+import { useNotes } from '../../hooks/useNotes'
+import { useAnalysis } from '../../hooks/useAIAnalysis'
+import { useFileUpload } from '../../hooks/useFileUpload'
+import { useThirdPartyServices } from '../../hooks/useThirdPartyServices'
+import { Button } from '../../components/ui/Button'
+import { Input } from '../../components/ui/Input'
+import { Card } from '../../components/ui/Card'
+import { FileUpload } from '../../components/ui/FileUpload'
+import { FileUploadResult } from '../../services/fileUpload'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
-intrac nhancdotditorcrnrops {
-  notd string
-  onav ()  void
-  onancl ()  void
+interface EnhancedNoteEditorScreenProps {
+  noteId?: string
+  onSave: () => void
+  onCancel: () => void
 }
 
-xport const nhancdotditorcrn act.nhancdotditorcrnrops  ({
-  notd,
-  onav,
-  onancl,
-})  {
-  const { nots, cratot, pdatot, slctdot, stlctdot }  sots()
-  const { analyzot, gnratmmary, xtractywords, sggstags, loading aioading }  snalysis()
-  const { pickmagromallry, takhoto, pickocmnt, ploaddils, ploading ilploading }  silpload()
-  const { procssxt, loading apioading }  shirdartys()
+export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> = ({
+  noteId,
+  onSave,
+  onCancel,
+}) => {
+  const { notes, createNote, updateNote, selectedNote, setSelectedNote } = useNotes()
+  const { analyzeNote, generateSummary, extractKeywords, suggestTags, loading: aiLoading } = useAnalysis()
+  const { pickImageFromGallery, takePhoto, pickDocument, uploadedFiles, uploading: fileUploading } = useFileUpload()
+  const { processText, loading: apiLoading } = useThirdPartyServices()
   
-  const titl, stitl]  stat('')
-  const contnt, stontnt]  stat('')
-  const tags, stags]  stat('')
-  const isaving, stsaving]  stat(als)
-  const aiggstions, stiggstions]  statany(nll)
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [tags, setTags] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
+  const [aiSuggestions, setAiSuggestions] = useState<any>(null)
+  const [showFileUpload, setShowFileUpload] = useState(false)
+  const [attachedFiles, setAttachedFiles] = useState<FileUploadResult[]>([])
 
-  const isditing  !!notd
-  const crrntot  isditing  slctdot || nots.ind(n  n.id  notd)  nll
-  const loading  aioading || ilploading || apioading
+  const isEditing = !!noteId
+  const currentNote = isEditing ? selectedNote || notes.find(n => n.id === noteId) : null
+  const loading = aiLoading || fileUploading || apiLoading
 
-  sct(()  {
-    i (crrntot) {
-      stitl(crrntot.titl)
-      stontnt(crrntot.contnt)
-      stags(crrntot.tags.join(', '))
+  useEffect(() => {
+    if (currentNote) {
+      setTitle(currentNote.title)
+      setContent(currentNote.content)
+      setTags(currentNote.tags.join(', '))
     }
-  }, crrntot])
+  }, [currentNote])
 
-  //  not analysis
-  const handlnalysis  async ()  {
-    i (!contnt.trim()) {
-      lrt.alrt('rror', 'las ntr som contnt to analyz')
-      rtrn
+  // Handle save note
+  const handleSave = async () => {
+    if (!title.trim() && !content.trim()) {
+      Alert.alert('Empty Note', 'Please enter a title or content')
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      const noteData = {
+        title: title.trim() || 'Untitled',
+        content: content.trim(),
+        tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0),
+        attachments: attachedFiles.map(file => ({
+          url: file.url,
+          name: file.name,
+          type: file.type,
+          size: file.size
+        }))
+      }
+
+      if (isEditing && currentNote) {
+        await updateNote(currentNote.id, noteData)
+      } else {
+        await createNote(noteData)
+      }
+
+      onSave()
+    } catch (error) {
+      console.error('Save error', error)
+      Alert.alert('Save Error', 'Failed to save note')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  // Handle AI analysis
+  const handleAIAnalysis = async () => {
+    if (!content.trim()) {
+      Alert.alert('No Content', 'Please enter some content to analyze')
+      return
     }
 
     try {
-      const sggstions  await procssxt(contnt)
-      stiggstions(sggstions)
-      lrt.alrt(' nalysis omplt', 'hck th sggstions blow')
-    } catch (rror) {
-      lrt.alrt('nalysis rror', 'aild to analyz contnt')
+      const analysis = await analyzeNote(content)
+      setAiSuggestions(analysis)
+    } catch (error) {
+      console.error('AI analysis error', error)
+      Alert.alert('Analysis Error', 'Failed to analyze note')
     }
   }
 
-  // pply  sggstions
-  const applyggstions  ()  {
-    i (aiggstions) {
-      i (aiggstions.tags && aiggstions.tags.lngth  ) {
-        const xistingags  tags  tags.split(',').map(t  t.trim())  ]
-        const nwags  ...nw t(...xistingags, ...aiggstions.tags])]
-        stags(nwags.join(', '))
-      }
+  // Handle file selection
+  const handleFileSelect = (file: FileUploadResult) => {
+    setAttachedFiles(prev => [...prev, file])
+    setShowFileUpload(false)
+  }
+
+  // Handle file removal
+  const handleFileRemove = (filePath: string) => {
+    setAttachedFiles(prev => prev.filter(file => file.path !== filePath))
+  }
+
+  // Handle image picker
+  const handlePickImage = async () => {
+    const result = await pickImageFromGallery()
+    if (result) {
+      setAttachedFiles(prev => [...prev, result])
     }
   }
 
-  // ick imag rom gallry
-  const handlickmag  async ()  {
-    try {
-      const rslt  await pickmagromallry()
-      i (rslt) {
-        lrt.alrt('ccss', 'mag ploadd sccsslly')
-      }
-    } catch (rror) {
-      lrt.alrt('rror', 'aild to pload imag')
+  // Handle camera
+  const handleTakePhoto = async () => {
+    const result = await takePhoto()
+    if (result) {
+      setAttachedFiles(prev => [...prev, result])
     }
   }
 
-  // ak photo
-  const handlakhoto  async ()  {
-    try {
-      const rslt  await takhoto()
-      i (rslt) {
-        lrt.alrt('ccss', 'hoto ploadd sccsslly')
-      }
-    } catch (rror) {
-      lrt.alrt('rror', 'aild to tak photo')
+  // Handle document picker
+  const handlePickDocument = async () => {
+    const result = await pickDocument()
+    if (result) {
+      setAttachedFiles(prev => [...prev, result])
     }
   }
 
-  // ick docmnt
-  const handlickocmnt  async ()  {
-    try {
-      const rslt  await pickocmnt()
-      i (rslt) {
-        lrt.alrt('ccss', 'ocmnt ploadd sccsslly')
-      }
-    } catch (rror) {
-      lrt.alrt('rror', 'aild to pload docmnt')
-    }
-  }
+  return (
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView 
+        style={styles.keyboardView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={onCancel} style={styles.headerButton}>
+            <Icon name="close" size={24} color="#6b7280" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>
+            {isEditing ? 'Edit Note' : 'New Note'}
+          </Text>
+          <TouchableOpacity 
+            onPress={handleSave} 
+            style={[styles.saveButton, isSaving && styles.disabledButton]}
+            disabled={isSaving}
+          >
+            <Text style={styles.saveButtonText}>
+              {isSaving ? 'Saving...' : 'Save'}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-  // av not
-  const handlav  async ()  {
-    i (!titl.trim() && !contnt.trim()) {
-      lrt.alrt('rror', 'las ntr a titl or contnt')
-      rtrn
-    }
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          {/* Title Input */}
+          <Input
+            placeholder="Note title..."
+            value={title}
+            onChangeText={setTitle}
+            style={styles.titleInput}
+          />
 
-    stsaving(tr)
+          {/* Content Input */}
+          <TextInput
+            style={styles.contentInput}
+            placeholder="Start writing your note..."
+            value={content}
+            onChangeText={setContent}
+            multiline
+            textAlignVertical="top"
+          />
 
-    try {
-      const notata  {
-        titl titl.trim() || 'ntitld',
-        contnt contnt.trim(),
-        tags tags.split(',').map(tag  tag.trim()).iltr(oolan),
-        attachmnts ploaddils.map(il  ({
-          rl il.rl,
-          nam il.nam,
-          typ il.typ,
-        })),
-      }
+          {/* Tags Input */}
+          <Input
+            placeholder="Tags (comma separated)..."
+            value={tags}
+            onChangeText={setTags}
+            style={styles.tagsInput}
+          />
 
-      i (isditing && crrntot) {
-        await pdatot(crrntot.id, {
-          ...crrntot,
-          ...notata,
-          pdatd_at nw at().totring(),
-        })
-      } ls {
-        await cratot(notata)
-      }
-
-      lrt.alrt('ccss', isditing  'ot pdatd'  'ot cratd')
-      onav.()
-    } catch (rror) {
-      lrt.alrt('rror', 'av aild, plas try again')
-    } inally {
-      stsaving(als)
-    }
-  }
-
-  // ancl diting
-  const handlancl  ()  {
-    i (titl.trim() || contnt.trim()) {
-      lrt.alrt(
-        'onirm',
-        'o hav nsavd changs. r yo sr yo want to lav',
-        
-          { txt 'ontin diting', styl 'cancl' },
-          { txt 'av', styl 'dstrctiv', onrss onancl },
-        ]
-      )
-    } ls {
-      onancl.()
-    }
-  }
-
-  rtrn (
-    araiw styl{styls.containr}
-      yboardvoidingiw
-        bhavior{latorm.  'ios'  'padding'  'hight'}
-        styl{styls.kyboardiw}
-      
-        {/* adr */}
-        iw styl{styls.hadr}
-          ochablpacity onrss{handlancl} styl{styls.cancltton}
-            xt styl{styls.canclxt}ancl/xt
-          /ochablpacity
-          
-          xt styl{styls.titl}
-            {isditing  'dit ot'  'w ot'}
-          /xt
-          
-          tton
-            titl"av"
-            onrss{handlav}
-            loading{isaving}
-            disabld{isaving}
-            siz"sm"
-            styl{styls.savtton}
-          /
-        /iw
-
-        {/* ontnt */}
-        crolliw styl{styls.contnt} showsrticalcrollndicator{als}
-          {/* asic orm */}
-          ard styl{styls.ormard}
-            npt
-              val{titl}
-              onhangxt{stitl}
-              placholdr"ntr titl..."
-              styl{styls.titlnpt}
-              maxngth{}
-            /
-
-            iw styl{styls.contntontainr}
-              xt styl{styls.contntabl}ontnt/xt
-              xtnpt
-                styl{styls.contntnpt}
-                val{contnt}
-                onhangxt{stontnt}
-                placholdr"tart writing..."
-                mltilin
-                txtlignrtical"top"
-                maxngth{}
-              /
-            /iw
-
-            npt
-              labl"ags"
-              val{tags}
-              onhangxt{stags}
-              placholdr"parat tags with commas..."
-              styl{styls.tagsnpt}
-            /
-          /ard
-
-          {/*  nalysis */}
-          ard styl{styls.aiard}
-            iw styl{styls.aiadr}
-              xt styl{styls.aiitl} nalysis/xt
-              tton
-                titl"nalyz"
-                onrss{handlnalysis}
-                loading{loading}
-                disabld{loading || !contnt.trim()}
-                siz"sm"
-                variant"otlin"
-              /
-            /iw
-
-            {aiggstions && (
-              iw styl{styls.aiggstions}
-                xt styl{styls.sggstionitl}ggstions/xt
-                
-                {aiggstions.smmary && (
-                  iw styl{styls.sggstiontm}
-                    xt styl{styls.sggstionabl}mmary/xt
-                    xt styl{styls.sggstionxt}{aiggstions.smmary}/xt
-                  /iw
-                )}
-
-                {aiggstions.kywords && aiggstions.kywords.lngth   && (
-                  iw styl{styls.sggstiontm}
-                    xt styl{styls.sggstionabl}ywords/xt
-                    xt styl{styls.sggstionxt}{aiggstions.kywords.join(', ')}/xt
-                  /iw
-                )}
-
-                {aiggstions.sntimnt && (
-                  iw styl{styls.sggstiontm}
-                    xt styl{styls.sggstionabl}ntimnt/xt
-                    xt styl{styls.sggstionxt}{aiggstions.sntimnt}/xt
-                  /iw
-                )}
-
-                {aiggstions.tags && aiggstions.tags.lngth   && (
-                  iw styl{styls.sggstiontm}
-                    xt styl{styls.sggstionabl}ggstd ags/xt
-                    xt styl{styls.sggstionxt}{aiggstions.tags.join(', ')}/xt
-                    tton
-                      titl"pply ags"
-                      onrss{applyggstions}
-                      siz"sm"
-                      variant"ghost"
-                      styl{styls.applytton}
-                    /
-                  /iw
-                )}
-              /iw
-            )}
-          /ard
-
-          {/* il pload */}
-          ard styl{styls.ploadard}
-            xt styl{styls.ploaditl}ttachmnts/xt
+          {/* AI Analysis Section */}
+          <Card style={styles.aiSection}>
+            <View style={styles.aiHeader}>
+              <Icon name="psychology" size={20} color="#8b5cf6" />
+              <Text style={styles.aiTitle}>AI Analysis</Text>
+            </View>
+            <Button
+              title="Analyze Note"
+              onPress={handleAIAnalysis}
+              loading={aiLoading}
+              style={styles.aiButton}
+            />
             
-            iw styl{styls.ploadttons}
-              tton
-                titl"📷 allry"
-                onrss{handlickmag}
-                loading{ilploading}
-                disabld{ilploading}
-                siz"sm"
-                variant"otlin"
-                styl{styls.ploadtton}
-              /
-              tton
-                titl"📸 amra"
-                onrss{handlakhoto}
-                loading{ilploading}
-                disabld{ilploading}
-                siz"sm"
-                variant"otlin"
-                styl{styls.ploadtton}
-              /
-              tton
-                titl"📄 ocmnt"
-                onrss{handlickocmnt}
-                loading{ilploading}
-                disabld{ilploading}
-                siz"sm"
-                variant"otlin"
-                styl{styls.ploadtton}
-              /
-            /iw
-
-            {ploaddils.lngth   && (
-              iw styl{styls.ploaddils}
-                xt styl{styls.ploaddilsitl}ploadd ils/xt
-                {ploaddils.map((il, indx)  (
-                  iw ky{indx} styl{styls.ploaddil}
-                    xt styl{styls.ploaddilam}{il.nam}/xt
-                    xt styl{styls.ploaddilyp}{il.typ}/xt
-                  /iw
-                ))}
-              /iw
+            {aiSuggestions && (
+              <View style={styles.aiResults}>
+                <Text style={styles.aiResultTitle}>Analysis Results:</Text>
+                <Text style={styles.aiResultText}>
+                  Summary: {aiSuggestions.summary}
+                </Text>
+                <Text style={styles.aiResultText}>
+                  Keywords: {aiSuggestions.keywords?.join(', ')}
+                </Text>
+                <Text style={styles.aiResultText}>
+                  Suggested Tags: {aiSuggestions.suggestedTags?.join(', ')}
+                </Text>
+              </View>
             )}
-          /ard
+          </Card>
 
-          {/* ot no */}
-          {crrntot && (
-            ard styl{styls.inoard}
-              xt styl{styls.inoitl}ot normation/xt
-              iw styl{styls.inoow}
-                xt styl{styls.inoabl}ratd/xt
-                xt styl{styls.inoal}
-                  {nw at(crrntot.cratd_at).toocaltring('n-')}
-                /xt
-              /iw
-              iw styl{styls.inoow}
-                xt styl{styls.inoabl}ast odiid/xt
-                xt styl{styls.inoal}
-                  {nw at(crrntot.pdatd_at).toocaltring('n-')}
-                /xt
-              /iw
-              iw styl{styls.inoow}
-                xt styl{styls.inoabl}ord ont/xt
-                xt styl{styls.inoal}
-                  {contnt.lngth} / ,
-                /xt
-              /iw
-            /ard
+          {/* File Upload Section */}
+          <Card style={styles.fileSection}>
+            <View style={styles.fileHeader}>
+              <Icon name="attach-file" size={20} color="#3b82f6" />
+              <Text style={styles.fileTitle}>Attachments</Text>
+              <TouchableOpacity onPress={() => setShowFileUpload(true)}>
+                <Icon name="add" size={20} color="#3b82f6" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Quick Upload Buttons */}
+            <View style={styles.quickUploadButtons}>
+              <TouchableOpacity 
+                style={styles.quickUploadButton}
+                onPress={handlePickImage}
+                disabled={fileUploading}
+              >
+                <Icon name="photo-library" size={16} color="#3b82f6" />
+                <Text style={styles.quickUploadText}>Gallery</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={styles.quickUploadButton}
+                onPress={handleTakePhoto}
+                disabled={fileUploading}
+              >
+                <Icon name="camera-alt" size={16} color="#10b981" />
+                <Text style={styles.quickUploadText}>Camera</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={styles.quickUploadButton}
+                onPress={handlePickDocument}
+                disabled={fileUploading}
+              >
+                <Icon name="description" size={16} color="#f59e0b" />
+                <Text style={styles.quickUploadText}>Document</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Attached Files */}
+            {attachedFiles.length > 0 && (
+              <View style={styles.attachedFiles}>
+                <Text style={styles.attachedFilesTitle}>
+                  Attached Files ({attachedFiles.length})
+                </Text>
+                {attachedFiles.map((file, index) => (
+                  <View key={index} style={styles.attachedFile}>
+                    <Icon name="attach-file" size={16} color="#6b7280" />
+                    <Text style={styles.attachedFileName} numberOfLines={1}>
+                      {file.name}
+                    </Text>
+                    <TouchableOpacity onPress={() => handleFileRemove(file.path)}>
+                      <Icon name="close" size={16} color="#ef4444" />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            )}
+          </Card>
+
+          {/* Loading Indicator */}
+          {loading && (
+            <View style={styles.loadingContainer}>
+              <Text style={styles.loadingText}>Processing...</Text>
+            </View>
           )}
-        /crolliw
-      /yboardvoidingiw
-    /araiw
+        </ScrollView>
+      </KeyboardAvoidingView>
+
+      {/* File Upload Modal */}
+      <FileUpload
+        visible={showFileUpload}
+        onClose={() => setShowFileUpload(false)}
+        onFileSelect={handleFileSelect}
+        allowMultiple={false}
+      />
+    </SafeAreaView>
   )
 }
 
-const styls  tylht.crat({
-  containr {
-    lx ,
-    backgrondolor '#ab',
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
   },
-  kyboardiw {
-    lx ,
+  keyboardView: {
+    flex: 1,
   },
-  hadr {
-    lxirction 'row',
-    aligntms 'cntr',
-    jstiyontnt 'spac-btwn',
-    paddingorizontal ,
-    paddingrtical ,
-    backgrondolor '#',
-    bordrottomidth ,
-    bordrottomolor '#b',
+  
+  // Header styles
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
   },
-  cancltton {
-    padding ,
+  headerButton: {
+    padding: 8,
   },
-  canclxt {
-    ontiz ,
-    color '#b',
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#111827',
   },
-  titl {
-    ontiz ,
-    ontight '',
-    color '#',
+  saveButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#3b82f6',
+    borderRadius: 6,
   },
-  savtton {
-    minidth ,
+  disabledButton: {
+    backgroundColor: '#d1d5db',
   },
-  contnt {
-    lx ,
-    padding ,
+  saveButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '500',
   },
-  ormard {
-    marginottom ,
+
+  // Content styles
+  content: {
+    flex: 1,
+    padding: 16,
   },
-  titlnpt {
-    ontiz ,
-    ontight '',
-    marginottom ,
+  titleInput: {
+    marginBottom: 16,
   },
-  contntontainr {
-    marginottom ,
+  contentInput: {
+    minHeight: 200,
+    padding: 16,
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    fontSize: 16,
+    color: '#111827',
+    marginBottom: 16,
   },
-  contntabl {
-    ontiz ,
-    ontight '',
-    color '#',
-    marginottom ,
+  tagsInput: {
+    marginBottom: 16,
   },
-  contntnpt {
-    bordridth ,
-    bordrolor '#dddb',
-    bordradis ,
-    padding ,
-    ontiz ,
-    backgrondolor '#',
-    minight ,
-    txtlignrtical 'top',
+
+  // AI section styles
+  aiSection: {
+    marginBottom: 16,
   },
-  tagsnpt {
-    marginottom ,
+  aiHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
   },
-  aiard {
-    marginottom ,
-    backgrondolor '#ac',
+  aiTitle: {
+    marginLeft: 8,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#374151',
   },
-  aiadr {
-    lxirction 'row',
-    jstiyontnt 'spac-btwn',
-    aligntms 'cntr',
-    marginottom ,
+  aiButton: {
+    marginBottom: 12,
   },
-  aiitl {
-    ontiz ,
-    ontight '',
-    color '#',
+  aiResults: {
+    padding: 12,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 6,
   },
-  aiggstions {
-    marginop ,
+  aiResultTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 8,
   },
-  sggstionitl {
-    ontiz ,
-    ontight '',
-    color '#',
-    marginottom ,
+  aiResultText: {
+    fontSize: 12,
+    color: '#6b7280',
+    marginBottom: 4,
   },
-  sggstiontm {
-    marginottom ,
+
+  // File section styles
+  fileSection: {
+    marginBottom: 16,
   },
-  sggstionabl {
-    ontiz ,
-    ontight '',
-    color '#b',
-    marginottom ,
+  fileHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
   },
-  sggstionxt {
-    ontiz ,
-    color '#',
-    linight ,
+  fileTitle: {
+    flex: 1,
+    marginLeft: 8,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#374151',
   },
-  applytton {
-    marginop ,
-    alignl 'lx-start',
+  quickUploadButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 16,
   },
-  ploadard {
-    marginottom ,
+  quickUploadButton: {
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    minWidth: 80,
   },
-  ploaditl {
-    ontiz ,
-    ontight '',
-    color '#',
-    marginottom ,
+  quickUploadText: {
+    marginTop: 4,
+    fontSize: 12,
+    color: '#374151',
   },
-  ploadttons {
-    lxirction 'row',
-    lxrap 'wrap',
-    gap ,
+  attachedFiles: {
+    marginTop: 8,
   },
-  ploadtton {
-    lx ,
-    minidth ,
+  attachedFilesTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#374151',
+    marginBottom: 8,
   },
-  ploaddils {
-    marginop ,
+  attachedFile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+    backgroundColor: '#f9fafb',
+    borderRadius: 6,
+    marginBottom: 4,
   },
-  ploaddilsitl {
-    ontiz ,
-    ontight '',
-    color '#',
-    marginottom ,
+  attachedFileName: {
+    flex: 1,
+    marginLeft: 8,
+    fontSize: 12,
+    color: '#6b7280',
   },
-  ploaddil {
-    lxirction 'row',
-    jstiyontnt 'spac-btwn',
-    aligntms 'cntr',
-    padding ,
-    backgrondolor '#',
-    bordradis ,
-    marginottom ,
+
+  // Loading styles
+  loadingContainer: {
+    alignItems: 'center',
+    padding: 16,
   },
-  ploaddilam {
-    ontiz ,
-    color '#',
-    lx ,
-  },
-  ploaddilyp {
-    ontiz ,
-    color '#b',
-  },
-  inoard {
-    backgrondolor '#ac',
-  },
-  inoitl {
-    ontiz ,
-    ontight '',
-    color '#',
-    marginottom ,
-  },
-  inoow {
-    lxirction 'row',
-    marginottom ,
-  },
-  inoabl {
-    ontiz ,
-    color '#b',
-    minidth ,
-  },
-  inoal {
-    ontiz ,
-    color '#',
-    lx ,
+  loadingText: {
+    fontSize: 14,
+    color: '#6b7280',
   },
 })

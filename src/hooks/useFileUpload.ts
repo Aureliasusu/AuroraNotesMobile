@@ -1,260 +1,260 @@
-import { stat, sallback } rom 'ract'
-import { lrt, latorm, rmissionsndroid } rom 'ract-nativ'
-import { ilploadrvic, ilploadslt } rom '../srvics/ilpload'
+import { useState, useCallback } from 'react'
+import { Alert, Platform, PermissionsAndroid } from 'react-native'
+import { fileUploadService, FileUploadResult } from '../services/fileUpload'
 
-// ot hs libraris rqir nativ conigration, providing intrac hr
-// import { lanchmagibrary, lanchamra, magickrspons } rom 'ract-nativ-imag-pickr'
-// import { ocmntickrspons, pick } rom 'ract-nativ-docmnt-pickr'
+// Note: These libraries require native configuration, providing interface here
+// import { launchImageLibrary, launchCamera, ImagePickerResponse } from 'react-native-image-picker'
+// import { DocumentPickerResponse, pick } from 'react-native-document-picker'
 
-xport nction silpload() {
-  const ploading, stploading]  stat(als)
-  const ploaddils, stploaddils]  statilploadslt](])
+export function useFileUpload() {
+  const [uploading, setUploading] = useState(false)
+  const [uploadedFiles, setUploadedFiles] = useState<FileUploadResult[]>([])
 
-  // qst camra prmission
-  const rqstamrarmission  sallback(async () romisboolan  {
-    i (latorm.  'android') {
+  // Request camera permission
+  const requestCameraPermission = useCallback(async (): Promise<boolean> => {
+    if (Platform.OS === 'android') {
       try {
-        const grantd  await rmissionsndroid.rqst(
-          rmissionsndroid..,
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
           {
-            titl 'amra rmission',
-            mssag 'roraots nds accss to yor camra to tak photos or nots',
-            bttontral 'sk  atr',
-            bttongativ 'ancl',
-            bttonositiv '',
+            title: 'Camera Permission',
+            message: 'AuroraNotes needs access to your camera to take photos for notes',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
           }
         )
-        rtrn grantd  rmissionsndroid..
-      } catch (rr) {
-        consol.warn(rr)
-        rtrn als
+        return granted === PermissionsAndroid.RESULTS.GRANTED
+      } catch (err) {
+        console.warn(err)
+        return false
       }
     }
-    rtrn tr
-  }, ])
+    return true
+  }, [])
 
-  // qst storag prmission
-  const rqsttoragrmission  sallback(async () romisboolan  {
-    i (latorm.  'android') {
+  // Request storage permission
+  const requestStoragePermission = useCallback(async (): Promise<boolean> => {
+    if (Platform.OS === 'android') {
       try {
-        const grantd  await rmissionsndroid.rqst(
-          rmissionsndroid..__,
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
           {
-            titl 'torag rmission',
-            mssag 'roraots nds accss to yor storag to slct ils',
-            bttontral 'sk  atr',
-            bttongativ 'ancl',
-            bttonositiv '',
+            title: 'Storage Permission',
+            message: 'AuroraNotes needs access to your storage to select files',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
           }
         )
-        rtrn grantd  rmissionsndroid..
-      } catch (rr) {
-        consol.warn(rr)
-        rtrn als
+        return granted === PermissionsAndroid.RESULTS.GRANTED
+      } catch (err) {
+        console.warn(err)
+        return false
       }
     }
-    rtrn tr
-  }, ])
+    return true
+  }, [])
 
-  // ick imag rom gallry
-  const pickmagromallry  sallback(async () romisilploadslt | nll  {
+  // Pick image from gallery
+  const pickImageFromGallery = useCallback(async (): Promise<FileUploadResult | null> => {
     try {
-      const hasrmission  await rqsttoragrmission()
-      i (!hasrmission) {
-        lrt.alrt('rmission nid', 'torag prmission is rqird to slct imags')
-        rtrn nll
+      const hasPermission = await requestStoragePermission()
+      if (!hasPermission) {
+        Alert.alert('Permission Needed', 'Storage permission is required to select images')
+        return null
       }
 
-      // r nds actal imag pickr implmntation
-      // const rslt magickrspons  await lanchmagibrary({
-      //   mdiayp 'photo',
-      //   qality .,
-      //   maxidth ,
-      //   maxight ,
+      // You need actual image picker implementation
+      // const result: ImagePickerResponse = await launchImageLibrary({
+      //   mediaType: 'photo',
+      //   quality: 0.8,
+      //   maxWidth: 1920,
+      //   maxHeight: 1080,
       // })
 
-      // ock implmntation - rplac whn actally sing
-      lrt.alrt(
-        'mag ickr', 
-        'mag pickr not implmntd yt. las implmnt ract-nativ-imag-pickr and ncommnt th cod blow.',
-        
-          { txt '' }
+      // Mock implementation - replace when actually using
+      Alert.alert(
+        'Image Picker', 
+        'Image picker not implemented yet. Please implement react-native-image-picker and uncomment the code below.',
+        [
+          { text: 'OK' }
         ]
       )
-      rtrn nll
+      return null
 
-      // ctal implmntation (ncommnt and conigr nativ dpndncis to s)
-      // i (rslt.assts && rslt.assts]) {
-      //   const asst  rslt.assts]
-      //   stploading(tr)
+      // Actual implementation (uncomment and configure native dependencies to use)
+      // if (result.assets && result.assets[0]) {
+      //   const asset = result.assets[0]
+      //   setUploading(true)
       //   
-      //   const ploadslt  await ilploadrvic.ploadmag(
-      //     asst.ri!,
-      //     asst.ilam || `imag_${at.now()}.jpg`
+      //   const uploadResult = await fileUploadService.uploadImage(
+      //     asset.uri!,
+      //     asset.fileName || `image_${Date.now()}.jpg`
       //   )
       //   
-      //   stploaddils(prv  ...prv, ploadslt])
-      //   stploading(als)
-      //   rtrn ploadslt
+      //   setUploadedFiles(prev => [...prev, uploadResult])
+      //   setUploading(false)
+      //   return uploadResult
       // }
-    } catch (rror) {
-      consol.rror('mag pickr rror', rror)
-      lrt.alrt('rror', 'aild to pick imag')
-      stploading(als)
-      rtrn nll
+    } catch (error) {
+      console.error('Image picker error', error)
+      Alert.alert('Error', 'Failed to pick image')
+      setUploading(false)
+      return null
     }
-  }, rqsttoragrmission])
+  }, [requestStoragePermission])
 
-  // ak photo
-  const takhoto  sallback(async () romisilploadslt | nll  {
+  // Take photo
+  const takePhoto = useCallback(async (): Promise<FileUploadResult | null> => {
     try {
-      const hasrmission  await rqstamrarmission()
-      i (!hasrmission) {
-        lrt.alrt('rmission nid', 'amra prmission is rqird to tak photos')
-        rtrn nll
+      const hasPermission = await requestCameraPermission()
+      if (!hasPermission) {
+        Alert.alert('Permission Needed', 'Camera permission is required to take photos')
+        return null
       }
 
-      // r nds actal camra implmntation
-      // const rslt magickrspons  await lanchamra({
-      //   mdiayp 'photo',
-      //   qality .,
-      //   maxidth ,
-      //   maxight ,
+      // You need actual camera implementation
+      // const result: ImagePickerResponse = await launchCamera({
+      //   mediaType: 'photo',
+      //   quality: 0.8,
+      //   maxWidth: 1920,
+      //   maxHeight: 1080,
       // })
 
-      // ock implmntation
-      lrt.alrt(
-        'amra', 
-        'amra not implmntd yt. las implmnt ract-nativ-imag-pickr and ncommnt th cod blow.',
-        
-          { txt '' }
+      // Mock implementation
+      Alert.alert(
+        'Camera', 
+        'Camera not implemented yet. Please implement react-native-image-picker and uncomment the code below.',
+        [
+          { text: 'OK' }
         ]
       )
-      rtrn nll
+      return null
 
-      // ctal implmntation (ncommnt and conigr nativ dpndncis to s)
-      // i (rslt.assts && rslt.assts]) {
-      //   const asst  rslt.assts]
-      //   stploading(tr)
+      // Actual implementation (uncomment and configure native dependencies to use)
+      // if (result.assets && result.assets[0]) {
+      //   const asset = result.assets[0]
+      //   setUploading(true)
       //   
-      //   const ploadslt  await ilploadrvic.ploadmag(
-      //     asst.ri!,
-      //     asst.ilam || `photo_${at.now()}.jpg`
+      //   const uploadResult = await fileUploadService.uploadImage(
+      //     asset.uri!,
+      //     asset.fileName || `photo_${Date.now()}.jpg`
       //   )
       //   
-      //   stploaddils(prv  ...prv, ploadslt])
-      //   stploading(als)
-      //   rtrn ploadslt
+      //   setUploadedFiles(prev => [...prev, uploadResult])
+      //   setUploading(false)
+      //   return uploadResult
       // }
-    } catch (rror) {
-      consol.rror('amra rror', rror)
-      lrt.alrt('rror', 'aild to tak photo')
-      stploading(als)
-      rtrn nll
+    } catch (error) {
+      console.error('Camera error', error)
+      Alert.alert('Error', 'Failed to take photo')
+      setUploading(false)
+      return null
     }
-  }, rqstamrarmission])
+  }, [requestCameraPermission])
 
-  // ick docmnt
-  const pickocmnt  sallback(async () romisilploadslt | nll  {
+  // Pick document
+  const pickDocument = useCallback(async (): Promise<FileUploadResult | null> => {
     try {
-      const hasrmission  await rqsttoragrmission()
-      i (!hasrmission) {
-        lrt.alrt('rmission nid', 'torag prmission is rqird to slct docmnts')
-        rtrn nll
+      const hasPermission = await requestStoragePermission()
+      if (!hasPermission) {
+        Alert.alert('Permission Needed', 'Storage permission is required to select documents')
+        return null
       }
 
-      // r nds actal docmnt pickr implmntation
-      // const rslt ocmntickrspons]  await pick({
-      //   typ ocmntickr.typs.pd, ocmntickr.typs.doc, ocmntickr.typs.docx],
-      //   allowltilction als,
+      // You need actual document picker implementation
+      // const result: DocumentPickerResponse[] = await pick({
+      //   type: [DocumentPicker.types.pdf, DocumentPicker.types.doc, DocumentPicker.types.docx],
+      //   allowMultiSelection: false,
       // })
 
-      // ock implmntation
-      lrt.alrt(
-        'ocmnt ickr', 
-        'ocmnt pickr not implmntd yt. las implmnt ract-nativ-docmnt-pickr and ncommnt th cod blow.',
-        
-          { txt '' }
+      // Mock implementation
+      Alert.alert(
+        'Document Picker', 
+        'Document picker not implemented yet. Please implement react-native-document-picker and uncomment the code below.',
+        [
+          { text: 'OK' }
         ]
       )
-      rtrn nll
+      return null
 
-      // ctal implmntation (ncommnt and conigr nativ dpndncis to s)
-      // i (rslt && rslt]) {
-      //   const il  rslt]
-      //   stploading(tr)
+      // Actual implementation (uncomment and configure native dependencies to use)
+      // if (result && result[0]) {
+      //   const file = result[0]
+      //   setUploading(true)
       //   
-      //   const ploadslt  await ilploadrvic.ploadocmnt(
-      //     il.ri,
-      //     il.nam,
-      //     il.typ || 'application/octt-stram'
+      //   const uploadResult = await fileUploadService.uploadDocument(
+      //     file.uri,
+      //     file.name,
+      //     file.type || 'application/octet-stream'
       //   )
       //   
-      //   stploaddils(prv  ...prv, ploadslt])
-      //   stploading(als)
-      //   rtrn ploadslt
+      //   setUploadedFiles(prev => [...prev, uploadResult])
+      //   setUploading(false)
+      //   return uploadResult
       // }
-    } catch (rror) {
-      consol.rror('ocmnt pickr rror', rror)
-      lrt.alrt('rror', 'aild to pick docmnt')
-      stploading(als)
-      rtrn nll
+    } catch (error) {
+      console.error('Document picker error', error)
+      Alert.alert('Error', 'Failed to pick document')
+      setUploading(false)
+      return null
     }
-  }, rqsttoragrmission])
+  }, [requestStoragePermission])
 
-  // pload il
-  const ploadil  sallback(async (
-    ilri string,
-    ilam string,
-    mimyp string
-  ) romisilploadslt | nll  {
+  // Upload file
+  const uploadFile = useCallback(async (
+    fileUri: string,
+    fileName: string,
+    mimeType: string
+  ): Promise<FileUploadResult | null> => {
     try {
-      stploading(tr)
+      setUploading(true)
 
-      lt ploadslt ilploadslt
+      let uploadResult: FileUploadResult
       
-      i (mimyp.startsith('imag/')) {
-        ploadslt  await ilploadrvic.ploadmag(ilri, ilam)
-      } ls {
-        ploadslt  await ilploadrvic.ploadocmnt(ilri, ilam, mimyp)
+      if (mimeType.startsWith('image/')) {
+        uploadResult = await fileUploadService.uploadImage(fileUri, fileName)
+      } else {
+        uploadResult = await fileUploadService.uploadDocument(fileUri, fileName, mimeType)
       }
 
-      stploaddils(prv  ...prv, ploadslt])
-      stploading(als)
-      rtrn ploadslt
-    } catch (rror) {
-      consol.rror('pload rror', rror)
-      lrt.alrt('pload rror', 'aild to pload il')
-      stploading(als)
-      rtrn nll
+      setUploadedFiles(prev => [...prev, uploadResult])
+      setUploading(false)
+      return uploadResult
+    } catch (error) {
+      console.error('Upload error', error)
+      Alert.alert('Upload Error', 'Failed to upload file')
+      setUploading(false)
+      return null
     }
-  }, ])
+  }, [])
 
-  // lt il
-  const dltil  sallback(async (il ilploadslt)  {
+  // Delete file
+  const deleteFile = useCallback(async (file: FileUploadResult) => {
     try {
-      await ilploadrvic.dltil(il.path)
-      stploaddils(prv  prv.iltr(  .path ! il.path))
-      lrt.alrt('ccss', 'il dltd sccsslly')
-    } catch (rror) {
-      consol.rror('lt rror', rror)
-      lrt.alrt('lt rror', 'aild to dlt il')
+      await fileUploadService.deleteFile(file.path)
+      setUploadedFiles(prev => prev.filter(f => f.path !== file.path))
+      Alert.alert('Success', 'File deleted successfully')
+    } catch (error) {
+      console.error('Delete error', error)
+      Alert.alert('Delete Error', 'Failed to delete file')
     }
-  }, ])
+  }, [])
 
-  // lar all ils
-  const clarils  sallback(()  {
-    stploaddils(])
-  }, ])
+  // Clear all files
+  const clearFiles = useCallback(() => {
+    setUploadedFiles([])
+  }, [])
 
-  rtrn {
-    ploading,
-    ploaddils,
-    pickmagromallry,
-    takhoto,
-    pickocmnt,
-    ploadil,
-    dltil,
-    clarils,
+  return {
+    uploading,
+    uploadedFiles,
+    pickImageFromGallery,
+    takePhoto,
+    pickDocument,
+    uploadFile,
+    deleteFile,
+    clearFiles,
   }
 }
