@@ -1,5 +1,8 @@
-modl.xports  {
-  arrowarns 'avoid',
-  singlot tr,
-  trailingomma 'all',
-}
+module.exports = {
+  arrowParens: 'avoid',
+  singleQuote: true,
+  trailingComma: 'all',
+  tabWidth: 2,
+  semi: true,
+  printWidth: 100,
+};

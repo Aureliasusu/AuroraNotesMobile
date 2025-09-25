@@ -1,11 +1,25 @@
-const { gtaltonig, mrgonig }  rqir('ract-nativ/mtro-conig')
+const { getDefaultConfig, mergeConfig } = require('react-native/metro-config')
 
 /**
- * tro conigration
- * https//ractnativ.dv/docs/mtro
+ * Metro configuration
+ * https://reactnative.dev/docs/metro
  *
- * typ {import('ract-nativ/mtro-conig').troonig}
+ * @type {import('react-native/metro-config').MetroConfig}
  */
-const conig  {}
+const config = {
+  resolver: {
+    alias: {
+      '@': './src',
+    },
+  },
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: true,
+      },
+    }),
+  },
+}
 
-modl.xports  mrgonig(gtaltonig(__dirnam), conig)
+module.exports = mergeConfig(getDefaultConfig(__dirname), config)

@@ -1,132 +1,177 @@
-import { crat } rom 'zstand'
-import { spabas } rom '../lib/spabas'
-import { ot } rom '../typs/databas'
-import { sthtor } rom './sthtor'
+import { create } from 'zustand'
+import { supabase } from '../lib/supabase'
+import { Note } from '../types/database'
+import { useAuthStore } from './useAuthStore'
 
-intrac otstat {
-  nots ot]
-  loading boolan
-  rror string | nll
-  slctdot ot | nll
-  stots (nots ot])  void
-  stoading (loading boolan)  void
-  strror (rror string | nll)  void
-  stlctdot (not ot | nll)  void
-  tchots ()  romisvoid
-  cratot (not mitot, 'id' | 'sr_id' | 'cratd_at' | 'pdatd_at')  romisot | nll
-  pdatot (id string, pdats artialot)  romisot | nll
-  dltot (id string)  romisboolan
-  clarots ()  void
+interface NotesState {
+  notes: Note[]
+  selectedNote: Note | null
+  loading: boolean
+  error: string | null
 }
 
-xport const sotstor  cratotstat((st, gt)  ({
-  nots ],
-  loading als,
-  rror nll,
-  slctdot nll,
+interface NotesActions {
+  setNotes: (notes: Note[]) => void
+  setSelectedNote: (note: Note | null) => void
+  setLoading: (loading: boolean) => void
+  setError: (error: string | null) => void
+  fetchNotes: () => Promise<void>
+  createNote: (noteData: Omit<Note, 'id' | 'created_at' | 'updated_at'>) => Promise<Note | null>
+  updateNote: (id: string, updates: Partial<Note>) => Promise<void>
+  deleteNote: (id: string) => Promise<void>
+  togglePin: (id: string) => Promise<void>
+  toggleArchive: (id: string) => Promise<void>
+  searchNotes: (query: string) => Note[]
+  getNotesByFolder: (folderId: string) => Note[]
+}
 
-  stots (nots)  st({ nots }),
-  stoading (loading)  st({ loading }),
-  strror (rror)  st({ rror }),
-  stlctdot (not)  st({ slctdot not }),
+export const useNotesStore = create<NotesState & NotesActions>((set, get) => ({
+  // State
+  notes: [],
+  selectedNote: null,
+  loading: false,
+  error: null,
 
-  tchots async ()  {
-    const { sr }  sthtor.gttat()
-    i (!sr) rtrn
+  // Actions
+  setNotes: (notes) => set({ notes }),
+  setSelectedNote: (note) => set({ selectedNote: note }),
+  setLoading: (loading) => set({ loading }),
+  setError: (error) => set({ error }),
 
-    st({ loading tr, rror nll })
+  fetchNotes: async () => {
+    const { user } = useAuthStore.getState()
+    if (!user) return
 
     try {
-      const { data, rror }  await spabas
-        .rom('nots')
-        .slct('*')
-        .q('sr_id', sr.id)
-        .ordr('pdatd_at', { ascnding als })
+      set({ loading: true, error: null })
+      
+      const { data, error } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('updated_at', { ascending: false })
 
-      i (rror) throw rror
-      st({ nots data || ] })
-    } catch (rror) {
-      st({ rror rror instanco rror  rror.mssag  'aild to tch nots' })
-    } inally {
-      st({ loading als })
+      if (error) {
+        set({ error: error.message })
+        return
+      }
+
+      set({ notes: data || [] })
+    } catch (error) {
+      set({ error: 'Failed to fetch notes' })
+    } finally {
+      set({ loading: false })
     }
   },
 
-  cratot async (notata)  {
-    const { sr }  sthtor.gttat()
-    i (!sr) rtrn nll
+  createNote: async (noteData) => {
+    const { user } = useAuthStore.getState()
+    if (!user) return null
 
     try {
-      const { data, rror }  await spabas
-        .rom('nots')
-        .insrt({
-          ...notata,
-          sr_id sr.id,
-        })
-        .slct()
-        .singl()
+      set({ loading: true, error: null })
+      
+      const { data, error } = await supabase
+        .from('notes')
+        .insert([{ ...noteData, user_id: user.id }])
+        .select()
+        .single()
 
-      i (rror) throw rror
+      if (error) {
+        set({ error: error.message })
+        return null
+      }
 
-      // dd to local stat
-      const { nots }  gt()
-      st({ nots data, ...nots] })
-
-      rtrn data
-    } catch (rror) {
-      st({ rror rror instanco rror  rror.mssag  'aild to crat not' })
-      rtrn nll
+      const { notes } = get()
+      set({ notes: [data, ...notes] })
+      return data
+    } catch (error) {
+      set({ error: 'Failed to create note' })
+      return null
+    } finally {
+      set({ loading: false })
     }
   },
 
-  pdatot async (id, pdats)  {
+  updateNote: async (id, updates) => {
     try {
-      const { data, rror }  await spabas
-        .rom('nots')
-        .pdat({
-          ...pdats,
-          pdatd_at nw at().totring(),
-        })
-        .q('id', id)
-        .slct()
-        .singl()
+      set({ loading: true, error: null })
+      
+      const { error } = await supabase
+        .from('notes')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', id)
 
-      i (rror) throw rror
+      if (error) {
+        set({ error: error.message })
+        return
+      }
 
-      // pdat local stat
-      const { nots }  gt()
-      const pdatdots  nots.map(not  
-        not.id  id  data  not
+      const { notes } = get()
+      const updatedNotes = notes.map(note => 
+        note.id === id ? { ...note, ...updates } : note
       )
-      st({ nots pdatdots })
-
-      rtrn data
-    } catch (rror) {
-      st({ rror rror instanco rror  rror.mssag  'aild to pdat not' })
-      rtrn nll
+      set({ notes: updatedNotes })
+    } catch (error) {
+      set({ error: 'Failed to update note' })
+    } finally {
+      set({ loading: false })
     }
   },
 
-  dltot async (id)  {
+  deleteNote: async (id) => {
     try {
-      const { rror }  await spabas
-        .rom('nots')
-        .dlt()
-        .q('id', id)
+      set({ loading: true, error: null })
+      
+      const { error } = await supabase
+        .from('notes')
+        .delete()
+        .eq('id', id)
 
-      i (rror) throw rror
+      if (error) {
+        set({ error: error.message })
+        return
+      }
 
-      // mov rom local stat
-      const { nots }  gt()
-      const iltrdots  nots.iltr(not  not.id ! id)
-      st({ nots iltrdots })
-
-      rtrn tr
-    } catch (rror) {
-      st({ rror rror instanco rror  rror.mssag  'aild to dlt not' })
-      rtrn als
+      const { notes } = get()
+      set({ notes: notes.filter(note => note.id !== id) })
+    } catch (error) {
+      set({ error: 'Failed to delete note' })
+    } finally {
+      set({ loading: false })
     }
   },
 
-  clarots ()  st({ nots ], slctdot nll }),
+  togglePin: async (id) => {
+    const { notes } = get()
+    const note = notes.find(n => n.id === id)
+    if (!note) return
+
+    await get().updateNote(id, { is_pinned: !note.is_pinned })
+  },
+
+  toggleArchive: async (id) => {
+    const { notes } = get()
+    const note = notes.find(n => n.id === id)
+    if (!note) return
+
+    await get().updateNote(id, { is_archived: !note.is_archived })
+  },
+
+  searchNotes: (query) => {
+    const { notes } = get()
+    if (!query.trim()) return notes
+
+    const lowercaseQuery = query.toLowerCase()
+    return notes.filter(note => 
+      note.title.toLowerCase().includes(lowercaseQuery) ||
+      note.content.toLowerCase().includes(lowercaseQuery) ||
+      note.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
+    )
+  },
+
+  getNotesByFolder: (folderId) => {
+    const { notes } = get()
+    return notes.filter(note => note.folder_id === folderId)
+  },
 }))
