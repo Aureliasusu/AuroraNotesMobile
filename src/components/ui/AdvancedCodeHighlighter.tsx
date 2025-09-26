@@ -216,7 +216,7 @@ export const AdvancedCodeHighlighter: React.FC<AdvancedCodeHighlighterProps> = (
       .replace(/"([^"]*)"/g, '<span class="string">"$1"</span>')
       .replace(/'([^']*)'/g, '<span class="string">\'$1\'</span>')
       .replace(/\b(\d+\.?\d*)\b/g, '<span class="number">$1</span>')
-      .replace/(#.*$)/g, '<span class="comment">$1</span>');
+      .replace(/(#.*$)/g, '<span class="comment">$1</span>');
   };
 
   const highlightHTML = (line: string) => {

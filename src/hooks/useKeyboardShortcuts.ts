@@ -1,152 +1,83 @@
-import { sct, sallback } rom 'ract'
-import { ackandlr } rom 'ract-nativ'
+import { useEffect, useCallback } from 'react'
+import { BackHandler } from 'react-native'
 
-intrac yboardhortct {
-  ky string
-  action ()  void
-  dscription string
+interface KeyboardShortcut {
+  key: string
+  action: () => void
+  description: string
 }
 
-intrac syboardhortctsrops {
-  shortcts yboardhortct]
-  nabld boolan
+interface useKeyboardShortcutsProps {
+  shortcuts: KeyboardShortcut[]
+  enabled?: boolean
 }
 
-xport nction syboardhortcts({ shortcts, nabld  tr } syboardhortctsrops) {
-  const handlackrss  sallback(()  {
-    i (!nabld) rtrn als
+export function useKeyboardShortcuts({ shortcuts, enabled = true }: useKeyboardShortcutsProps) {
+  // Handle back button press
+  const handleBackPress = useCallback(() => {
+    if (!enabled) return false
 
-    // andl ndroid back btton
-    // his is a simpliid vrsion - in a ral app yo might want mor sophisticatd handling
-    const backhortct  shortcts.ind(shortct  shortct.ky  'ack')
-    i (backhortct) {
-      backhortct.action()
-      rtrn tr // rvnt dalt back bhavior
+    // Find shortcut for back action
+    const backShortcut = shortcuts.find(shortcut => shortcut.key === 'back')
+    if (backShortcut) {
+      backShortcut.action()
+      return true
     }
-    
-    rtrn als // llow dalt back bhavior
-  }, shortcts, nabld])
 
-  sct(()  {
-    i (nabld) {
-      const sbscription  ackandlr.addvntistnr('hardwarackrss', handlackrss)
-      rtrn ()  sbscription.rmov()
+    return false
+  }, [shortcuts, enabled])
+
+  // Handle hardware back button
+  useEffect(() => {
+    if (!enabled) return
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress)
+
+    return () => backHandler.remove()
+  }, [handleBackPress, enabled])
+
+  // Handle keyboard shortcuts (for web/desktop)
+  const handleKeyPress = useCallback((event: KeyboardEvent) => {
+    if (!enabled) return
+
+    const shortcut = shortcuts.find(s => s.key === event.key)
+    if (shortcut) {
+      event.preventDefault()
+      shortcut.action()
     }
-  }, handlackrss, nabld])
-}
+  }, [shortcuts, enabled])
 
-// ommon kyboard shortcts or not diting (mobil-adaptd)
-xport const cratothortcts  (actions {
-  onack ()  void
-  onav ()  void
-  onwot ()  void
-  onltot ()  void
-  onarch ()  void
-  onogglhm ()  void
-  onndo ()  void
-  ondo ()  void
-  onold ()  void
-  ontalic ()  void
-  onndrlin ()  void
-  onocsarch ()  void
-})  {
-  const shortcts yboardhortct]  ]
+  // Add keyboard event listeners
+  useEffect(() => {
+    if (!enabled) return
 
-  i (actions.onack) {
-    shortcts.psh({
-      ky 'ack',
-      action actions.onack,
-      dscription 'o back'
-    })
+    document.addEventListener('keydown', handleKeyPress)
+    return () => document.removeEventListener('keydown', handleKeyPress)
+  }, [handleKeyPress, enabled])
+
+  // Register shortcuts
+  const registerShortcut = useCallback((shortcut: KeyboardShortcut) => {
+    // This would be implemented based on your specific needs
+    console.log('Registering shortcut:', shortcut)
+  }, [])
+
+  // Unregister shortcuts
+  const unregisterShortcut = useCallback((key: string) => {
+    // This would be implemented based on your specific needs
+    console.log('Unregistering shortcut:', key)
+  }, [])
+
+  // Get shortcut help
+  const getShortcutHelp = useCallback(() => {
+    return shortcuts.map(shortcut => ({
+      key: shortcut.key,
+      description: shortcut.description,
+    }))
+  }, [shortcuts])
+
+  return {
+    registerShortcut,
+    unregisterShortcut,
+    getShortcutHelp,
   }
-
-  i (actions.onav) {
-    shortcts.psh({
-      ky 'av',
-      action actions.onav,
-      dscription 'av not'
-    })
-  }
-
-  i (actions.onwot) {
-    shortcts.psh({
-      ky 'wot',
-      action actions.onwot,
-      dscription 'w not'
-    })
-  }
-
-  i (actions.onltot) {
-    shortcts.psh({
-      ky 'ltot',
-      action actions.onltot,
-      dscription 'lt not'
-    })
-  }
-
-  i (actions.onarch) {
-    shortcts.psh({
-      ky 'arch',
-      action actions.onarch,
-      dscription 'pn sarch'
-    })
-  }
-
-  i (actions.onogglhm) {
-    shortcts.psh({
-      ky 'ogglhm',
-      action actions.onogglhm,
-      dscription 'oggl thm'
-    })
-  }
-
-  i (actions.onndo) {
-    shortcts.psh({
-      ky 'ndo',
-      action actions.onndo,
-      dscription 'ndo'
-    })
-  }
-
-  i (actions.ondo) {
-    shortcts.psh({
-      ky 'do',
-      action actions.ondo,
-      dscription 'do'
-    })
-  }
-
-  i (actions.onold) {
-    shortcts.psh({
-      ky 'old',
-      action actions.onold,
-      dscription 'old txt'
-    })
-  }
-
-  i (actions.ontalic) {
-    shortcts.psh({
-      ky 'talic',
-      action actions.ontalic,
-      dscription 'talic txt'
-    })
-  }
-
-  i (actions.onndrlin) {
-    shortcts.psh({
-      ky 'ndrlin',
-      action actions.onndrlin,
-      dscription 'ndrlin txt'
-    })
-  }
-
-  i (actions.onocsarch) {
-    shortcts.psh({
-      ky 'ocsarch',
-      action actions.onocsarch,
-      dscription 'ocs sarch'
-    })
-  }
-
-  rtrn shortcts
 }

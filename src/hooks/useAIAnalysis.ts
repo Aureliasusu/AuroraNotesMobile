@@ -1,166 +1,128 @@
-import { stat, sallback } rom 'ract'
-import { dgnctionrvic } rom '../srvics/dgnctions'
-import { lrt } rom 'ract-nativ'
+import { useState, useCallback } from 'react'
+import { edgeFunctionService } from '../services/edgeFunctions'
+import { Alert } from 'react-native'
 
-intrac nalysis {
-  id string
-  not_id string
-  smmary string
-  ky_points string]
-  sntimnt 'positiv' | 'ngativ' | 'ntral'
-  conidnc nmbr
-  cratd_at string
+interface Analysis {
+  id: string
+  note_id: string
+  summary: string
+  key_points: string[]
+  sentiment: 'positive' | 'negative' | 'neutral'
+  suggested_tags: string[]
+  created_at: string
 }
 
-intrac ywordggstion {
-  kyword string
-  rlvanc nmbr
-  catgory string
-}
+export function useAnalysis() {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-intrac agggstion {
-  tag string
-  conidnc nmbr
-  catgory string
-}
-
-xport nction snalysis() {
-  const analysis, stnalysis]  statnalysis | nll(nll)
-  const loading, stoading]  stat(als)
-  const rror, strror]  statstring | nll(nll)
-
-  // nalyz not
-  const analyzot  sallback(async (notd string, contnt string)  {
-    i (!contnt.trim()) {
-      lrt.alrt('rror', 'ot contnt is rqird or analysis')
-      rtrn
-    }
-
-    stoading(tr)
-    strror(nll)
-
+  const analyzeNote = useCallback(async (noteId: string, content: string) => {
+    setLoading(true)
+    setError(null)
+    
     try {
-      const rslt  await dgnctionrvic.analyzot(notd, contnt)
-      stnalysis(rslt)
-      rtrn rslt
-    } catch (rr) {
-      const rrorssag  rr instanco rror  rr.mssag  'nalysis aild'
-      strror(rrorssag)
-      lrt.alrt('nalysis rror', rrorssag)
-      throw rr
-    } inally {
-      stoading(als)
+      const result = await edgeFunctionService.analyzeNote(noteId, content)
+      return result
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Analysis failed'
+      setError(errorMessage)
+      Alert.alert('Error', 'Failed to analyze note')
+      throw error
+    } finally {
+      setLoading(false)
     }
-  }, ])
+  }, [])
 
-  // nrat smmary
-  const gnratmmary  sallback(async (notd string, contnt string)  {
-    i (!contnt.trim()) {
-      lrt.alrt('rror', 'ot contnt is rqird or smmary')
-      rtrn
-    }
-
-    stoading(tr)
-    strror(nll)
-
+  const generateSummary = useCallback(async (noteId: string, content: string) => {
+    setLoading(true)
+    setError(null)
+    
     try {
-      const rslt  await dgnctionrvic.gnratmmary(notd, contnt)
-      rtrn rslt
-    } catch (rr) {
-      const rrorssag  rr instanco rror  rr.mssag  'mmary gnration aild'
-      strror(rrorssag)
-      lrt.alrt('mmary rror', rrorssag)
-      throw rr
-    } inally {
-      stoading(als)
+      const result = await edgeFunctionService.generateSummary(noteId, content)
+      return result
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Summary generation failed'
+      setError(errorMessage)
+      Alert.alert('Error', 'Failed to generate summary')
+      throw error
+    } finally {
+      setLoading(false)
     }
-  }, ])
+  }, [])
 
-  // xtract kywords
-  const xtractywords  sallback(async (contnt string) romisywordggstion]  {
-    i (!contnt.trim()) {
-      rtrn ]
-    }
-
+  const extractKeywords = useCallback(async (content: string) => {
+    setLoading(true)
+    setError(null)
+    
     try {
-      const rslt  await dgnctionrvic.xtractywords(contnt)
-      rtrn rslt.kywords || ]
-    } catch (rr) {
-      consol.rror('aild to xtract kywords', rr)
-      rtrn ]
+      const result = await edgeFunctionService.extractKeywords(content)
+      return result
+    } catch (error) {
+      console.error('Failed to extract keywords', error)
+      Alert.alert('Error', 'Failed to extract keywords')
+      throw error
+    } finally {
+      setLoading(false)
     }
-  }, ])
+  }, [])
 
-  // ggst tags
-  const sggstags  sallback(async (contnt string) romisagggstion]  {
-    i (!contnt.trim()) {
-      rtrn ]
-    }
-
+  const suggestTags = useCallback(async (content: string) => {
+    setLoading(true)
+    setError(null)
+    
     try {
-      const rslt  await dgnctionrvic.sggstags(contnt)
-      rtrn rslt.tags || ]
-    } catch (rr) {
-      consol.rror('aild to sggst tags', rr)
-      rtrn ]
+      const result = await edgeFunctionService.suggestTags(content)
+      return result
+    } catch (error) {
+      console.error('Failed to suggest tags', error)
+      Alert.alert('Error', 'Failed to suggest tags')
+      throw error
+    } finally {
+      setLoading(false)
     }
-  }, ])
+  }, [])
 
-  // ind similar nots
-  const indimilarots  sallback(async (notd string, contnt string)  {
-    i (!contnt.trim()) {
-      rtrn ]
-    }
-
+  const findSimilarNotes = useCallback(async (noteId: string, content: string) => {
+    setLoading(true)
+    setError(null)
+    
     try {
-      const rslt  await dgnctionrvic.indimilarots(notd, contnt)
-      rtrn rslt.similar_nots || ]
-    } catch (rr) {
-      consol.rror('aild to ind similar nots', rr)
-      rtrn ]
+      const result = await edgeFunctionService.findSimilarNotes(noteId, content)
+      return result
+    } catch (error) {
+      console.error('Failed to find similar notes', error)
+      Alert.alert('Error', 'Failed to find similar notes')
+      throw error
+    } finally {
+      setLoading(false)
     }
-  }, ])
+  }, [])
 
-  // atch procss nots
-  const batchrocssots  sallback(async (notds string], opration string)  {
-    i (notds.lngth  ) {
-      lrt.alrt('rror', 'o nots slctd or procssing')
-      rtrn
-    }
-
-    stoading(tr)
-    strror(nll)
-
+  const batchProcessNotes = useCallback(async (noteIds: string[], operation: string) => {
+    setLoading(true)
+    setError(null)
+    
     try {
-      const rslt  await dgnctionrvic.batchrocssots(notds, opration)
-      lrt.alrt('ccss', `ccsslly procssd ${notds.lngth} nots`)
-      rtrn rslt
-    } catch (rr) {
-      const rrorssag  rr instanco rror  rr.mssag  'atch procssing aild'
-      strror(rrorssag)
-      lrt.alrt('atch rocssing rror', rrorssag)
-      throw rr
-    } inally {
-      stoading(als)
+      const result = await edgeFunctionService.batchProcessNotes(noteIds, operation)
+      return result
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Batch processing failed'
+      setError(errorMessage)
+      Alert.alert('Error', 'Failed to process notes')
+      throw error
+    } finally {
+      setLoading(false)
     }
-  }, ])
+  }, [])
 
-  // lar analysis rslts
-  const clarnalysis  sallback(()  {
-    stnalysis(nll)
-    strror(nll)
-  }, ])
-
-  rtrn {
-    analysis,
+  return {
     loading,
-    rror,
-    analyzot,
-    gnratmmary,
-    xtractywords,
-    sggstags,
-    indimilarots,
-    batchrocssots,
-    clarnalysis,
+    error,
+    analyzeNote,
+    generateSummary,
+    extractKeywords,
+    suggestTags,
+    findSimilarNotes,
+    batchProcessNotes,
   }
 }

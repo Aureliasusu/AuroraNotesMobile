@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { User, Session } from '@supabase/supabase-js'
 import { Alert } from 'react-native'
@@ -12,11 +12,11 @@ interface AuthState {
 }
 
 export function useAuth() {
-  const authState: AuthState = {
-    user: null,
-    session: null,
-    loading: true
-  }
+  // const authState: AuthState = {
+  //   user: null,
+  //   session: null,
+  //   loading: true
+  // }
 
   const { 
     user, 

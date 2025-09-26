@@ -1,13 +1,11 @@
 /**
- * ormat
+ * @format
  */
 
-import act rom 'ract'
-import actstndrr rom 'ract-tst-rndrr'
-import pp rom '../pp'
+import React from 'react'
+import { render } from '@testing-library/react-native'
+import App from '../App'
 
-tst('rndrs corrctly', async ()  {
-  await actstndrr.act(()  {
-    actstndrr.crat(pp /)
-  })
+test('renders correctly', async () => {
+  await render(<App />)
 })

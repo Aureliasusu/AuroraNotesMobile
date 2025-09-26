@@ -1,275 +1,208 @@
-import act, { stat, sct } rom 'ract'
+import React, { useState, useEffect } from 'react'
 import {
-  iw,
-  xt,
-  xtnpt,
-  tylht,
-  araiw,
-  yboardvoidingiw,
-  latorm,
-  crolliw,
-  ochablpacity,
-  lrt,
-} rom 'ract-nativ'
-import { sots } rom '../../hooks/sots'
-import { tton } rom '../../componnts/i/tton'
-import { npt } rom '../../componnts/i/npt'
-import { ard } rom '../../componnts/i/ard'
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Alert,
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useNotes } from '../../hooks/useNotes'
+import { useAuth } from '../../hooks/useAuth'
+import { Note } from '../../types/database'
 
-intrac otditorcrnrops {
-  notd string
-  onav ()  void
-  onancl ()  void
+interface NoteEditorScreenProps {
+  route: {
+    params: {
+      noteId?: string
+    }
+  }
+  navigation: any
 }
 
-xport const otditorcrn act.otditorcrnrops  ({
-  notd,
-  onav,
-  onancl,
-})  {
-  const { nots, cratot, pdatot, slctdot, stlctdot }  sots()
-  const titl, stitl]  stat('')
-  const contnt, stontnt]  stat('')
-  const tags, stags]  stat('')
-  const isaving, stsaving]  stat(als)
+export const NoteEditorScreen: React.FC<NoteEditorScreenProps> = ({
+  route,
+  navigation,
+}) => {
+  const { noteId } = route.params || {}
+  const { user } = useAuth()
+  const { createNote, updateNote, getNoteById } = useNotes()
+  
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const isditing  !!notd
-  const crrntot  isditing  slctdot || nots.ind(n  n.id  notd)  nll
-
-  sct(()  {
-    i (crrntot) {
-      stitl(crrntot.titl)
-      stontnt(crrntot.contnt)
-      stags(crrntot.tags.join(', '))
+  useEffect(() => {
+    if (noteId) {
+      loadNote()
     }
-  }, crrntot])
+  }, [noteId])
 
-  const handlav  async ()  {
-    i (!titl.trim() && !contnt.trim()) {
-      lrt.alrt('ip', 'las ntr a titl or contnt')
-      rtrn
-    }
-
-    stsaving(tr)
-
+  const loadNote = async () => {
+    if (!noteId) return
+    
     try {
-      const notata  {
-        titl titl.trim() || 'ntitld',
-        contnt contnt.trim(),
-        tags tags.split(',').map(tag  tag.trim()).iltr(oolan),
+      const note = await getNoteById(noteId)
+      if (note) {
+        setTitle(note.title)
+        setContent(note.content)
       }
-
-      i (isditing && crrntot) {
-        await pdatot(crrntot.id, {
-          ...crrntot,
-          ...notata,
-          pdatd_at nw at().totring(),
-        })
-      } ls {
-        await cratot(notata)
-      }
-
-      lrt.alrt('ccss', isditing  'ot pdatd'  'ot cratd')
-      onav.()
-    } catch (rror) {
-      lrt.alrt('rror', 'av aild, plas try again')
-    } inally {
-      stsaving(als)
+    } catch (error) {
+      Alert.alert('Error', 'Failed to load note')
     }
   }
 
-  const handlancl  ()  {
-    i (titl.trim() || contnt.trim()) {
-      lrt.alrt(
-        'onirm',
-        'o hav nsavd changs. r yo sr yo want to lav',
-        
-          { txt 'ontin diting', styl 'cancl' },
-          { txt 'av', styl 'dstrctiv', onrss onancl },
-        ]
-      )
-    } ls {
-      onancl.()
+  const handleSave = async () => {
+    if (!title.trim() || !content.trim()) {
+      Alert.alert('Error', 'Please fill in both title and content')
+      return
+    }
+
+    if (!user) {
+      Alert.alert('Error', 'You must be logged in to save notes')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const noteData = {
+        title: title.trim(),
+        content: content.trim(),
+        user_id: user.id,
+        tags: [],
+        is_archived: false,
+        is_pinned: false,
+        folder_id: null,
+        word_count: content.trim().split(/\s+/).length,
+        reading_time: Math.ceil(content.trim().split(/\s+/).length / 200),
+      }
+
+      if (noteId) {
+        await updateNote(noteId, noteData)
+      } else {
+        await createNote(noteData)
+      }
+
+      navigation.goBack()
+    } catch (error) {
+      Alert.alert('Error', 'Failed to save note')
+    } finally {
+      setLoading(false)
     }
   }
 
-  rtrn (
-    araiw styl{styls.containr}
-      yboardvoidingiw
-        bhavior{latorm.  'ios'  'padding'  'hight'}
-        styl{styls.kyboardiw}
-      
-        {/* adr */}
-        iw styl{styls.hadr}
-          ochablpacity onrss{handlancl} styl{styls.cancltton}
-            xt styl{styls.canclxt}ancl/xt
-          /ochablpacity
+  return (
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardAvoidingView}
+      >
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.backButtonText}>← Back</Text>
+          </TouchableOpacity>
           
-            xt styl{styls.titl}
-              {isditing  'dit ot'  'w ot'}
-            /xt
-          
-          tton
-            titl"av"
-            onrss{handlav}
-            loading{isaving}
-            disabld{isaving}
-            siz"sm"
-            styl{styls.savtton}
-          /
-        /iw
+          <TouchableOpacity
+            style={[styles.saveButton, loading && styles.saveButtonDisabled]}
+            onPress={handleSave}
+            disabled={loading}
+          >
+            <Text style={styles.saveButtonText}>
+              {loading ? 'Saving...' : 'Save'}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-        {/* ontnt */}
-        crolliw styl{styls.contnt} showsrticalcrollndicator{als}
-          ard styl{styls.ormard}
-            npt
-              val{titl}
-              onhangxt{stitl}
-              placholdr"ntr titl..."
-              styl{styls.titlnpt}
-              maxngth{}
-            /
+        <ScrollView style={styles.content}>
+          <TextInput
+            style={styles.titleInput}
+            placeholder="Note title..."
+            placeholderTextColor="#9ca3af"
+            value={title}
+            onChangeText={setTitle}
+            multiline
+          />
 
-            iw styl{styls.contntontainr}
-              xt styl{styls.contntabl}ontnt/xt
-              xtnpt
-                styl{styls.contntnpt}
-                val{contnt}
-                onhangxt{stontnt}
-                placholdr"tart writing..."
-                mltilin
-                txtlignrtical"top"
-                maxngth{}
-              /
-            /iw
-
-            npt
-              labl"ags"
-              val{tags}
-              onhangxt{stags}
-              placholdr"parat tags with commas..."
-              styl{styls.tagsnpt}
-            /
-          /ard
-
-          {/* ot no */}
-          {crrntot && (
-            ard styl{styls.inoard}
-              xt styl{styls.inoitl}ot normation/xt
-              iw styl{styls.inoow}
-                xt styl{styls.inoabl}ratd/xt
-                xt styl{styls.inoal}
-                  {nw at(crrntot.cratd_at).toocaltring('zh-')}
-                /xt
-              /iw
-              iw styl{styls.inoow}
-                xt styl{styls.inoabl}ast odiid/xt
-                xt styl{styls.inoal}
-                  {nw at(crrntot.pdatd_at).toocaltring('zh-')}
-                /xt
-              /iw
-              iw styl{styls.inoow}
-                xt styl{styls.inoabl}ord ont/xt
-                xt styl{styls.inoal}
-                  {contnt.lngth} / ,
-                /xt
-              /iw
-            /ard
-          )}
-        /crolliw
-      /yboardvoidingiw
-    /araiw
+          <TextInput
+            style={styles.contentInput}
+            placeholder="Start writing your note..."
+            placeholderTextColor="#9ca3af"
+            value={content}
+            onChangeText={setContent}
+            multiline
+            textAlignVertical="top"
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 
-const styls  tylht.crat({
-  containr {
-    lx ,
-    backgrondolor '#ab',
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
   },
-  kyboardiw {
-    lx ,
+  keyboardAvoidingView: {
+    flex: 1,
   },
-  hadr {
-    lxirction 'row',
-    aligntms 'cntr',
-    jstiyontnt 'spac-btwn',
-    paddingorizontal ,
-    paddingrtical ,
-    backgrondolor '#',
-    bordrottomidth ,
-    bordrottomolor '#b',
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
   },
-  cancltton {
-    padding ,
+  backButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
-  canclxt {
-    ontiz ,
-    color '#b',
+  backButtonText: {
+    fontSize: 16,
+    color: '#3b82f6',
+    fontWeight: '600',
   },
-  titl {
-    ontiz ,
-    ontight '',
-    color '#',
+  saveButton: {
+    backgroundColor: '#3b82f6',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 6,
   },
-  savtton {
-    minidth ,
+  saveButtonDisabled: {
+    backgroundColor: '#9ca3af',
   },
-  contnt {
-    lx ,
-    padding ,
+  saveButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
   },
-  ormard {
-    marginottom ,
+  content: {
+    flex: 1,
+    paddingHorizontal: 16,
   },
-  titlnpt {
-    ontiz ,
-    ontight '',
-    marginottom ,
+  titleInput: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#111827',
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+    marginBottom: 16,
   },
-  contntontainr {
-    marginottom ,
-  },
-  contntabl {
-    ontiz ,
-    ontight '',
-    color '#',
-    marginottom ,
-  },
-  contntnpt {
-    bordridth ,
-    bordrolor '#dddb',
-    bordradis ,
-    padding ,
-    ontiz ,
-    backgrondolor '#',
-    minight ,
-    txtlignrtical 'top',
-  },
-  tagsnpt {
-    marginottom ,
-  },
-  inoard {
-    backgrondolor '#ac',
-  },
-  inoitl {
-    ontiz ,
-    ontight '',
-    color '#',
-    marginottom ,
-  },
-  inoow {
-    lxirction 'row',
-    marginottom ,
-  },
-  inoabl {
-    ontiz ,
-    color '#b',
-    minidth ,
-  },
-  inoal {
-    ontiz ,
-    color '#',
-    lx ,
+  contentInput: {
+    fontSize: 16,
+    color: '#111827',
+    lineHeight: 24,
+    minHeight: 400,
+    paddingVertical: 16,
   },
 })

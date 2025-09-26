@@ -1,134 +1,128 @@
-import { spabas } rom '../lib/spabas'
+import { supabase } from '../lib/supabase'
 
-// dg nction srvic or calling pabas dg nctions
-xport class dgnctionrvic {
-  //  not analysis
-  static async analyzot(notd string, contnt string) {
+// Edge function service for calling Supabase edge functions
+export class edgeFunctionService {
+  // Analyze note
+  static async analyzeNote(noteId: string, content: string) {
     try {
-      const { data, rror }  await spabas.nctions.invok('analyz-not', {
-        body {
-          not_id notd,
-          contnt contnt,
+      const { data, error } = await supabase.functions.invoke('analyze-note', {
+        body: {
+          note_id: noteId,
+          content: content,
         },
       })
 
-      i (rror) {
-        consol.rror('rror analyzing not', rror)
-        throw rror
+      if (error) {
+        throw new Error(`Analysis failed: ${error.message}`)
       }
 
-      rtrn data
-    } catch (rror) {
-      consol.rror('aild to analyz not', rror)
-      throw rror
+      return data
+    } catch (error) {
+      console.error('Failed to analyze note', error)
+      throw error
     }
   }
 
-  // nrat not smmary
-  static async gnratmmary(notd string, contnt string) {
+  // Generate summary
+  static async generateSummary(noteId: string, content: string) {
     try {
-      const { data, rror }  await spabas.nctions.invok('gnrat-smmary', {
-        body {
-          not_id notd,
-          contnt contnt,
+      const { data, error } = await supabase.functions.invoke('generate-summary', {
+        body: {
+          note_id: noteId,
+          content: content,
         },
       })
 
-      i (rror) {
-        consol.rror('rror gnrating smmary', rror)
-        throw rror
+      if (error) {
+        throw new Error(`Summary generation failed: ${error.message}`)
       }
 
-      rtrn data
-    } catch (rror) {
-      consol.rror('aild to gnrat smmary', rror)
-      throw rror
+      return data
+    } catch (error) {
+      console.error('Failed to generate summary', error)
+      throw error
     }
   }
 
-  // xtract kywords
-  static async xtractywords(contnt string) {
+  // Extract keywords
+  static async extractKeywords(content: string) {
     try {
-      const { data, rror }  await spabas.nctions.invok('xtract-kywords', {
-        body {
-          contnt contnt,
+      const { data, error } = await supabase.functions.invoke('extract-keywords', {
+        body: {
+          content: content,
         },
       })
 
-      i (rror) {
-        consol.rror('rror xtracting kywords', rror)
-        throw rror
+      if (error) {
+        throw new Error(`Keyword extraction failed: ${error.message}`)
       }
 
-      rtrn data
-    } catch (rror) {
-      consol.rror('aild to xtract kywords', rror)
-      throw rror
+      return data
+    } catch (error) {
+      console.error('Failed to extract keywords', error)
+      throw error
     }
   }
 
-  // mart tag sggstions
-  static async sggstags(contnt string) {
+  // Suggest tags
+  static async suggestTags(content: string) {
     try {
-      const { data, rror }  await spabas.nctions.invok('sggst-tags', {
-        body {
-          contnt contnt,
+      const { data, error } = await supabase.functions.invoke('suggest-tags', {
+        body: {
+          content: content,
         },
       })
 
-      i (rror) {
-        consol.rror('rror sggsting tags', rror)
-        throw rror
+      if (error) {
+        throw new Error(`Tag suggestion failed: ${error.message}`)
       }
 
-      rtrn data
-    } catch (rror) {
-      consol.rror('aild to sggst tags', rror)
-      throw rror
+      return data
+    } catch (error) {
+      console.error('Failed to suggest tags', error)
+      throw error
     }
   }
 
-  // ind similar nots
-  static async indimilarots(notd string, contnt string) {
+  // Find similar notes
+  static async findSimilarNotes(noteId: string, content: string) {
     try {
-      const { data, rror }  await spabas.nctions.invok('ind-similar-nots', {
-        body {
-          not_id notd,
-          contnt contnt,
+      const { data, error } = await supabase.functions.invoke('find-similar-notes', {
+        body: {
+          note_id: noteId,
+          content: content,
         },
       })
 
-      i (rror) {
-        consol.rror('rror inding similar nots', rror)
-        throw rror
+      if (error) {
+        throw new Error(`Similar notes search failed: ${error.message}`)
       }
 
-      rtrn data
-    } catch (rror) {
-      consol.rror('aild to ind similar nots', rror)
-      throw rror
+      return data
+    } catch (error) {
+      console.error('Failed to find similar notes', error)
+      throw error
     }
   }
 
-  // atch procss nots
-  static async batchrocssots(notds string], opration string) {
+  // Batch process notes
+  static async batchProcessNotes(noteIds: string[], operation: string) {
     try {
-      const { data, rror }  await spabas.nctions.invok('batch-procss-nots', {
-        body {
-          not_ids notds,
-          opration opration, // 'analyz', 'smmariz', 'catgoriz'
+      const { data, error } = await supabase.functions.invoke('batch-process-notes', {
+        body: {
+          note_ids: noteIds,
+          operation: operation,
         },
       })
 
-      i (rror) {
-        consol.rror('rror batch procssing nots', rror)
-        throw rror
+      if (error) {
+        throw new Error(`Batch processing failed: ${error.message}`)
       }
 
-      rtrn data
-    } catch (rror) {
-      consol.rror('aild to batch procss nots', rror)
-      throw rror
+      return data
+    } catch (error) {
+      console.error('Failed to batch process notes', error)
+      throw error
     }
   }
 }

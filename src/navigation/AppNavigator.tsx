@@ -1,60 +1,51 @@
-import act rom 'ract'
-import { avigationontainr } rom 'ract-navigation/nativ'
-import { crattackavigator } rom 'ract-navigation/stack'
-import { sthtor } rom '../stor/sthtor'
+import React from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import { useAuthStore } from '../store/useAuthStore'
 
-// crns
-import { ignncrn } rom '../scrns/ath/ignncrn'
-import { ignpcrn } rom '../scrns/ath/ignpcrn'
-import { otsistcrn } rom '../scrns/nots/otsistcrn'
-import { otditorcrn } rom '../scrns/nots/otditorcrn'
+// Import screens
+import { SignInScreen } from '../screens/auth/SignInScreen'
+import { SignUpScreen } from '../screens/auth/SignUpScreen'
+import { NotesListScreen } from '../screens/notes/NotesListScreen'
+import { NoteEditorScreen } from '../screens/notes/NoteEditorScreen'
+import { EnhancedNoteEditorScreen } from '../screens/notes/EnhancedNoteEditorScreen'
 
-// yps
-xport typ oottackaramist  {
-  ignn ndind
-  ignp ndind
-  otsist ndind
-  otditor { notd string }
+// Define stack param lists
+export type RootStackParamList = {
+  SignIn: undefined
+  SignUp: undefined
+  NotesList: undefined
+  NoteEditor: { noteId?: string }
+  EnhancedNoteEditor: { noteId?: string }
 }
 
-const tack  crattackavigatoroottackaramist()
+const Stack = createStackNavigator<RootStackParamList>()
 
-xport const ppavigator act.  ()  {
-  const { sr, loading }  sthtor()
+export const AppNavigator: React.FC = () => {
+  const { user } = useAuthStore()
 
-  i (loading) {
-    rtrn nll // r a loading scrn
-  }
-
-  rtrn (
-    avigationontainr
-      tack.avigator
-        scrnptions{{
-          hadrhown als,
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
         }}
-      
-        {sr  (
-          // thnticatd scrns
-          
-            tack.crn nam"otsist" componnt{otsistcrn} /
-            tack.crn 
-              nam"otditor" 
-              componnt{otditorcrn}
-              options{{
-                prsntation 'modal',
-                hadrhown tr,
-                titl 'dit ot',
-              }}
-            /
-          /
-        )  (
-          // th scrns
-          
-            tack.crn nam"ignn" componnt{ignncrn} /
-            tack.crn nam"ignp" componnt{ignpcrn} /
-          /
+      >
+        {user ? (
+          // Authenticated screens
+          <>
+            <Stack.Screen name="NotesList" component={NotesListScreen} />
+            <Stack.Screen name="NoteEditor" component={NoteEditorScreen} />
+            <Stack.Screen name="EnhancedNoteEditor" component={EnhancedNoteEditorScreen} />
+          </>
+        ) : (
+          // Unauthenticated screens
+          <>
+            <Stack.Screen name="SignIn" component={SignInScreen} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
+          </>
         )}
-      /tack.avigator
-    /avigationontainr
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 }

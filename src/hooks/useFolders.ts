@@ -58,8 +58,8 @@ export function useFolders() {
 
   // Get folder hierarchy structure
   const getFolderHierarchy = useCallback(() => {
-    const rootFolders = folders.filter(folder => !folder.parent_id)
-    const childFolders = folders.filter(folder => folder.parent_id)
+    // const rootFolders = folders.filter(folder => !folder.parent_id)
+    // const childFolders = folders.filter(folder => folder.parent_id)
     
     const buildHierarchy = (parentId: string | null): Folder[] => {
       return folders

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
@@ -28,7 +28,7 @@ interface SearchResultItemProps {
 
 // Search result item component
 const SearchResultItem: React.FC<SearchResultItemProps> = ({ result, onPress }) => {
-  const { note, relevanceScore, matchedFields, highlights } = result
+  const { note, relevanceScore, highlights } = result
 
   return (
     <TouchableOpacity style={styles.resultItem} onPress={onPress}>
@@ -106,10 +106,8 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
     loading,
     error,
     updateQuery,
-    updateTags,
     addTag,
     removeTag,
-    updateDateRange,
     updateSort,
     updateFolder,
     updatePinned,

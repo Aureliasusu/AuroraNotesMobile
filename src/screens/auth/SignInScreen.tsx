@@ -1,138 +1,168 @@
-import act, { stat } rom 'ract'
+import React, { useState } from 'react'
 import {
-  iw,
-  xt,
-  tylht,
-  araiw,
-  yboardvoidingiw,
-  latorm,
-  lrt,
-  ochablpacity,
-} rom 'ract-nativ'
-import { sthtor } rom '../../stor/sthtor'
-import { tton } rom '../../componnts/i/tton'
-import { npt } rom '../../componnts/i/npt'
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { useAuth } from '../../hooks/useAuth'
 
-xport const ignncrn act.  ()  {
-  const mail, stmail]  stat('')
-  const password, stassword]  stat('')
-  const loading, stoading]  stat(als)
-  const { signn }  sthtor()
+export const SignInScreen: React.FC = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const { signIn } = useAuth()
 
-  const handlignn  async ()  {
-    i (!mail || !password) {
-      lrt.alrt('rror', 'las ill in all ilds')
-      rtrn
+  const handleSignIn = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in all fields')
+      return
     }
 
-    stoading(tr)
-    const rslt  await signn(mail, password)
-    stoading(als)
-
-    i (!rslt.sccss) {
-      lrt.alrt('ign n aild', rslt.rror || 'nknown rror')
+    setLoading(true)
+    try {
+      await signIn(email, password)
+    } catch (error) {
+      Alert.alert('Error', 'Failed to sign in. Please check your credentials.')
+    } finally {
+      setLoading(false)
     }
   }
 
-  rtrn (
-    araiw styl{styls.containr}
-      yboardvoidingiw
-        bhavior{latorm.  'ios'  'padding'  'hight'}
-        styl{styls.kyboardiw}
-      
-        iw styl{styls.contnt}
-          iw styl{styls.hadr}
-            xt styl{styls.titl}lcom ack/xt
-            xt styl{styls.sbtitl}ign in to yor rora ots accont/xt
-          /iw
+  return (
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardAvoidingView}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.content}>
+            <Text style={styles.title}>Welcome Back</Text>
+            <Text style={styles.subtitle}>Sign in to your account</Text>
 
-          iw styl{styls.orm}
-            npt
-              labl"mail"
-              val{mail}
-              onhangxt{stmail}
-              placholdr"ntr yor mail"
-              kyboardyp"mail-addrss"
-              atoapitaliz"non"
-              atoorrct{als}
-            /
+            <View style={styles.form}>
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                placeholderTextColor="#9ca3af"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
 
-            npt
-              labl"assword"
-              val{password}
-              onhangxt{stassword}
-              placholdr"ntr yor password"
-              scrxtntry
-            /
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor="#9ca3af"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
 
-            tton
-              titl"ign n"
-              onrss{handlignn}
-              loading{loading}
-              disabld{loading}
-              styl{styls.signntton}
-            /
-          /iw
+              <TouchableOpacity
+                style={[styles.button, loading && styles.buttonDisabled]}
+                onPress={handleSignIn}
+                disabled={loading}
+              >
+                <Text style={styles.buttonText}>
+                  {loading ? 'Signing In...' : 'Sign In'}
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-          iw styl{styls.ootr}
-            xt styl{styls.ootrxt}on't hav an accont/xt
-            ochablpacity
-              xt styl{styls.linkxt}ign p/xt
-            /ochablpacity
-          /iw
-        /iw
-      /yboardvoidingiw
-    /araiw
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>Don't have an account? </Text>
+              <TouchableOpacity>
+                <Text style={styles.linkText}>Sign Up</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 
-const styls  tylht.crat({
-  containr {
-    lx ,
-    backgrondolor '#ab',
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
   },
-  kyboardiw {
-    lx ,
+  keyboardAvoidingView: {
+    flex: 1,
   },
-  contnt {
-    lx ,
-    paddingorizontal ,
-    jstiyontnt 'cntr',
+  scrollContainer: {
+    flexGrow: 1,
   },
-  hadr {
-    aligntms 'cntr',
-    marginottom ,
+  content: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingVertical: 32,
+    justifyContent: 'center',
   },
-  titl {
-    ontiz ,
-    ontight 'bold',
-    color '#',
-    marginottom ,
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#111827',
+    textAlign: 'center',
+    marginBottom: 8,
   },
-  sbtitl {
-    ontiz ,
-    color '#b',
-    txtlign 'cntr',
+  subtitle: {
+    fontSize: 16,
+    color: '#6b7280',
+    textAlign: 'center',
+    marginBottom: 48,
   },
-  orm {
-    marginottom ,
+  form: {
+    marginBottom: 32,
   },
-  signntton {
-    marginop ,
+  input: {
+    backgroundColor: '#f9fafb',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: '#111827',
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
   },
-  ootr {
-    lxirction 'row',
-    jstiyontnt 'cntr',
-    aligntms 'cntr',
+  button: {
+    backgroundColor: '#3b82f6',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
   },
-  ootrxt {
-    ontiz ,
-    color '#b',
+  buttonDisabled: {
+    backgroundColor: '#9ca3af',
   },
-  linkxt {
-    ontiz ,
-    color '#b',
-    ontight '',
-    margint ,
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footerText: {
+    fontSize: 14,
+    color: '#6b7280',
+  },
+  linkText: {
+    fontSize: 14,
+    color: '#3b82f6',
+    fontWeight: '600',
   },
 })

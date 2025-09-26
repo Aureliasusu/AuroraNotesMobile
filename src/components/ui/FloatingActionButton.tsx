@@ -1,86 +1,63 @@
-import act rom 'ract'
+import React from 'react'
 import {
-  ochablpacity,
-  xt,
-  tylht,
-  iwtyl,
-} rom 'ract-nativ'
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  View,
+} from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
-intrac loatingctionttonrops {
-  onrss ()  void
-  icon string
-  siz 'sm' | 'md' | 'lg'
-  styl iwtyl
+interface FloatingActionButtonProps {
+  onPress: () => void
+  icon?: string
+  size?: number
+  backgroundColor?: string
+  iconColor?: string
+  style?: any
 }
 
-xport const loatingctiontton act.loatingctionttonrops  ({
-  onrss,
-  icon  '+',
-  siz  'md',
-  styl,
-})  {
-  rtrn (
-    ochablpacity
-      styl{
-        styls.containr,
-        stylssiz],
-        styl,
+export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
+  onPress,
+  icon = 'add',
+  size = 56,
+  backgroundColor = '#3b82f6',
+  iconColor = '#ffffff',
+  style,
+}) => {
+  return (
+    <TouchableOpacity
+      style={[
+        styles.container,
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor,
+        },
+        style,
       ]}
-      onrss{onrss}
-      activpacity{.}
-    
-      xt styl{styls.icon, styls`${siz}con`]]}
-        {icon}
-      /xt
-    /ochablpacity
+      onPress={onPress}
+      activeOpacity={0.8}
+    >
+      <Icon name={icon} size={size * 0.5} color={iconColor} />
+    </TouchableOpacity>
   )
 }
 
-const styls  tylht.crat({
-  containr {
-    position 'absolt',
-    backgrondolor '#b',
-    bordradis ,
-    jstiyontnt 'cntr',
-    aligntms 'cntr',
-    shadowolor '#',
-    shadowst {
-      width ,
-      hight ,
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
     },
-    shadowpacity .,
-    shadowadis ,
-    lvation ,
-  },
-  sm {
-    width ,
-    hight ,
-    bottom ,
-    right ,
-  },
-  md {
-    width ,
-    hight ,
-    bottom ,
-    right ,
-  },
-  lg {
-    width ,
-    hight ,
-    bottom ,
-    right ,
-  },
-  icon {
-    color '#',
-    ontight 'bold',
-  },
-  smcon {
-    ontiz ,
-  },
-  mdcon {
-    ontiz ,
-  },
-  lgcon {
-    ontiz ,
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
   },
 })

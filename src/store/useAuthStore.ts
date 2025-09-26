@@ -37,7 +37,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
       await supabase.auth.signOut()
       set({ user: null, profile: null })
     } catch (error) {
-      console.error('Sign out error:', error)
+      // console.error('Sign out error:', error)
     } finally {
       set({ loading: false })
     }
@@ -56,7 +56,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
         .eq('id', user.id)
 
       if (error) {
-        console.error('Profile update error:', error)
+        // console.error('Profile update error:', error)
         return
       }
 
@@ -66,7 +66,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
         set({ profile: { ...profile, ...updates } })
       }
     } catch (error) {
-      console.error('Profile update error:', error)
+      // console.error('Profile update error:', error)
     } finally {
       set({ loading: false })
     }
