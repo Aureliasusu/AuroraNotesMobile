@@ -8,6 +8,7 @@
 import React, { useEffect } from 'react'
 import { StatusBar, StyleSheet, View, ActivityIndicator } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { Colors } from './src/constants/colors'
 import { NavigationContainer } from '@react-navigation/native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
@@ -24,7 +25,7 @@ const App: React.FC = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#3b82f6" />
+        <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     )
   }
@@ -33,7 +34,7 @@ const App: React.FC = () => {
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
         <NavigationContainer>
-          <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+          <StatusBar barStyle="dark-content" backgroundColor={Colors.white} />
           <AppNavigator user={user} />
         </NavigationContainer>
       </SafeAreaProvider>
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: Colors.white,
   },
 })
 
