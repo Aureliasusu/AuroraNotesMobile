@@ -14,6 +14,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { AppNavigator } from './src/navigation/AppNavigator'
 import { useAuth } from './src/hooks/useAuth'
+import { ThemeProvider } from './src/contexts/ThemeContext'
+import { OfflineProvider } from './src/contexts/OfflineContext'
 
 const App: React.FC = () => {
   const { user, loading, initializeAuth } = useAuth()
@@ -31,14 +33,18 @@ const App: React.FC = () => {
   }
 
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <StatusBar barStyle="dark-content" backgroundColor={Colors.white} />
-          <AppNavigator user={user} />
-        </NavigationContainer>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <OfflineProvider>
+      <ThemeProvider>
+        <GestureHandlerRootView style={styles.container}>
+          <SafeAreaProvider>
+            <NavigationContainer>
+              <StatusBar barStyle="dark-content" backgroundColor={Colors.white} />
+              <AppNavigator user={user} />
+            </NavigationContainer>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </ThemeProvider>
+    </OfflineProvider>
   )
 }
 

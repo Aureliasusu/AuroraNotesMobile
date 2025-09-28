@@ -1,6 +1,8 @@
 // Jest setup file for React Native testing
 import 'react-native-gesture-handler/jestSetup'
 
+/* eslint-env jest */
+
 // Mock react-native-vector-icons
 jest.mock('react-native-vector-icons/MaterialIcons', () => 'Icon')
 

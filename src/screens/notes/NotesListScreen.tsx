@@ -15,7 +15,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useNotes } from '../../hooks/useNotes';
 import { useAuth } from '../../hooks/useAuth';
 import { useFolders } from '../../hooks/useFolders';
-import { NoteCard, SearchBar, FloatingActionButton, FolderManager, AdvancedSearch } from '../../components/ui';
+import { useTheme } from '../../contexts/ThemeContext';
+import { NoteCard, SearchBar, FloatingActionButton, FolderManager, AdvancedSearch, ThemeToggle } from '../../components/ui';
 import { Note } from '../../types/database';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -33,6 +34,7 @@ export const NotesListScreen: React.FC = () => {
     searchNotes,
   } = useNotes();
   const { folders } = useFolders();
+  const { colors } = useTheme();
 
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -169,6 +171,7 @@ export const NotesListScreen: React.FC = () => {
           >
             <Icon name="search" size={20} color="#10b981" />
           </TouchableOpacity>
+          <ThemeToggle size={20} style={styles.headerButton} />
         </View>
         <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
           <Text style={styles.signOutText}>Sign Out</Text>
