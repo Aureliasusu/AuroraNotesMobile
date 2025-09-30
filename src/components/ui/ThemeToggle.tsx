@@ -16,6 +16,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
 
   return (
     <TouchableOpacity
+      testID="theme-toggle"
       style={[styles.container, { backgroundColor: colors.surface }, style]}
       onPress={toggleTheme}
       activeOpacity={0.7}
