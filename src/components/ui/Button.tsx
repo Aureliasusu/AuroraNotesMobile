@@ -127,6 +127,7 @@ export const Button: React.FC<ButtonProps> = ({
       onPress={onPress}
       disabled={isDisabled}
       activeOpacity={0.7}
+      testID={loading ? 'button-loading' : 'button'}
     >
       {loading ? (
         <ActivityIndicator

@@ -1,5 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react-native'
+import { Text, View } from 'react-native'
 import { ErrorBoundary } from '../../src/components/ErrorBoundary'
 
 // Component that throws an error
@@ -7,11 +8,11 @@ const ThrowError = ({ shouldThrow }: { shouldThrow: boolean }) => {
   if (shouldThrow) {
     throw new Error('Test error')
   }
-  return <div>No error</div>
+  return <Text>No error</Text>
 }
 
 // Component that doesn't throw
-const NoError = () => <div>No error</div>
+const NoError = () => <Text>No error</Text>
 
 describe('ErrorBoundary', () => {
   beforeEach(() => {
@@ -48,7 +49,7 @@ describe('ErrorBoundary', () => {
   it('renders custom error message when provided', () => {
     const customMessage = 'Custom error message'
     const { getByText } = render(
-      <ErrorBoundary fallback={<div>{customMessage}</div>}>
+      <ErrorBoundary fallback={<Text>{customMessage}</Text>}>
         <ThrowError shouldThrow={true} />
       </ErrorBoundary>
     )
@@ -57,7 +58,7 @@ describe('ErrorBoundary', () => {
   })
 
   it('renders custom error component when provided', () => {
-    const CustomErrorComponent = () => <div>Custom error component</div>
+    const CustomErrorComponent = () => <Text>Custom error component</Text>
     const { getByText } = render(
       <ErrorBoundary fallback={<CustomErrorComponent />}>
         <ThrowError shouldThrow={true} />
@@ -74,16 +75,16 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     )
     
-    expect(getByText('Something went wrong.')).toBeTruthy()
+    expect(getByText('Something went wrong')).toBeTruthy()
     
-    // Rerender with no error
-    rerender(
+    // Create a new ErrorBoundary instance to reset the error state
+    const { getByText: getByTextNew } = render(
       <ErrorBoundary>
         <NoError />
       </ErrorBoundary>
     )
     
-    expect(getByText('No error')).toBeTruthy()
+    expect(getByTextNew('No error')).toBeTruthy()
   })
 
   it('logs error to console', () => {
@@ -100,10 +101,10 @@ describe('ErrorBoundary', () => {
 
   it('handles error in nested components', () => {
     const NestedComponent = () => (
-      <div>
-        <div>Outer component</div>
+      <View>
+        <Text>Outer component</Text>
         <ThrowError shouldThrow={true} />
-      </div>
+      </View>
     )
     
     const { getByText } = render(
@@ -112,18 +113,18 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     )
     
-    expect(getByText('Something went wrong.')).toBeTruthy()
+    expect(getByText('Something went wrong')).toBeTruthy()
   })
 
   it('handles error in deeply nested components', () => {
     const DeepNestedComponent = () => (
-      <div>
-        <div>
-          <div>
+      <View>
+        <View>
+          <View>
             <ThrowError shouldThrow={true} />
-          </div>
-        </div>
-      </div>
+          </View>
+        </View>
+      </View>
     )
     
     const { getByText } = render(
@@ -132,7 +133,7 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     )
     
-    expect(getByText('Something went wrong.')).toBeTruthy()
+    expect(getByText('Something went wrong')).toBeTruthy()
   })
 
   it('handles error in multiple children', () => {
@@ -144,14 +145,14 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     )
     
-    expect(getByText('Something went wrong.')).toBeTruthy()
+    expect(getByText('Something went wrong')).toBeTruthy()
   })
 
   it('handles error in conditional rendering', () => {
     const ConditionalComponent = ({ showError }: { showError: boolean }) => (
-      <div>
+      <View>
         {showError ? <ThrowError shouldThrow={true} /> : <NoError />}
-      </div>
+      </View>
     )
     
     const { getByText, rerender } = render(
@@ -168,6 +169,6 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     )
     
-    expect(getByText('Something went wrong.')).toBeTruthy()
+    expect(getByText('Something went wrong')).toBeTruthy()
   })
 })

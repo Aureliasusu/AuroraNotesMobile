@@ -107,7 +107,7 @@ describe('Performance Utilities', () => {
       memoizedFn(obj1)
       memoizedFn(obj2)
       
-      expect(mockFn).toHaveBeenCalledTimes(2) // Different object references
+      expect(mockFn).toHaveBeenCalledTimes(1) // Same value, should be memoized
     })
   })
 

@@ -87,5 +87,7 @@ global.Platform = {
   select: jest.fn(),
 }
 
+// Supabase mocks will be handled in individual test files
+
 // Silence the warning: Animated: `useNativeDriver` is not supported
 // jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')

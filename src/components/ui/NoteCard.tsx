@@ -12,6 +12,7 @@ import { Note } from '../../types/database'
 interface NoteCardProps {
   note: Note
   onPress: (note: Note) => void
+  onLongPress?: (note: Note) => void
   onEdit?: (note: Note) => void
   onDelete?: (note: Note) => void
   onPin?: (note: Note) => void
@@ -21,23 +22,28 @@ interface NoteCardProps {
 export const NoteCard: React.FC<NoteCardProps> = ({
   note,
   onPress,
+  onLongPress,
   onEdit,
   onDelete,
   onPin,
   onArchive,
 }) => {
   const handleLongPress = () => {
-    Alert.alert(
-      'Note Options',
-      'What would you like to do with this note?',
-      [
-        onEdit && { text: 'Edit', onPress: () => onEdit(note) },
-        onPin && { text: note.is_pinned ? 'Unpin' : 'Pin', onPress: () => onPin(note) },
-        onArchive && { text: note.is_archived ? 'Unarchive' : 'Archive', onPress: () => onArchive(note) },
-        onDelete && { text: 'Delete', onPress: () => onDelete(note), style: 'destructive' as const },
-        { text: 'Cancel', style: 'cancel' as const },
-      ].filter(Boolean)
-    )
+    if (onLongPress) {
+      onLongPress(note)
+    } else {
+      Alert.alert(
+        'Note Options',
+        'What would you like to do with this note?',
+        [
+          onEdit && { text: 'Edit', onPress: () => onEdit(note) },
+          onPin && { text: note.is_pinned ? 'Unpin' : 'Pin', onPress: () => onPin(note) },
+          onArchive && { text: note.is_archived ? 'Unarchive' : 'Archive', onPress: () => onArchive(note) },
+          onDelete && { text: 'Delete', onPress: () => onDelete(note), style: 'destructive' as const },
+          { text: 'Cancel', style: 'cancel' as const },
+        ].filter(Boolean)
+      )
+    }
   }
 
   const formatDate = (dateString: string) => {

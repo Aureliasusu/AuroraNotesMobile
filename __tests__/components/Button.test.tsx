@@ -24,11 +24,11 @@ describe('Button', () => {
   })
 
   it('shows loading state', () => {
-    const { getByText } = render(
+    const { getByTestId } = render(
       <Button title="Loading" loading={true} onPress={() => {}} />
     )
     // Check if loading state is shown (ActivityIndicator should be present)
-    expect(getByText('Loading')).toBeTruthy()
+    expect(getByTestId('button-loading')).toBeTruthy()
   })
 
   it('is disabled when disabled prop is true', () => {

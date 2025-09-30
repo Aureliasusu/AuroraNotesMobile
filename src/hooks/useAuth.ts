@@ -141,10 +141,24 @@ export function useAuth() {
     }
   }
 
+  const initializeAuth = async () => {
+    try {
+      setLoading(true)
+      const { data: { session } } = await supabase.auth.getSession()
+      setSession(session)
+      setUser(session?.user ?? null)
+    } catch (error) {
+      console.error('Failed to initialize auth:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return {
     user,
     session,
     loading,
+    initializeAuth,
     signIn,
     signUp,
     signOut,

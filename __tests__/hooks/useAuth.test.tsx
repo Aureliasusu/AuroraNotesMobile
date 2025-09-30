@@ -1,25 +1,41 @@
 import { renderHook, act } from '@testing-library/react-native'
 import { useAuth } from '../../src/hooks/useAuth'
 
-// Mock dependencies
+// Mock Supabase
 jest.mock('../../src/lib/supabase', () => ({
   supabase: {
     auth: {
-      getUser: jest.fn(),
-      onAuthStateChange: jest.fn(() => ({
-        data: { subscription: { unsubscribe: jest.fn() } }
-      })),
+      getSession: jest.fn().mockResolvedValue({
+        data: { session: null },
+        error: null,
+      }),
+      signInWithPassword: jest.fn().mockResolvedValue({
+        data: { user: null, session: null },
+        error: null,
+      }),
+      signUp: jest.fn().mockResolvedValue({
+        data: { user: null, session: null },
+        error: null,
+      }),
+      signOut: jest.fn().mockResolvedValue({ error: null }),
+      onAuthStateChange: jest.fn().mockReturnValue({
+        data: { subscription: { unsubscribe: jest.fn() } },
+      }),
     },
   },
 }))
 
+// Mock dependencies
+
 jest.mock('../../src/store/useAuthStore', () => ({
   useAuthStore: () => ({
     user: null,
+    session: null,
     profile: null,
     loading: false,
     initialized: false,
     setUser: jest.fn(),
+    setSession: jest.fn(),
     setProfile: jest.fn(),
     setLoading: jest.fn(),
     setInitialized: jest.fn(),

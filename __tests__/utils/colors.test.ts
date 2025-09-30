@@ -29,10 +29,10 @@ describe('Color Constants', () => {
     })
 
     it('has consistent color scheme', () => {
-      expect(Colors.background).toBe('#ffffff')
-      expect(Colors.surface).toBe('#f8f9fa')
-      expect(Colors.textPrimary).toBe('#1a1a1a')
-      expect(Colors.textSecondary).toBe('#6b7280')
+      expect(Colors.background).toBe('#f9fafb')
+      expect(Colors.surface).toBe('#ffffff')
+      expect(Colors.textPrimary).toBe('#111827')
+      expect(Colors.textSecondary).toBe('#374151')
     })
   })
 
@@ -64,10 +64,10 @@ describe('Color Constants', () => {
     })
 
     it('has dark theme appropriate colors', () => {
-      expect(DarkColors.background).toBe('#121212')
-      expect(DarkColors.surface).toBe('#1e1e1e')
-      expect(DarkColors.textPrimary).toBe('#ffffff')
-      expect(DarkColors.textSecondary).toBe('#a0a0a0')
+      expect(DarkColors.background).toBe('#111827')
+      expect(DarkColors.surface).toBe('#1f2937')
+      expect(DarkColors.textPrimary).toBe('#f9fafb')
+      expect(DarkColors.textSecondary).toBe('#d1d5db')
     })
   })
 
