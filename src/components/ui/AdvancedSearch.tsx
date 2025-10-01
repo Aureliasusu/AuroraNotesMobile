@@ -14,6 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useAdvancedSearch } from '../../hooks/useAdvancedSearch'
 import { SearchResult } from '../../store/useSearchStore'
+import { Colors } from '../../constants/colors'
 
 interface AdvancedSearchProps {
   visible: boolean
@@ -464,7 +465,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9fafb',
+    backgroundColor: Colors.gray50,
   },
   
   // Header styles

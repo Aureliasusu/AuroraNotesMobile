@@ -45,7 +45,7 @@ describe('App E2E Flow', () => {
 
   it('shows loading state initially', () => {
     // Mock loading state
-    jest.mocked(require('../../src/hooks/useAuth').useAuth).mockReturnValue({
+    jest.mocked(require('../../src/hooks/useAuth')).mockReturnValue({
       user: null,
       loading: true,
       initializeAuth: jest.fn(),
@@ -58,7 +58,7 @@ describe('App E2E Flow', () => {
 
   it('handles theme switching', async () => {
     const mockToggleTheme = jest.fn()
-    jest.mocked(require('../../src/contexts/ThemeContext').useTheme).mockReturnValue({
+    jest.mocked(require('../../src/contexts/ThemeContext')).mockReturnValue({
       theme: 'light',
       colors: {
         primary: '#3b82f6',

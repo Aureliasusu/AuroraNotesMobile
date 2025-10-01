@@ -44,13 +44,13 @@ jest.mock('../../src/screens/notes/NoteEditorScreen', () => ({
 
 describe('AppNavigator', () => {
   it('renders without crashing', () => {
-    const { container } = render(<AppNavigator user={null} />)
-    expect(container).toBeTruthy()
+    const { root } = render(<AppNavigator user={null} />)
+    expect(root).toBeTruthy()
   })
 
   it('renders auth screens when user is null', () => {
-    const { container } = render(<AppNavigator user={null} />)
-    expect(container).toBeTruthy()
+    const { root } = render(<AppNavigator user={null} />)
+    expect(root).toBeTruthy()
   })
 
   it('renders main app screens when user is present', () => {
@@ -62,8 +62,8 @@ describe('AppNavigator', () => {
       },
     }
     
-    const { container } = render(<AppNavigator user={mockUser} />)
-    expect(container).toBeTruthy()
+    const { root } = render(<AppNavigator user={mockUser} />)
+    expect(root).toBeTruthy()
   })
 
   it('handles user object with required properties', () => {
@@ -76,8 +76,8 @@ describe('AppNavigator', () => {
       },
     }
     
-    const { container } = render(<AppNavigator user={mockUser} />)
-    expect(container).toBeTruthy()
+    const { root } = render(<AppNavigator user={mockUser} />)
+    expect(root).toBeTruthy()
   })
 
   it('handles user object with minimal properties', () => {
@@ -86,7 +86,7 @@ describe('AppNavigator', () => {
       email: 'test@example.com',
     }
     
-    const { container } = render(<AppNavigator user={mockUser} />)
-    expect(container).toBeTruthy()
+    const { root } = render(<AppNavigator user={mockUser} />)
+    expect(root).toBeTruthy()
   })
 })

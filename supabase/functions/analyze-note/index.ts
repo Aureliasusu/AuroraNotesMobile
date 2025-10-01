@@ -1,122 +1,122 @@
-import { srv } rom "https//dno.land/std../http/srvr.ts"
-import { cratlint } rom 'https//sm.sh/spabas/spabas-js'
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const corsadrs  {
-  'ccss-ontrol-llow-rigin' '*',
-  'ccss-ontrol-llow-adrs' 'athorization, x-clint-ino, apiky, contnt-typ',
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-srv(async (rq)  {
-  // andl  prlight rqsts
-  i (rq.mthod  '') {
-    rtrn nw spons('ok', { hadrs corsadrs })
+serve(async (req) => {
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    // rat pabas clint
-    const spabaslint  cratlint(
-      no.nv.gt('_')  '',
-      no.nv.gt('__')  '',
+    // Create Supabase client
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
-        global {
-          hadrs { thorization rq.hadrs.gt('thorization')! },
+        global: {
+          headers: { Authorization: req.headers.get('Authorization')! },
         },
       }
     )
 
-    // t th rqst body
-    const { not_id, contnt }  await rq.json()
+    // Get the request body
+    const { note_id, content } = await req.json()
 
-    i (!contnt) {
-      rtrn nw spons(
-        .stringiy({ rror 'ontnt is rqird' }),
+    if (!content) {
+      return new Response(
+        JSON.stringify({ error: 'Content is required' }),
         { 
-          stats , 
-          hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         }
       )
     }
 
-    // impl  analysis (yo can intgrat with pn  hr)
-    const analysis  {
-      id crypto.random(),
-      not_id,
-      smmary gnratmmary(contnt),
-      ky_points xtractyoints(contnt),
-      sntimnt analyzntimnt(contnt),
-      conidnc .,
-      cratd_at nw at().totring(),
+    // Implement analysis (you can integrate with OpenAI here)
+    const analysis = {
+      id: crypto.randomUUID(),
+      note_id,
+      summary: generateSummary(content),
+      key_points: extractKeyPoints(content),
+      sentiment: analyzeSentiment(content),
+      confidence: 0.8,
+      created_at: new Date().toISOString(),
     }
 
-    // av analysis to databas
-    const { rror }  await spabaslint
-      .rom('not_analyss')
-      .insrt(analysis)
+    // Save analysis to database
+    const { error } = await supabaseClient
+      .from('note_analyses')
+      .insert(analysis)
 
-    i (rror) {
-      consol.rror('atabas rror', rror)
-      rtrn nw spons(
-        .stringiy({ rror 'aild to sav analysis' }),
+    if (error) {
+      console.error('Database error', error)
+      return new Response(
+        JSON.stringify({ error: 'Failed to save analysis' }),
         { 
-          stats , 
-          hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } 
+          status: 500, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         }
       )
     }
 
-    rtrn nw spons(
-      .stringiy(analysis),
+    return new Response(
+      JSON.stringify(analysis),
       { 
-        stats , 
-        hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } 
+        status: 200, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
     )
 
-  } catch (rror) {
-    consol.rror('nction rror', rror)
-    rtrn nw spons(
-      .stringiy({ rror 'ntrnal srvr rror' }),
+  } catch (error) {
+    console.error('Function error', error)
+    return new Response(
+      JSON.stringify({ error: 'Internal server error' }),
       { 
-        stats , 
-        hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } 
+        status: 500, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
     )
   }
 })
 
-// impl txt analysis nctions
-nction gnratmmary(txt string) string {
-  const sntncs  txt.split(/.!]+/).iltr(s  s.trim().lngth  )
-  const words  txt.split(/s+/).iltr(w  w.lngth  )
+// Implement text analysis functions
+function generateSummary(text: string): string {
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0)
+  const words = text.split(/\s+/).filter(w => w.length > 0)
   
-  i (sntncs.lngth  ) {
-    rtrn txt.sbstring(, ) + (txt.lngth    '...'  '')
+  if (sentences.length <= 2) {
+    return text.substring(0, 100) + (text.length > 100 ? '...' : '')
   }
   
-  // ak irst and last sntncs or smmary
-  const smmary  sntncs.slic(, ).concat(sntncs.slic(-)).join('. ')
-  rtrn smmary.sbstring(, ) + (smmary.lngth    '...'  '')
+  // Take first and last sentences for summary
+  const summary = sentences.slice(0, 1).concat(sentences.slice(-1)).join('. ')
+  return summary.substring(0, 150) + (summary.length > 150 ? '...' : '')
 }
 
-nction xtractyoints(txt string) string] {
-  const sntncs  txt.split(/.!]+/).iltr(s  s.trim().lngth  )
-  const kyoints  sntncs
-    .iltr(sntnc  sntnc.lngth  )
-    .slic(, )
-    .map(s  s.trim())
+function extractKeyPoints(text: string): string[] {
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0)
+  const keyPoints = sentences
+    .filter(sentence => sentence.length > 20)
+    .slice(0, 5)
+    .map(s => s.trim())
   
-  rtrn kyoints.lngth    kyoints  'o ky points idntiid']
+  return keyPoints.length > 0 ? keyPoints : ['No key points identified']
 }
 
-nction analyzntimnt(txt string) 'positiv' | 'ngativ' | 'ntral' {
-  const positivords  'good', 'grat', 'xcllnt', 'amazing', 'wondrl', 'antastic', 'lov', 'happy', 'joy']
-  const ngativords  'bad', 'trribl', 'awl', 'hat', 'sad', 'angry', 'rstratd', 'disappointd']
+function analyzeSentiment(text: string): 'positive' | 'negative' | 'neutral' {
+  const positiveWords = ['good', 'great', 'excellent', 'amazing', 'wonderful', 'fantastic', 'love', 'happy', 'joy']
+  const negativeWords = ['bad', 'terrible', 'awful', 'hate', 'sad', 'angry', 'frustrated', 'disappointed']
   
-  const words  txt.toowras().split(/s+/)
-  const positivont  words.iltr(w  positivords.inclds(w)).lngth
-  const ngativont  words.iltr(w  ngativords.inclds(w)).lngth
+  const words = text.toLowerCase().split(/\s+/)
+  const positiveCount = words.filter(w => positiveWords.includes(w)).length
+  const negativeCount = words.filter(w => negativeWords.includes(w)).length
   
-  i (positivont  ngativont) rtrn 'positiv'
-  i (ngativont  positivont) rtrn 'ngativ'
-  rtrn 'ntral'
+  if (positiveCount > negativeCount) return 'positive'
+  if (negativeCount > positiveCount) return 'negative'
+  return 'neutral'
 }

@@ -89,5 +89,15 @@ global.Platform = {
 
 // Supabase mocks will be handled in individual test files
 
+// Mock react-native-webview
+jest.mock('react-native-webview', () => {
+  const React = require('react')
+  const { View } = require('react-native')
+  return {
+    WebView: (props) => React.createElement(View, { 'data-testid': 'webview', ...props }),
+    default: (props) => React.createElement(View, { 'data-testid': 'webview', ...props }),
+  }
+})
+
 // Silence the warning: Animated: `useNativeDriver` is not supported
 // jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')

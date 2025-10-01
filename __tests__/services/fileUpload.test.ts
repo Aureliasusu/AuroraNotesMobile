@@ -1,4 +1,4 @@
-import { uploadImage, uploadDocument, testUpload } from '../../src/services/fileUpload'
+import { FileUploadService } from '../../src/services/fileUpload'
 
 // Mock Supabase
 jest.mock('../../src/lib/supabase', () => ({
@@ -8,6 +8,7 @@ jest.mock('../../src/lib/supabase', () => ({
         upload: jest.fn(),
         getPublicUrl: jest.fn(),
       })),
+      listBuckets: jest.fn(),
     },
   },
 }))
@@ -17,10 +18,10 @@ describe('File Upload Service', () => {
     jest.clearAllMocks()
   })
 
-  describe('uploadImage', () => {
+  describe('FileUploadService.uploadImage', () => {
     it('uploads image successfully', async () => {
       const mockFile = {
-        uri: 'file://test.jpg',
+        uri: 'https://example.com/test.jpg',
         type: 'image/jpeg',
         name: 'test.jpg',
       }
@@ -39,7 +40,7 @@ describe('File Upload Service', () => {
         getPublicUrl: mockGetPublicUrl,
       })
 
-      const result = await uploadImage(mockFile, 'user123')
+      const result = await FileUploadService.uploadImage(mockFile, 'user123')
 
       expect(mockUpload).toHaveBeenCalledWith(
         'user123/test.jpg',
@@ -53,7 +54,7 @@ describe('File Upload Service', () => {
 
     it('handles upload errors', async () => {
       const mockFile = {
-        uri: 'file://test.jpg',
+        uri: 'https://example.com/test.jpg',
         type: 'image/jpeg',
         name: 'test.jpg',
       }
@@ -68,7 +69,7 @@ describe('File Upload Service', () => {
         getPublicUrl: jest.fn(),
       })
 
-      const result = await uploadImage(mockFile, 'user123')
+      const result = await FileUploadService.uploadImage(mockFile, 'user123')
 
       expect(result).toEqual({
         success: false,
@@ -77,10 +78,10 @@ describe('File Upload Service', () => {
     })
   })
 
-  describe('uploadDocument', () => {
+  describe('FileUploadService.uploadDocument', () => {
     it('uploads document successfully', async () => {
       const mockFile = {
-        uri: 'file://test.pdf',
+        uri: 'https://example.com/test.pdf',
         type: 'application/pdf',
         name: 'test.pdf',
       }
@@ -99,7 +100,7 @@ describe('File Upload Service', () => {
         getPublicUrl: mockGetPublicUrl,
       })
 
-      const result = await uploadDocument(mockFile, 'user123')
+      const result = await FileUploadService.uploadDocument(mockFile, 'user123')
 
       expect(mockUpload).toHaveBeenCalledWith(
         'user123/test.pdf',
@@ -112,7 +113,7 @@ describe('File Upload Service', () => {
     })
   })
 
-  describe('testUpload', () => {
+  describe('FileUploadService.testUpload', () => {
     it('tests upload functionality', async () => {
       const mockUpload = jest.fn().mockResolvedValue({
         data: { path: 'test/test.txt' },
@@ -124,7 +125,7 @@ describe('File Upload Service', () => {
         getPublicUrl: jest.fn(),
       })
 
-      const result = await testUpload()
+      const result = await FileUploadService.testUpload()
 
       expect(mockUpload).toHaveBeenCalled()
       expect(result.success).toBe(true)

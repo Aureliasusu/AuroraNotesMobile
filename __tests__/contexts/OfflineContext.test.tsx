@@ -1,11 +1,12 @@
 import React from 'react'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { render, fireEvent } from '@testing-library/react-native'
 import { OfflineProvider, useOffline } from '../../src/contexts/OfflineContext'
 
 // Mock NetInfo
 jest.mock('@react-native-community/netinfo', () => ({
-  addEventListener: jest.fn(),
-  fetch: jest.fn(),
+  addEventListener: jest.fn(() => jest.fn()),
+  fetch: jest.fn(() => Promise.resolve({ isConnected: true })),
 }))
 
 // Mock Alert
@@ -20,14 +21,14 @@ const TestComponent = () => {
   const { isOffline, isSyncing, lastSync, syncData } = useOffline()
   
   return (
-    <div>
-      <div data-testid="is-offline">{isOffline.toString()}</div>
-      <div data-testid="is-syncing">{isSyncing.toString()}</div>
-      <div data-testid="last-sync">{lastSync || 'null'}</div>
-      <button data-testid="sync-data" onPress={syncData}>
-        Sync Data
-      </button>
-    </div>
+    <View>
+      <Text testID="is-offline">{isOffline?.toString() || 'false'}</Text>
+      <Text testID="is-syncing">{isSyncing?.toString() || 'false'}</Text>
+      <Text testID="last-sync">{lastSync || 'null'}</Text>
+      <TouchableOpacity testID="sync-data" onPress={syncData}>
+        <Text>Sync Data</Text>
+      </TouchableOpacity>
+    </View>
   )
 }
 
@@ -87,7 +88,7 @@ describe('OfflineContext', () => {
     const { getByTestId } = render(
       <OfflineProvider>
         <TestComponent />
-      </ThemeProvider>
+      </OfflineProvider>
     )
     
     const syncButton = getByTestId('sync-data')
@@ -104,7 +105,7 @@ describe('OfflineContext', () => {
     const { getByTestId } = render(
       <OfflineProvider>
         <TestComponent />
-      </ThemeProvider>
+      </OfflineProvider>
     )
     
     const syncButton = getByTestId('sync-data')
@@ -124,7 +125,7 @@ describe('OfflineContext', () => {
     const { getByTestId } = render(
       <OfflineProvider>
         <TestComponent />
-      </ThemeProvider>
+      </OfflineProvider>
     )
     
     const syncButton = getByTestId('sync-data')
@@ -150,7 +151,7 @@ describe('OfflineContext', () => {
     const { getByTestId } = render(
       <OfflineProvider>
         <TestComponent />
-      </ThemeProvider>
+      </OfflineProvider>
     )
     
     const syncButton = getByTestId('sync-data')
