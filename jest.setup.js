@@ -81,6 +81,17 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   clear: jest.fn(),
 }))
 
+// Mock NetInfo
+jest.mock('@react-native-community/netinfo', () => ({
+  addEventListener: jest.fn(() => jest.fn()),
+  fetch: jest.fn(() => Promise.resolve({ isConnected: true })),
+  getCurrentConnectivity: jest.fn(() => Promise.resolve({ isConnected: true })),
+  isConnected: {
+    addEventListener: jest.fn(() => jest.fn()),
+    fetch: jest.fn(() => Promise.resolve(true)),
+  },
+}))
+
 // Mock Platform
 global.Platform = {
   OS: 'ios',

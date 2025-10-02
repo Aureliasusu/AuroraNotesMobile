@@ -1,5 +1,6 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
+import { render, fireEvent, act } from '@testing-library/react-native'
 import { ThemeProvider, useTheme } from '../../src/contexts/ThemeContext'
 
 // Mock AsyncStorage
@@ -22,19 +23,19 @@ const TestComponent = () => {
   const { theme, colors, toggleTheme, setTheme } = useTheme()
   
   return (
-    <div>
-      <div data-testid="theme">{theme}</div>
-      <div data-testid="primary-color">{colors.primary}</div>
-      <button data-testid="toggle-theme" onPress={toggleTheme}>
-        Toggle Theme
-      </button>
-      <button data-testid="set-dark" onPress={() => setTheme('dark')}>
-        Set Dark
-      </button>
-      <button data-testid="set-light" onPress={() => setTheme('light')}>
-        Set Light
-      </button>
-    </div>
+    <View>
+      <Text testID="theme">{theme}</Text>
+      <Text testID="primary-color">{colors.primary}</Text>
+      <TouchableOpacity testID="toggle-theme" onPress={toggleTheme}>
+        <Text>Toggle Theme</Text>
+      </TouchableOpacity>
+      <TouchableOpacity testID="set-dark" onPress={() => setTheme('dark')}>
+        <Text>Set Dark</Text>
+      </TouchableOpacity>
+      <TouchableOpacity testID="set-light" onPress={() => setTheme('light')}>
+        <Text>Set Light</Text>
+      </TouchableOpacity>
+    </View>
   )
 }
 
