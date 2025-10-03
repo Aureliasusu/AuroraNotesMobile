@@ -16,6 +16,11 @@ jest.mock('react-native', () => ({
   Appearance: {
     getColorScheme: jest.fn(),
   },
+  StyleSheet: {
+    create: jest.fn((styles) => styles),
+  },
+  TouchableOpacity: 'TouchableOpacity',
+  Text: 'Text',
 }))
 
 // Test component that uses theme

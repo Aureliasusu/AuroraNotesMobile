@@ -43,7 +43,7 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
   };
 
   const copyToClipboard = () => {
-    // In a real implementation, you would use Clipboard from @react-native-clipboard/clipboard
+    // TODO: implement clipboard functionality
     console.log('Code copied:', code);
   };
 
@@ -73,7 +73,7 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
   };
 
   const highlightJavaScript = (line: string) => {
-    // This is a simplified version - in a real app you'd use a proper syntax highlighter
+    // basic syntax highlighting
     return line
       .replace(/\b(const|let|var|function|if|else|for|while|return|import|export|class|interface|type|async|await|try|catch|finally|throw|new|this|super|extends|implements|static|public|private|protected|readonly|abstract|enum|namespace|module|declare|interface|type|as|is|in|of|typeof|instanceof|void|never|any|unknown|boolean|number|string|object|array|symbol|bigint)\b/g, 'KEYWORD:$1:KEYWORD')
       .replace(/\b(true|false|null|undefined|NaN|Infinity)\b/g, 'LITERAL:$1:LITERAL')

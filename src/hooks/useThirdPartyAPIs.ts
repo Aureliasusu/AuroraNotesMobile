@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { Alert } from 'react-native'
-import { OpenAIService, TranslationService, WeatherService, NewsService } from '../services/thirdPartyAPIs'
+import { TextProcessingService, TranslationService, WeatherService, NewsService } from '../services/thirdPartyAPIs'
 
 export function useThirdPartyServices() {
   const [loading, setLoading] = useState(false)
@@ -12,7 +12,7 @@ export function useThirdPartyServices() {
     setError(null)
     
     try {
-      const summary = await OpenAIService.generateSummary(text, maxLength)
+      const summary = await TextProcessingService.generateSummary(text, maxLength)
       return summary
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to generate summary'
@@ -29,7 +29,7 @@ export function useThirdPartyServices() {
     setError(null)
     
     try {
-      const keywords = await OpenAIService.extractKeywords(text)
+      const keywords = await TextProcessingService.extractKeywords(text)
       return keywords
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to extract keywords'
@@ -46,7 +46,7 @@ export function useThirdPartyServices() {
     setError(null)
     
     try {
-      const sentiment = await OpenAIService.analyzeSentiment(text)
+      const sentiment = await TextProcessingService.analyzeSentiment(text)
       return sentiment
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to analyze sentiment'
@@ -63,7 +63,7 @@ export function useThirdPartyServices() {
     setError(null)
     
     try {
-      const tags = await OpenAIService.suggestTags(text)
+      const tags = await TextProcessingService.suggestTags(text)
       return tags
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to suggest tags'

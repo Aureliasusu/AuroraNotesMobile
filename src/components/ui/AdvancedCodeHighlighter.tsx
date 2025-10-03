@@ -42,7 +42,7 @@ export const AdvancedCodeHighlighter: React.FC<AdvancedCodeHighlighterProps> = (
   };
 
   const copyToClipboard = () => {
-    // In a real implementation, you would use Clipboard from @react-native-clipboard/clipboard
+    // TODO: add clipboard support
     Alert.alert('Copied', 'Code copied to clipboard');
     console.log('Code copied:', code);
   };

@@ -22,14 +22,17 @@ export function useAdvancedSearch() {
   // Perform search when filters change
   useEffect(() => {
     if (notes.length > 0) {
-      setLoading(true)
-      try {
-        searchNotes(notes)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Search failed')
-      } finally {
-        setLoading(false)
+      const performSearch = async () => {
+        setLoading(true)
+        try {
+          searchNotes(notes)
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Search failed')
+        } finally {
+          setLoading(false)
+        }
       }
+      performSearch()
     }
   }, [notes, filters, searchNotes, setLoading, setError])
 

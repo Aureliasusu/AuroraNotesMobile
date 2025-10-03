@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { edgeFunctionService } from '../services/edgeFunctions'
+import { EdgeFunctionService } from '../services/edgeFunctions'
 import { Alert } from 'react-native'
 
 interface Analysis {
@@ -21,7 +21,7 @@ export function useAnalysis() {
     setError(null)
     
     try {
-      const result = await edgeFunctionService.analyzeNote(noteId, content)
+      const result = await EdgeFunctionService.analyzeNote(noteId, content)
       return result
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Analysis failed'
@@ -38,7 +38,7 @@ export function useAnalysis() {
     setError(null)
     
     try {
-      const result = await edgeFunctionService.generateSummary(noteId, content)
+      const result = await EdgeFunctionService.generateSummary(noteId, content)
       return result
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Summary generation failed'
@@ -55,7 +55,7 @@ export function useAnalysis() {
     setError(null)
     
     try {
-      const result = await edgeFunctionService.extractKeywords(content)
+      const result = await EdgeFunctionService.extractKeywords(content)
       return result
     } catch (error) {
       console.error('Failed to extract keywords', error)
@@ -71,7 +71,7 @@ export function useAnalysis() {
     setError(null)
     
     try {
-      const result = await edgeFunctionService.suggestTags(content)
+      const result = await EdgeFunctionService.suggestTags(content)
       return result
     } catch (error) {
       console.error('Failed to suggest tags', error)
@@ -87,7 +87,7 @@ export function useAnalysis() {
     setError(null)
     
     try {
-      const result = await edgeFunctionService.findSimilarNotes(noteId, content)
+      const result = await EdgeFunctionService.findSimilarNotes(noteId, content)
       return result
     } catch (error) {
       console.error('Failed to find similar notes', error)
@@ -103,7 +103,7 @@ export function useAnalysis() {
     setError(null)
     
     try {
-      const result = await edgeFunctionService.batchProcessNotes(noteIds, operation)
+      const result = await EdgeFunctionService.batchProcessNotes(noteIds, operation)
       return result
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Batch processing failed'

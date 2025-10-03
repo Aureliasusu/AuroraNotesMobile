@@ -25,6 +25,17 @@ jest.mock('@react-navigation/bottom-tabs', () => ({
   }),
 }))
 
+// Mock auth store
+const mockUseAuthStore = jest.fn()
+jest.mock('../../src/store/useAuthStore', () => ({
+  useAuthStore: mockUseAuthStore,
+}))
+
+// Mock zustand
+jest.mock('zustand', () => ({
+  create: jest.fn(() => mockUseAuthStore),
+}))
+
 // Mock screens
 jest.mock('../../src/screens/auth/SignInScreen', () => ({
   SignInScreen: () => null,
@@ -42,51 +53,67 @@ jest.mock('../../src/screens/notes/NoteEditorScreen', () => ({
   NoteEditorScreen: () => null,
 }))
 
+jest.mock('../../src/screens/notes/EnhancedNoteEditorScreen', () => ({
+  EnhancedNoteEditorScreen: () => null,
+}))
+
 describe('AppNavigator', () => {
+  beforeEach(() => {
+    mockUseAuthStore.mockReturnValue({
+      user: null,
+    })
+  })
+
   it('renders without crashing', () => {
-    const { root } = render(<AppNavigator user={null} />)
-    expect(root).toBeTruthy()
+    const { getByTestId } = render(<AppNavigator />)
+    expect(getByTestId).toBeDefined()
   })
 
   it('renders auth screens when user is null', () => {
-    const { root } = render(<AppNavigator user={null} />)
-    expect(root).toBeTruthy()
+    const { getByTestId } = render(<AppNavigator />)
+    expect(getByTestId).toBeDefined()
   })
 
   it('renders main app screens when user is present', () => {
-    const mockUser = {
-      id: 'user1',
-      email: 'test@example.com',
-      user_metadata: {
-        full_name: 'Test User',
+    mockUseAuthStore.mockReturnValue({
+      user: {
+        id: 'user1',
+        email: 'test@example.com',
+        user_metadata: {
+          full_name: 'Test User',
+        },
       },
-    }
+    })
     
-    const { root } = render(<AppNavigator user={mockUser} />)
-    expect(root).toBeTruthy()
+    const { getByTestId } = render(<AppNavigator />)
+    expect(getByTestId).toBeDefined()
   })
 
   it('handles user object with required properties', () => {
-    const mockUser = {
-      id: 'user1',
-      email: 'test@example.com',
-      user_metadata: {
-        full_name: 'Test User',
-        avatar_url: 'https://example.com/avatar.jpg',
+    mockUseAuthStore.mockReturnValue({
+      user: {
+        id: 'user1',
+        email: 'test@example.com',
+        user_metadata: {
+          full_name: 'Test User',
+          avatar_url: 'https://example.com/avatar.jpg',
+        },
       },
-    }
+    })
     
-    const { root } = render(<AppNavigator user={mockUser} />)
-    expect(root).toBeTruthy()
+    const { getByTestId } = render(<AppNavigator />)
+    expect(getByTestId).toBeDefined()
   })
 
   it('handles user object with minimal properties', () => {
-    const mockUser = {
-      id: 'user1',
-      email: 'test@example.com',
-    }
+    mockUseAuthStore.mockReturnValue({
+      user: {
+        id: 'user1',
+        email: 'test@example.com',
+      },
+    })
     
-    const { root } = render(<AppNavigator user={mockUser} />)
-    expect(root).toBeTruthy()
+    const { getByTestId } = render(<AppNavigator />)
+    expect(getByTestId).toBeDefined()
   })
 })

@@ -63,52 +63,43 @@ And some HTML:
   return message;
 }
 
-// Call the function
 greetUser("Alice", 25);`,
     
     python: `def calculate_fibonacci(n):
-    """Calculate the nth Fibonacci number."""
     if n <= 1:
         return n
     return calculate_fibonacci(n - 1) + calculate_fibonacci(n - 2)
 
-# Example usage
 for i in range(10):
     print(f"F({i}) = {calculate_fibonacci(i)}")`,
     
     html: `<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Website</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial;
             margin: 0;
             padding: 20px;
-            background-color: #f0f0f0;
         }
         .container {
             max-width: 800px;
             margin: 0 auto;
             background: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to My Website</h1>
-        <p>This is a sample HTML page with embedded CSS.</p>
+        <h1>Welcome</h1>
+        <p>Sample page</p>
     </div>
 </body>
 </html>`,
     
-    css: `/* Modern CSS Grid Layout */
-.container {
+    css: `.container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
@@ -116,42 +107,26 @@ for i in range(10):
 }
 
 .card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
-  padding: 24px;
+  background: #667eea;
+  border-radius: 8px;
+  padding: 20px;
   color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-}
-
-@media (max-width: 768px) {
-  .container {
-    grid-template-columns: 1fr;
-    padding: 10px;
-  }
+  transform: translateY(-2px);
 }`,
     
     json: `{
-  "name": "AuroraNotes Mobile",
+  "name": "AuroraNotes",
   "version": "1.0.0",
-  "description": "A beautiful note-taking app",
   "dependencies": {
     "react": "^18.0.0",
-    "react-native": "^0.72.0",
-    "@supabase/supabase-js": "^2.38.0"
+    "react-native": "^0.72.0"
   },
   "scripts": {
-    "start": "react-native start",
-    "ios": "react-native run-ios",
-    "android": "react-native run-android"
-  },
-  "keywords": ["notes", "mobile", "react-native", "supabase"],
-  "author": "Your Name",
-  "license": "MIT"
+    "start": "react-native start"
+  }
 }`
   };
 

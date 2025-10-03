@@ -12,7 +12,7 @@ import {
   TextInput,
 } from 'react-native'
 import { useNotes } from '../../hooks/useNotes'
-import { useAnalysis } from '../../hooks/useAIAnalysis'
+import { useAnalysis } from '../../hooks/useAnalysis'
 import { useFileUpload } from '../../hooks/useFileUpload'
 import { useThirdPartyAPIs } from '../../hooks/useThirdPartyAPIs'
 import { Button } from '../../components/ui/Button'
@@ -34,21 +34,21 @@ export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> =
   onCancel,
 }) => {
   const { notes, createNote, updateNote, selectedNote, setSelectedNote } = useNotes()
-  const { analyzeNote, generateSummary, extractKeywords, suggestTags, loading: aiLoading } = useAnalysis()
-  const { pickImageFromGallery, takePhoto, pickDocument, uploadedFiles, uploading: fileUploading } = useFileUpload()
+  const { analyzeNote, generateSummary, extractKeywords, suggestTags, loading: analysisLoading } = useAnalysis()
+  const { pickImageFromGallery, takePhoto, pickDocument, files, uploading: fileUploading } = useFileUpload()
   const { processText, loading: apiLoading } = useThirdPartyServices()
   
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [tags, setTags] = useState('')
   const [isSaving, setIsSaving] = useState(false)
-  const [aiSuggestions, setAiSuggestions] = useState<any>(null)
+  const [analysisSuggestions, setAnalysisSuggestions] = useState<any>(null)
   const [showFileUpload, setShowFileUpload] = useState(false)
   const [attachedFiles, setAttachedFiles] = useState<FileUploadResult[]>([])
 
   const isEditing = !!noteId
   const currentNote = isEditing ? selectedNote || notes.find(n => n.id === noteId) : null
-  const loading = aiLoading || fileUploading || apiLoading
+  const loading = analysisLoading || fileUploading || apiLoading
 
   useEffect(() => {
     if (currentNote) {
@@ -94,8 +94,8 @@ export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> =
     }
   }
 
-  // Handle AI analysis
-  const handleAIAnalysis = async () => {
+  // Handle content analysis
+  const handleContentAnalysis = async () => {
     if (!content.trim()) {
       Alert.alert('No Content', 'Please enter some content to analyze')
       return
@@ -103,9 +103,9 @@ export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> =
 
     try {
       const analysis = await analyzeNote(content)
-      setAiSuggestions(analysis)
+      setAnalysisSuggestions(analysis)
     } catch (error) {
-      console.error('AI analysis error', error)
+      console.error('Content analysis error', error)
       Alert.alert('Analysis Error', 'Failed to analyze note')
     }
   }
@@ -197,30 +197,30 @@ export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> =
             style={styles.tagsInput}
           />
 
-          {/* AI Analysis Section */}
-          <Card style={styles.aiSection}>
-            <View style={styles.aiHeader}>
+          {/* Content Analysis Section */}
+          <Card style={styles.analysisSection}>
+            <View style={styles.analysisHeader}>
               <Icon name="psychology" size={20} color="#8b5cf6" />
-              <Text style={styles.aiTitle}>AI Analysis</Text>
+              <Text style={styles.analysisTitle}>Content Analysis</Text>
             </View>
             <Button
               title="Analyze Note"
-              onPress={handleAIAnalysis}
-              loading={aiLoading}
-              style={styles.aiButton}
+              onPress={handleContentAnalysis}
+              loading={analysisLoading}
+              style={styles.analysisButton}
             />
             
-            {aiSuggestions && (
-              <View style={styles.aiResults}>
-                <Text style={styles.aiResultTitle}>Analysis Results:</Text>
-                <Text style={styles.aiResultText}>
-                  Summary: {aiSuggestions.summary}
+            {analysisSuggestions && (
+              <View style={styles.analysisResults}>
+                <Text style={styles.analysisResultTitle}>Analysis Results:</Text>
+                <Text style={styles.analysisResultText}>
+                  Summary: {analysisSuggestions.summary}
                 </Text>
-                <Text style={styles.aiResultText}>
-                  Keywords: {aiSuggestions.keywords?.join(', ')}
+                <Text style={styles.analysisResultText}>
+                  Keywords: {analysisSuggestions.keywords?.join(', ')}
                 </Text>
-                <Text style={styles.aiResultText}>
-                  Suggested Tags: {aiSuggestions.suggestedTags?.join(', ')}
+                <Text style={styles.analysisResultText}>
+                  Suggested Tags: {analysisSuggestions.suggestedTags?.join(', ')}
                 </Text>
               </View>
             )}
@@ -373,36 +373,36 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  // AI section styles
-  aiSection: {
+  // Analysis section styles
+  analysisSection: {
     marginBottom: 16,
   },
-  aiHeader: {
+  analysisHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
   },
-  aiTitle: {
+  analysisTitle: {
     marginLeft: 8,
     fontSize: 16,
     fontWeight: '600',
     color: '#374151',
   },
-  aiButton: {
+  analysisButton: {
     marginBottom: 12,
   },
-  aiResults: {
+  analysisResults: {
     padding: 12,
     backgroundColor: '#f3f4f6',
     borderRadius: 6,
   },
-  aiResultTitle: {
+  analysisResultTitle: {
     fontSize: 14,
     fontWeight: '600',
     color: '#374151',
     marginBottom: 8,
   },
-  aiResultText: {
+  analysisResultText: {
     fontSize: 12,
     color: '#6b7280',
     marginBottom: 4,

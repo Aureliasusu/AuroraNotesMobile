@@ -37,7 +37,7 @@ serve(async (req) => {
       )
     }
 
-    // Implement analysis (you can integrate with OpenAI here)
+    // Implement content analysis
     const analysis = {
       id: crypto.randomUUID(),
       note_id,

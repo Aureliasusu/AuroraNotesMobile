@@ -16,6 +16,13 @@ jest.mock('react-native', () => ({
   Appearance: {
     getColorScheme: jest.fn(),
   },
+  View: 'View',
+  Text: 'Text',
+  TouchableOpacity: 'TouchableOpacity',
+  StyleSheet: {
+    create: jest.fn((styles) => styles),
+    flatten: jest.fn((styles) => styles),
+  },
 }))
 
 // Test component to use the context

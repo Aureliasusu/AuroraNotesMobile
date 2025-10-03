@@ -1,11 +1,11 @@
 import { supabase } from '../lib/supabase'
 
-// Edge function service for calling Supabase edge functions
-export class edgeFunctionService {
+// Service for calling Supabase edge functions
+export class EdgeFunctionService {
   // Analyze note
   static async analyzeNote(noteId: string, content: string) {
     try {
-      const { data, error } = await supabase.functions.invoke('analyze-note', {
+      const { data, error } = await supabase.functions.invoke('analyze-content', {
         body: {
           note_id: noteId,
           content: content,

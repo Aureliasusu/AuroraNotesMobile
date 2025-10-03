@@ -1,6 +1,6 @@
 /**
  * AuroraNotes Mobile App
- * AI-powered note taking application
+ * Advanced note taking application
  *
  * @format
  */

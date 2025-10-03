@@ -1,10 +1,10 @@
 import { Alert } from 'react-native'
 import { supabase } from '../lib/supabase'
 
-// OpenAI service
-export class OpenAIService {
+// Text processing service
+export class TextProcessingService {
   private static readonly API_URL = 'https://api.openai.com/v1'
-  private static readonly API_KEY = process.env.OPENAI_API_KEY || 'your-openai-api-key' // Get from environment variables
+  private static readonly API_KEY = process.env.OPENAI_API_KEY || 'your-api-key'
 
   // Generate text summary
   static async generateSummary(text: string, maxLength: number = 200): Promise<string> {
@@ -39,7 +39,7 @@ export class OpenAIService {
       const data = await response.json()
       return data.choices[0].message.content.trim()
     } catch (error) {
-      console.error('OpenAI API error:', error)
+      console.error('API error:', error)
       Alert.alert('Error', 'Failed to generate summary')
       throw error
     }
@@ -79,7 +79,7 @@ export class OpenAIService {
       const keywords = data.choices[0].message.content.trim()
       return keywords.split(',').map(k => k.trim()).filter(k => k.length > 0)
     } catch (error) {
-      console.error('OpenAI API error:', error)
+      console.error('API error:', error)
       Alert.alert('Error', 'Failed to extract keywords')
       throw error
     }
@@ -122,7 +122,7 @@ export class OpenAIService {
       if (sentiment.includes('negative')) return 'negative'
       return 'neutral'
     } catch (error) {
-      console.error('OpenAI API error:', error)
+      console.error('API error:', error)
       Alert.alert('Error', 'Failed to analyze sentiment')
       throw error
     }
@@ -162,7 +162,7 @@ export class OpenAIService {
       const tags = data.choices[0].message.content.trim()
       return tags.split(',').map(t => t.trim()).filter(t => t.length > 0)
     } catch (error) {
-      console.error('OpenAI API error:', error)
+      console.error('API error:', error)
       Alert.alert('Error', 'Failed to suggest tags')
       throw error
     }

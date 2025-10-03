@@ -68,6 +68,28 @@ jest.mock('../../src/contexts/ThemeContext', () => ({
   }),
 }))
 
+jest.mock('../../src/hooks/useAdvancedSearch', () => ({
+  useAdvancedSearch: () => ({
+    filters: { query: '', tags: [], dateRange: { start: null, end: null }, sortBy: 'relevance', sortOrder: 'desc', folderId: null, isPinned: null, isArchived: null },
+    results: [],
+    loading: false,
+    error: null,
+    updateQuery: jest.fn(),
+    updateTags: jest.fn(),
+    addTag: jest.fn(),
+    removeTag: jest.fn(),
+    updateDateRange: jest.fn(),
+    updateSort: jest.fn(),
+    updateFolder: jest.fn(),
+    updatePinned: jest.fn(),
+    updateArchived: jest.fn(),
+    clearFilters: jest.fn(),
+    getAllTags: jest.fn(() => []),
+    getSearchStats: jest.fn(() => ({ totalNotes: 0, filteredNotes: 0, hasActiveFilters: false, filterCount: 0 })),
+    getFolderOptions: jest.fn(() => []),
+  }),
+}))
+
 jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({
     navigate: jest.fn(),
