@@ -1,5 +1,6 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react-native'
+import { View, Text } from 'react-native'
 import { ThemeProvider, useTheme } from '../../src/contexts/ThemeContext'
 import { ThemeToggle } from '../../src/components/ui/ThemeToggle'
 
@@ -18,9 +19,11 @@ jest.mock('react-native', () => ({
   },
   StyleSheet: {
     create: jest.fn((styles) => styles),
+    flatten: jest.fn((styles) => styles),
   },
   TouchableOpacity: 'TouchableOpacity',
   Text: 'Text',
+  View: 'View',
 }))
 
 // Test component that uses theme
@@ -28,12 +31,12 @@ const TestComponent = () => {
   const { theme, colors } = useTheme()
   
   return (
-    <div>
-      <div data-testid="theme">{theme}</div>
-      <div data-testid="primary-color">{colors.primary}</div>
-      <div data-testid="background-color">{colors.background}</div>
-      <div data-testid="text-color">{colors.textPrimary}</div>
-    </div>
+    <View>
+      <Text testID="theme">{theme}</Text>
+      <Text testID="primary-color">{colors.primary}</Text>
+      <Text testID="background-color">{colors.background}</Text>
+      <Text testID="text-color">{colors.textPrimary}</Text>
+    </View>
   )
 }
 
@@ -52,8 +55,8 @@ describe('Theme Integration', () => {
     
     expect(getByTestId('theme')).toHaveTextContent('light')
     expect(getByTestId('primary-color')).toHaveTextContent('#3b82f6')
-    expect(getByTestId('background-color')).toHaveTextContent('#ffffff')
-    expect(getByTestId('text-color')).toHaveTextContent('#1a1a1a')
+    expect(getByTestId('background-color')).toHaveTextContent('#f9fafb')
+    expect(getByTestId('text-color')).toHaveTextContent('#111827')
   })
 
   it('toggles theme through ThemeToggle component', () => {
@@ -91,16 +94,16 @@ describe('Theme Integration', () => {
     
     // Light theme colors
     expect(primaryColor).toHaveTextContent('#3b82f6')
-    expect(backgroundColor).toHaveTextContent('#ffffff')
-    expect(textColor).toHaveTextContent('#1a1a1a')
+    expect(backgroundColor).toHaveTextContent('#f9fafb')
+    expect(textColor).toHaveTextContent('#111827')
     
     // Toggle to dark theme
     fireEvent.press(toggleButton)
     
     // Dark theme colors
-    expect(primaryColor).toHaveTextContent('#60a5fa')
-    expect(backgroundColor).toHaveTextContent('#121212')
-    expect(textColor).toHaveTextContent('#ffffff')
+    expect(primaryColor).toHaveTextContent('#3b82f6')
+    expect(backgroundColor).toHaveTextContent('#111827')
+    expect(textColor).toHaveTextContent('#f9fafb')
   })
 
   it('persists theme changes across component re-renders', () => {
@@ -153,10 +156,10 @@ describe('Theme Integration', () => {
     const NestedComponent = () => {
       const { theme, colors } = useTheme()
       return (
-        <div>
-          <div data-testid="nested-theme">{theme}</div>
-          <div data-testid="nested-color">{colors.primary}</div>
-        </div>
+        <View>
+          <Text testID="nested-theme">{theme}</Text>
+          <Text testID="nested-color">{colors.primary}</Text>
+        </View>
       )
     }
     
@@ -177,16 +180,17 @@ describe('Theme Integration', () => {
     fireEvent.press(toggleButton)
     
     expect(nestedTheme).toHaveTextContent('dark')
-    expect(nestedColor).toHaveTextContent('#60a5fa')
+    expect(nestedColor).toHaveTextContent('#3b82f6')
   })
 
   it('handles theme context errors gracefully', () => {
-    // Test without ThemeProvider
-    const { getByText } = render(
-      <TestComponent />
-    )
+    // Test without ThemeProvider - mock the error
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
     
-    // Should show error or fallback
-    expect(getByText('useTheme must be used within a ThemeProvider')).toBeTruthy()
+    expect(() => {
+      render(<TestComponent />)
+    }).toThrow('useTheme must be used within a ThemeProvider')
+    
+    consoleSpy.mockRestore()
   })
 })

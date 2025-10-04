@@ -28,12 +28,7 @@ jest.mock('@react-navigation/bottom-tabs', () => ({
 // Mock auth store
 const mockUseAuthStore = jest.fn()
 jest.mock('../../src/store/useAuthStore', () => ({
-  useAuthStore: mockUseAuthStore,
-}))
-
-// Mock zustand
-jest.mock('zustand', () => ({
-  create: jest.fn(() => mockUseAuthStore),
+  useAuthStore: () => mockUseAuthStore(),
 }))
 
 // Mock screens

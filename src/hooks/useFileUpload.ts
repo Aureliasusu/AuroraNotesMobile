@@ -70,18 +70,10 @@ export function useFileUpload() {
       // const result = await launchImageLibrary({
       //   mediaType: 'photo',
       //   quality: 0.8,
-      //   maxWidth: 1920,
-      //   maxHeight: 1080,
       // })
 
-      // mock for now - replace when actually using
-      Alert.alert(
-        'Image Picker', 
-        'Image picker not implemented yet. Please implement react-native-image-picker and uncomment the code below.',
-        [
-          { text: 'OK' }
-        ]
-      )
+      // mock for now
+      Alert.alert('Image Picker', 'Not implemented yet')
       return null
 
       // real implementation
@@ -94,7 +86,7 @@ export function useFileUpload() {
       //     asset.fileName || `image_${Date.now()}.jpg`
       //   )
       //   
-      //   setUploadedFiles(prev => [...prev, uploadResult])
+      //   setFiles(prev => [...prev, uploadResult])
       //   setUploading(false)
       //   return uploadResult
       // }
@@ -119,18 +111,10 @@ export function useFileUpload() {
       // const result = await launchCamera({
       //   mediaType: 'photo',
       //   quality: 0.8,
-      //   maxWidth: 1920,
-      //   maxHeight: 1080,
       // })
 
       // mock for now
-      Alert.alert(
-        'Camera', 
-        'Camera not implemented yet. Please implement react-native-image-picker and uncomment the code below.',
-        [
-          { text: 'OK' }
-        ]
-      )
+      Alert.alert('Camera', 'Not implemented yet')
       return null
 
       // real implementation
@@ -143,7 +127,7 @@ export function useFileUpload() {
       //     asset.fileName || `photo_${Date.now()}.jpg`
       //   )
       //   
-      //   setUploadedFiles(prev => [...prev, uploadResult])
+      //   setFiles(prev => [...prev, uploadResult])
       //   setUploading(false)
       //   return uploadResult
       // }
@@ -166,18 +150,12 @@ export function useFileUpload() {
 
       // TODO: implement document picker
       // const result = await pick({
-      //   type: [DocumentPicker.types.pdf, DocumentPicker.types.doc, DocumentPicker.types.docx],
+      //   type: [DocumentPicker.types.pdf],
       //   allowMultiSelection: false,
       // })
 
       // mock for now
-      Alert.alert(
-        'Document Picker', 
-        'Document picker not implemented yet. Please implement react-native-document-picker and uncomment the code below.',
-        [
-          { text: 'OK' }
-        ]
-      )
+      Alert.alert('Document Picker', 'Not implemented yet')
       return null
 
       // real implementation
@@ -185,13 +163,9 @@ export function useFileUpload() {
       //   const file = result[0]
       //   setUploading(true)
       //   
-      //   const uploadResult = await uploadDocument(
-      //     file.uri,
-      //     file.name,
-      //     file.type || 'application/octet-stream'
-      //   )
+      //   const uploadResult = await uploadDocument(file.uri, file.name)
       //   
-      //   setUploadedFiles(prev => [...prev, uploadResult])
+      //   setFiles(prev => [...prev, uploadResult])
       //   setUploading(false)
       //   return uploadResult
       // }
