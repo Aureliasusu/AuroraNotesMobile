@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Platform } from 'react-native';
 
 interface SimpleCodeHighlighterProps {
   code: string;
