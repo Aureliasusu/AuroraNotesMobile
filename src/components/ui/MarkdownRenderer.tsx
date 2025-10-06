@@ -109,7 +109,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       });
 
       // Process links
-      processedLine = processedLine.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
+      processedLine = processedLine.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, _url) => {
         const key = `link-${index}-${partIndex++}`;
         parts.push(
           <Text key={key} style={styles.link}>
@@ -120,9 +120,9 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       });
 
       // Split by placeholders and create final text
-      const finalParts = processedLine.split(/(__\w+_\d+__)/).map((part, partIndex) => {
+      const finalParts = processedLine.split(/(__\w+_\d+__)/).map((part) => {
         if (part.match(/__\w+_\d+__/)) {
-          const matchIndex = parseInt(part.match(/\d+/)?.[0] || '0');
+          const matchIndex = parseInt(part.match(/\d+/)?.[0] || '0', 10);
           return parts[matchIndex] || part;
         }
         return part;

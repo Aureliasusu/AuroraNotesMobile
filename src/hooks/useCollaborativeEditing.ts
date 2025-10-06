@@ -25,7 +25,7 @@ interface CollaborativeEditingState {
 export function useCollaborativeEditing(noteId: string) {
   const { user } = useAuthStore()
   const { updateNote } = useNotesStore()
-  const { isOnline, lastSeen } = useUserPresence()
+  const { } = useUserPresence()
   
   const [state, setState] = useState<CollaborativeEditingState>({
     editingUsers: [],
@@ -129,7 +129,7 @@ export function useCollaborativeEditing(noteId: string) {
 
     try {
       // Check for conflicts
-      const { data: existingNote, error } = await supabase
+      const { error } = await supabase
         .from('notes')
         .select('*')
         .eq('id', noteId)

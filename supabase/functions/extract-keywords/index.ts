@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseClient = createClient(
+    createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
@@ -22,7 +22,7 @@ serve(async (req) => {
       }
     )
 
-    const { note_id, content } = await req.json()
+    const { content } = await req.json()
 
     if (!content) {
       return new Response(

@@ -24,7 +24,7 @@ const testFiles = [
 
 console.log('📁 Testing file existence and readability...')
 let passedTests = 0
-let totalTests = testFiles.length
+const totalTests = testFiles.length
 
 testFiles.forEach(file => {
   try {

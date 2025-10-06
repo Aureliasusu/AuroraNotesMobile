@@ -2,7 +2,6 @@ import { useCallback, useEffect } from 'react'
 import { useSearchStore } from '../store/useSearchStore'
 import { useNotes } from './useNotes'
 import { useFolders } from './useFolders'
-import { Note } from '../types/database'
 
 export function useAdvancedSearch() {
   const { notes } = useNotes()

@@ -66,7 +66,7 @@ describe('OfflineContext', () => {
       return mockCallback
     })
     
-    const { getByTestId } = render(
+    render(
       <OfflineProvider>
         <TestComponent />
       </OfflineProvider>

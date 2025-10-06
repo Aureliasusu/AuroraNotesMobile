@@ -14,7 +14,6 @@ import {
 import { useNotes } from '../../hooks/useNotes'
 import { useAnalysis } from '../../hooks/useAnalysis'
 import { useFileUpload } from '../../hooks/useFileUpload'
-import { useThirdPartyAPIs } from '../../hooks/useThirdPartyAPIs'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Card } from '../../components/ui/Card'
@@ -33,10 +32,9 @@ export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> =
   onSave,
   onCancel,
 }) => {
-  const { notes, createNote, updateNote, selectedNote, setSelectedNote } = useNotes()
-  const { analyzeNote, generateSummary, extractKeywords, suggestTags, loading: analysisLoading } = useAnalysis()
-  const { pickImageFromGallery, takePhoto, pickDocument, files, uploading: fileUploading } = useFileUpload()
-  const { processText, loading: apiLoading } = useThirdPartyServices()
+  const { notes, createNote, updateNote, selectedNote } = useNotes()
+  const { analyzeNote, loading: analysisLoading } = useAnalysis()
+  const { pickImageFromGallery, takePhoto, pickDocument, uploading: fileUploading } = useFileUpload()
   
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')

@@ -69,7 +69,7 @@ describe('ErrorBoundary', () => {
   })
 
   it('handles multiple errors', () => {
-    const { getByText, rerender } = render(
+    const { getByText } = render(
       <ErrorBoundary>
         <ThrowError shouldThrow={true} />
       </ErrorBoundary>

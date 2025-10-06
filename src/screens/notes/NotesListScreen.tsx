@@ -15,7 +15,6 @@ import { useNavigation } from '@react-navigation/native';
 import { useNotes } from '../../hooks/useNotes';
 import { useAuth } from '../../hooks/useAuth';
 import { useFolders } from '../../hooks/useFolders';
-import { useTheme } from '../../contexts/ThemeContext';
 import { NoteCard, SearchBar, FloatingActionButton, FolderManager, AdvancedSearch, ThemeToggle } from '../../components/ui';
 import { Note } from '../../types/database';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -24,17 +23,14 @@ export const NotesListScreen: React.FC = () => {
   const navigation = useNavigation();
   const { user, signOut } = useAuth();
   const {
-    notes,
     loading,
     fetchNotes,
     deleteNote,
-    togglePin,
     activeNotes,
     pinnedNotes,
     searchNotes,
   } = useNotes();
   const { folders } = useFolders();
-  const { colors } = useTheme();
 
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');

@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
-  Platform,
 } from 'react-native';
 
 interface RichTextEditorProps {
@@ -105,7 +104,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     onPress, 
     icon, 
     isActive = false, 
-    title 
+    _title 
   }: { 
     onPress: () => void; 
     icon: string; 

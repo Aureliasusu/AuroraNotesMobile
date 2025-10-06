@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
-import { render, fireEvent, act } from '@testing-library/react-native'
+import { render, fireEvent } from '@testing-library/react-native'
 import { ThemeProvider, useTheme } from '../../src/contexts/ThemeContext'
 
 // Mock AsyncStorage
@@ -138,7 +138,7 @@ describe('ThemeContext', () => {
     const mockGetItem = jest.mocked(require('@react-native-async-storage/async-storage').getItem)
     mockGetItem.mockResolvedValue('dark')
     
-    const { getByTestId } = render(
+    render(
       <ThemeProvider>
         <TestComponent />
       </ThemeProvider>
@@ -157,7 +157,7 @@ describe('ThemeContext', () => {
     mockGetItem.mockResolvedValue(null)
     mockGetColorScheme.mockReturnValue('dark')
     
-    const { getByTestId } = render(
+    render(
       <ThemeProvider>
         <TestComponent />
       </ThemeProvider>

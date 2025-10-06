@@ -1,4 +1,4 @@
-import { debounce, throttle, memoize, PerformanceMonitor } from '../../src/utils/performance'
+import { debounce, throttle, memoize } from '../../src/utils/performance'
 
 describe('Performance Utilities', () => {
   beforeEach(() => {

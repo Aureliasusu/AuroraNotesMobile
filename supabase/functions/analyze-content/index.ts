@@ -87,7 +87,6 @@ serve(async (req) => {
 // Implement text analysis functions
 function generateSummary(text: string): string {
   const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0)
-  const words = text.split(/\s+/).filter(w => w.length > 0)
   
   if (sentences.length <= 2) {
     return text.substring(0, 100) + (text.length > 100 ? '...' : '')

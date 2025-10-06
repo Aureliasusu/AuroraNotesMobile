@@ -250,7 +250,6 @@ export class BatchProcessingService {
 
       return { summary, keywords, sentiment, tags }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to process text'
       console.error('Batch processing error:', error)
       Alert.alert('Error', 'Failed to process text')
       throw error

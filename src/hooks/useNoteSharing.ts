@@ -84,7 +84,7 @@ export function useNoteSharing() {
       }
 
       // Create the share
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('note_shares')
         .insert({
           note_id: noteId,

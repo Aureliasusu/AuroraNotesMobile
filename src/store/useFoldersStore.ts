@@ -18,7 +18,7 @@ interface FoldersState {
   clearFolders: () => void
 }
 
-export const useFoldersStore = create<FoldersState>((set, get) => ({
+export const useFoldersStore = create<FoldersState>((set, _get) => ({
   folders: [],
   loading: false,
   error: null,
@@ -173,7 +173,7 @@ export const useFoldersStore = create<FoldersState>((set, get) => ({
 if (typeof window !== 'undefined') {
   const { user } = useAuthStore.getState()
   if (user) {
-    const channel = supabase
+    supabase
       .channel('folders_changes')
       .on(
         'postgres_changes',

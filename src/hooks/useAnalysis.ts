@@ -2,15 +2,6 @@ import { useState, useCallback } from 'react'
 import { EdgeFunctionService } from '../services/edgeFunctions'
 import { Alert } from 'react-native'
 
-interface Analysis {
-  id: string
-  note_id: string
-  summary: string
-  key_points: string[]
-  sentiment: 'positive' | 'negative' | 'neutral'
-  suggested_tags: string[]
-  created_at: string
-}
 
 export function useAnalysis() {
   const [loading, setLoading] = useState(false)

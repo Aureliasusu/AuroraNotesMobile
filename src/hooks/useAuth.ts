@@ -1,15 +1,9 @@
 import { useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { User, Session } from '@supabase/supabase-js'
 import { Alert } from 'react-native'
 import { useAuthStore } from '../store/useAuthStore'
 import { useNotesStore } from '../store/useNotesStore'
 
-interface AuthState {
-  user: User | null
-  session: Session | null
-  loading: boolean
-}
 
 export function useAuth() {
   // const authState: AuthState = {

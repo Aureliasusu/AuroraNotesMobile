@@ -13,7 +13,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNotes } from '../../hooks/useNotes'
 import { useAuth } from '../../hooks/useAuth'
-import { Note } from '../../types/database'
 
 interface NoteEditorScreenProps {
   route: {
