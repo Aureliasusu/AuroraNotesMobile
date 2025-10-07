@@ -59,8 +59,8 @@ export function useAuth() {
       }
 
       return { success: true, user: data.user }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Sign in failed'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? error.message : 'Sign in failed'
       Alert.alert('Sign In Failed', errorMessage)
       return { success: false, error: errorMessage }
     } finally {
@@ -84,8 +84,8 @@ export function useAuth() {
 
       Alert.alert('Sign Up Success', 'Please check your email to verify your account')
       return { success: true, user: data.user }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Sign up failed'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? error.message : 'Sign up failed'
       Alert.alert('Sign Up Failed', errorMessage)
       return { success: false, error: errorMessage }
     } finally {
@@ -107,8 +107,8 @@ export function useAuth() {
       // Clear local state
       clearNotes()
       return { success: true }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Sign out failed'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? error.message : 'Sign out failed'
       Alert.alert('Sign Out Failed', errorMessage)
       return { success: false, error: errorMessage }
     } finally {
@@ -128,8 +128,8 @@ export function useAuth() {
 
       Alert.alert('Reset Password', 'Please check your email to reset your password')
       return { success: true }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Reset password failed'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? error.message : 'Reset password failed'
       Alert.alert('Reset Password Failed', errorMessage)
       return { success: false, error: errorMessage }
     }
@@ -141,8 +141,8 @@ export function useAuth() {
       const { data: { session } } = await supabase.auth.getSession()
       setSession(session)
       setUser(session?.user ?? null)
-    } catch (error) {
-      console.error('Failed to initialize auth:', error)
+    } catch (err) {
+      console.error(err)
     } finally {
       setLoading(false)
     }

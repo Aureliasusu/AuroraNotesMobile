@@ -90,8 +90,8 @@ export function useFileUpload() {
       //   setUploading(false)
       //   return uploadResult
       // }
-    } catch (error) {
-      console.error('Image picker error', error)
+    } catch (err) {
+      console.error(err)
       Alert.alert('Error', 'Failed to pick image')
       setUploading(false)
       return null
@@ -131,8 +131,8 @@ export function useFileUpload() {
       //   setUploading(false)
       //   return uploadResult
       // }
-    } catch (error) {
-      console.error('Camera error', error)
+    } catch (err) {
+      console.error(err)
       Alert.alert('Error', 'Failed to take photo')
       setUploading(false)
       return null
@@ -169,8 +169,8 @@ export function useFileUpload() {
       //   setUploading(false)
       //   return uploadResult
       // }
-    } catch (error) {
-      console.error('Document picker error', error)
+    } catch (err) {
+      console.error(err)
       Alert.alert('Error', 'Failed to pick document')
       setUploading(false)
       return null

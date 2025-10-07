@@ -100,8 +100,8 @@ export function useCollaborativeEditing(noteId: string) {
           is_online: true,
         },
       }))
-    } catch (error) {
-      console.error('Failed to start editing', error)
+    } catch (err) {
+      console.error(err)
       Alert.alert('Error', 'Failed to start editing')
     }
   }, [user, noteId])
@@ -118,8 +118,8 @@ export function useCollaborativeEditing(noteId: string) {
         isEditing: false,
         currentEditor: null,
       }))
-    } catch (error) {
-      console.error('Failed to stop editing', error)
+    } catch (err) {
+      console.error(err)
     }
   }, [user, noteId])
 
@@ -148,8 +148,8 @@ export function useCollaborativeEditing(noteId: string) {
       }
 
       await updateNote(noteId, noteUpdate)
-    } catch (error) {
-      console.error('Failed to save note', error)
+    } catch (err) {
+      console.error(err)
       Alert.alert('Error', 'Save failed')
     }
   }, [user, noteId, updateNote])
@@ -177,8 +177,8 @@ export function useCollaborativeEditing(noteId: string) {
         ...prev,
         conflictResolution: false,
       }))
-    } catch (error) {
-      console.error('Failed to resolve conflict', error)
+    } catch (err) {
+      console.error(err)
       Alert.alert('Error', 'Failed to resolve conflict')
     }
   }, [user, noteId, updateNote])

@@ -14,11 +14,11 @@ export function useAnalysis() {
     try {
       const result = await EdgeFunctionService.analyzeNote(noteId, content)
       return result
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Analysis failed'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Analysis failed'
       setError(errorMessage)
       Alert.alert('Error', 'Failed to analyze note')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
@@ -31,11 +31,11 @@ export function useAnalysis() {
     try {
       const result = await EdgeFunctionService.generateSummary(noteId, content)
       return result
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Summary generation failed'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Summary generation failed'
       setError(errorMessage)
       Alert.alert('Error', 'Failed to generate summary')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
@@ -48,10 +48,10 @@ export function useAnalysis() {
     try {
       const result = await EdgeFunctionService.extractKeywords(content)
       return result
-    } catch (error) {
-      console.error('Failed to extract keywords', error)
+    } catch (err) {
+      console.error('Failed to extract keywords', err)
       Alert.alert('Error', 'Failed to extract keywords')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
@@ -64,10 +64,10 @@ export function useAnalysis() {
     try {
       const result = await EdgeFunctionService.suggestTags(content)
       return result
-    } catch (error) {
-      console.error('Failed to suggest tags', error)
+    } catch (err) {
+      console.error('Failed to suggest tags', err)
       Alert.alert('Error', 'Failed to suggest tags')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
@@ -80,10 +80,10 @@ export function useAnalysis() {
     try {
       const result = await EdgeFunctionService.findSimilarNotes(noteId, content)
       return result
-    } catch (error) {
-      console.error('Failed to find similar notes', error)
+    } catch (err) {
+      console.error('Failed to find similar notes', err)
       Alert.alert('Error', 'Failed to find similar notes')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
@@ -96,11 +96,11 @@ export function useAnalysis() {
     try {
       const result = await EdgeFunctionService.batchProcessNotes(noteIds, operation)
       return result
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Batch processing failed'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Batch processing failed'
       setError(errorMessage)
       Alert.alert('Error', 'Failed to process notes')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }

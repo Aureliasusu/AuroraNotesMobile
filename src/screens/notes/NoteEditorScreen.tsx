@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import {
   View,
   Text,
@@ -35,13 +35,7 @@ export const NoteEditorScreen: React.FC<NoteEditorScreenProps> = ({
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    if (noteId) {
-      loadNote()
-    }
-  }, [noteId])
-
-  const loadNote = async () => {
+  const loadNote = useCallback(async () => {
     if (!noteId) return
     
     try {
@@ -53,7 +47,13 @@ export const NoteEditorScreen: React.FC<NoteEditorScreenProps> = ({
     } catch (error) {
       Alert.alert('Error', 'Failed to load note')
     }
-  }
+  }, [noteId, getNoteById])
+
+  useEffect(() => {
+    if (noteId) {
+      loadNote()
+    }
+  }, [noteId, loadNote])
 
   const handleSave = async () => {
     if (!title.trim() || !content.trim()) {

@@ -14,11 +14,11 @@ export function useThirdPartyServices() {
     try {
       const summary = await TextProcessingService.generateSummary(text, maxLength)
       return summary
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to generate summary'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to generate summary'
       setError(errorMessage)
       Alert.alert('Error', 'Failed to generate summary')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
@@ -31,11 +31,11 @@ export function useThirdPartyServices() {
     try {
       const keywords = await TextProcessingService.extractKeywords(text)
       return keywords
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to extract keywords'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to extract keywords'
       setError(errorMessage)
       Alert.alert('Error', 'Failed to extract keywords')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
@@ -48,11 +48,11 @@ export function useThirdPartyServices() {
     try {
       const sentiment = await TextProcessingService.analyzeSentiment(text)
       return sentiment
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to analyze sentiment'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to analyze sentiment'
       setError(errorMessage)
       Alert.alert('Error', 'Failed to analyze sentiment')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
@@ -65,11 +65,11 @@ export function useThirdPartyServices() {
     try {
       const tags = await TextProcessingService.suggestTags(text)
       return tags
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to suggest tags'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to suggest tags'
       setError(errorMessage)
       Alert.alert('Error', 'Failed to suggest tags')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
@@ -83,11 +83,11 @@ export function useThirdPartyServices() {
     try {
       const translatedText = await TranslationService.translateText(text, targetLanguage)
       return translatedText
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to translate text'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to translate text'
       setError(errorMessage)
       Alert.alert('Error', 'Failed to translate text')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
@@ -101,11 +101,11 @@ export function useThirdPartyServices() {
     try {
       const weather = await WeatherService.getCurrentWeather(lat, lon)
       return weather
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to get weather'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to get weather'
       setError(errorMessage)
       Alert.alert('Error', 'Failed to get weather data')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
@@ -119,11 +119,11 @@ export function useThirdPartyServices() {
     try {
       const news = await NewsService.getNews(query, language)
       return news
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to get news'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to get news'
       setError(errorMessage)
       Alert.alert('Error', 'Failed to get news')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
@@ -143,11 +143,11 @@ export function useThirdPartyServices() {
       ])
 
       return { summary, keywords, sentiment, tags }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to process text'
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to process text'
       setError(errorMessage)
       Alert.alert('Error', 'Failed to process text')
-      throw error
+      throw err
     } finally {
       setLoading(false)
     }
