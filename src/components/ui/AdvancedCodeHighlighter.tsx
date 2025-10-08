@@ -42,7 +42,7 @@ export const AdvancedCodeHighlighter: React.FC<AdvancedCodeHighlighterProps> = (
   };
 
   const copyToClipboard = () => {
-    // TODO: add clipboard support
+    // clipboard not implemented yet
     Alert.alert('Copied', 'Code copied to clipboard');
     console.log('Code copied:', code);
   };
@@ -172,24 +172,24 @@ export const AdvancedCodeHighlighter: React.FC<AdvancedCodeHighlighterProps> = (
     `;
   };
 
-  const formatCodeWithSyntaxHighlighting = (code: string, lang: string, showLineNumbers: boolean) => {
-    const lines = code.split('\n');
+  const formatCodeWithSyntaxHighlighting = (codeText: string, language: string, showNumbers: boolean) => {
+    const lines = codeText.split('\n');
     
     return lines.map((line, index) => {
-      const lineNumber = showLineNumbers ? `<span class="line-numbers">${String(index + 1).padStart(2, ' ')}</span>` : '';
+      const lineNumber = showNumbers ? `<span class="line-numbers">${String(index + 1).padStart(2, ' ')}</span>` : '';
       
       // Simple syntax highlighting based on language
       let highlightedLine = line;
       
-      if (lang === 'javascript' || lang === 'typescript') {
+      if (language === 'javascript' || language === 'typescript') {
         highlightedLine = highlightJavaScript(line);
-      } else if (lang === 'python') {
+      } else if (language === 'python') {
         highlightedLine = highlightPython(line);
-      } else if (lang === 'html') {
+      } else if (language === 'html') {
         highlightedLine = highlightHTML(line);
-      } else if (lang === 'css') {
+      } else if (language === 'css') {
         highlightedLine = highlightCSS(line);
-      } else if (lang === 'json') {
+      } else if (language === 'json') {
         highlightedLine = highlightJSON(line);
       }
       

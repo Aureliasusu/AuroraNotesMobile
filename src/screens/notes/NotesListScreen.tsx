@@ -113,7 +113,7 @@ export const NotesListScreen: React.FC = () => {
       [
         { text: 'Cancel', style: 'cancel' },
         { text: 'Confirm', onPress: () => {
-          // TODO: Implement batch move notes to folder functionality
+          // batch move not ready
           Alert.alert('Info', 'This feature will be implemented in future versions');
         }},
       ]

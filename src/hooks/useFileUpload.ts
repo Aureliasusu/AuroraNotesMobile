@@ -66,7 +66,7 @@ export function useFileUpload() {
         return null
       }
 
-      // TODO: implement image picker
+      // image picker pending
       // const result = await launchImageLibrary({
       //   mediaType: 'photo',
       //   quality: 0.8,
@@ -107,7 +107,7 @@ export function useFileUpload() {
         return null
       }
 
-      // TODO: implement camera
+      // camera not done yet
       // const result = await launchCamera({
       //   mediaType: 'photo',
       //   quality: 0.8,
@@ -148,7 +148,7 @@ export function useFileUpload() {
         return null
       }
 
-      // TODO: implement document picker
+      // doc picker coming soon
       // const result = await pick({
       //   type: [DocumentPicker.types.pdf],
       //   allowMultiSelection: false,

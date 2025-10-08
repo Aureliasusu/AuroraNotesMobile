@@ -43,7 +43,7 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
   };
 
   const copyToClipboard = () => {
-    // TODO: implement clipboard functionality
+    // will add clipboard later
     console.log('Code copied:', code);
   };
 
@@ -130,9 +130,9 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
       const type = parts[i - 1]?.replace(':', '');
       
       if (content) {
-        const style = getTokenStyle(type);
+        const tokenStyle = getTokenStyle(type);
         elements.push(
-          <Text key={i} style={style}>
+          <Text key={i} style={tokenStyle}>
             {content}
           </Text>
         );

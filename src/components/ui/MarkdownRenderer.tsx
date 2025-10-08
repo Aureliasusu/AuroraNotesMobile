@@ -49,10 +49,10 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       // Handle headers
       if (line.startsWith('#')) {
         const level = line.match(/^#+/)?.[0].length || 1;
-        const text = line.replace(/^#+\s*/, '');
+        const headerText = line.replace(/^#+\s*/, '');
         elements.push(
           <Text key={`header-${index}`} style={[styles.header, styles[`h${level}`]]}>
-            {text}
+            {headerText}
           </Text>
         );
         return;
@@ -60,11 +60,11 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 
       // Handle lists
       if (line.startsWith('- ') || line.startsWith('* ')) {
-        const text = line.replace(/^[-*]\s*/, '');
+        const listText = line.replace(/^[-*]\s*/, '');
         elements.push(
           <View key={`list-${index}`} style={styles.listItem}>
             <Text style={styles.listBullet}>•</Text>
-            <Text style={styles.listText}>{text}</Text>
+            <Text style={styles.listText}>{listText}</Text>
           </View>
         );
         return;
@@ -76,44 +76,44 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       let partIndex = 0;
 
       // Process bold text
-      processedLine = processedLine.replace(/\*\*(.*?)\*\*/g, (match, text) => {
+      processedLine = processedLine.replace(/\*\*(.*?)\*\*/g, (_match, boldText) => {
         const key = `bold-${index}-${partIndex++}`;
         parts.push(
           <Text key={key} style={styles.bold}>
-            {text}
+            {boldText}
           </Text>
         );
         return `__BOLD_${parts.length - 1}__`;
       });
 
       // Process italic text
-      processedLine = processedLine.replace(/\*(.*?)\*/g, (match, text) => {
+      processedLine = processedLine.replace(/\*(.*?)\*/g, (_match, italicText) => {
         const key = `italic-${index}-${partIndex++}`;
         parts.push(
           <Text key={key} style={styles.italic}>
-            {text}
+            {italicText}
           </Text>
         );
         return `__ITALIC_${parts.length - 1}__`;
       });
 
       // Process inline code
-      processedLine = processedLine.replace(/`(.*?)`/g, (match, text) => {
+      processedLine = processedLine.replace(/`(.*?)`/g, (_match, inlineCode) => {
         const key = `code-${index}-${partIndex++}`;
         parts.push(
           <Text key={key} style={styles.inlineCode}>
-            {text}
+            {inlineCode}
           </Text>
         );
         return `__CODE_${parts.length - 1}__`;
       });
 
       // Process links
-      processedLine = processedLine.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, _url) => {
+      processedLine = processedLine.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_match, linkLabel, _url) => {
         const key = `link-${index}-${partIndex++}`;
         parts.push(
           <Text key={key} style={styles.link}>
-            {text}
+            {linkLabel}
           </Text>
         );
         return `__LINK_${parts.length - 1}__`;
