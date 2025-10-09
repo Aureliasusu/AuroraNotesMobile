@@ -44,7 +44,6 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
 
   const copyToClipboard = () => {
     // will add clipboard later
-    console.log('Code copied:', code);
   };
 
   const formatCode = (code: string, lang: string) => {

@@ -44,7 +44,6 @@ export const AdvancedCodeHighlighter: React.FC<AdvancedCodeHighlighterProps> = (
   const copyToClipboard = () => {
     // clipboard not implemented yet
     Alert.alert('Copied', 'Code copied to clipboard');
-    console.log('Code copied:', code);
   };
 
   const getHTML = () => {
