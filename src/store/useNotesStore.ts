@@ -23,6 +23,8 @@ interface NotesActions {
   toggleArchive: (id: string) => Promise<void>
   searchNotes: (query: string) => Note[]
   getNotesByFolder: (folderId: string) => Note[]
+  clearNotes: () => void
+  addNote: (note: Note) => void
 }
 
 export const useNotesStore = create<NotesState & NotesActions>((set, get) => ({
@@ -173,5 +175,13 @@ export const useNotesStore = create<NotesState & NotesActions>((set, get) => ({
   getNotesByFolder: (folderId) => {
     const { notes } = get()
     return notes.filter(note => note.folder_id === folderId)
+  },
+
+  clearNotes: () => {
+    set({ notes: [], selectedNote: null })
+  },
+
+  addNote: (note) => {
+    set(state => ({ notes: [...state.notes, note] }))
   },
 }))

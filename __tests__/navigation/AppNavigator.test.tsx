@@ -4,7 +4,7 @@ import { AppNavigator } from '../../src/navigation/AppNavigator'
 
 // Mock navigation dependencies
 jest.mock('@react-navigation/native', () => ({
-  NavigationContainer: ({ children }) => children,
+  NavigationContainer: ({ children }: any) => children,
   useNavigation: () => ({
     navigate: jest.fn(),
     dispatch: jest.fn(),
@@ -13,15 +13,15 @@ jest.mock('@react-navigation/native', () => ({
 
 jest.mock('@react-navigation/stack', () => ({
   createStackNavigator: () => ({
-    Navigator: ({ children }) => children,
-    Screen: ({ children }) => children,
+    Navigator: ({ children }: any) => children,
+    Screen: ({ children }: any) => children,
   }),
 }))
 
 jest.mock('@react-navigation/bottom-tabs', () => ({
   createBottomTabNavigator: () => ({
-    Navigator: ({ children }) => children,
-    Screen: ({ children }) => children,
+    Navigator: ({ children }: any) => children,
+    Screen: ({ children }: any) => children,
   }),
 }))
 

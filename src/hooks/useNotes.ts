@@ -53,6 +53,11 @@ export function useNotes() {
     await fetchNotes()
   }, [user, fetchNotes])
 
+  // Get note by ID
+  const getNoteById = useCallback((id: string) => {
+    return notes.find(note => note.id === id) || null
+  }, [notes])
+
   return {
     // State
     notes,
@@ -72,6 +77,7 @@ export function useNotes() {
     // Enhanced functionality
     searchNotes,
     filterByTags,
+    getNoteById,
     
     // Computed values
     pinnedNotes: notes.filter(note => note.is_pinned),

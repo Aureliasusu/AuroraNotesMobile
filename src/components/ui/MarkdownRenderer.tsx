@@ -51,7 +51,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         const level = line.match(/^#+/)?.[0].length || 1;
         const headerText = line.replace(/^#+\s*/, '');
         elements.push(
-          <Text key={`header-${index}`} style={[styles.header, styles[`h${level}`]]}>
+          <Text key={`header-${index}`} style={[styles.header, styles[`h${level}` as keyof typeof styles]]}>
             {headerText}
           </Text>
         );

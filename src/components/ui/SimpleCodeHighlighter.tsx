@@ -46,8 +46,8 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
     // will add clipboard later
   };
 
-  const formatCode = (code: string, lang: string) => {
-    const lines = code.split('\n');
+  const formatCode = (codeInput: string, lang: string) => {
+    const lines = codeInput.split('\n');
     
     return lines.map((line, index) => {
       const lineNumber = showLineNumbers ? String(index + 1).padStart(3, ' ') : '';
@@ -149,7 +149,7 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
 
     switch (type) {
       case 'KEYWORD':
-        return [baseStyle, { color: isDark ? '#569cd6' : '#0066cc', fontWeight: 'bold' }];
+        return [baseStyle, { color: isDark ? '#569cd6' : '#0066cc', fontWeight: 'bold' as const }];
       case 'LITERAL':
         return [baseStyle, { color: isDark ? '#4fc1ff' : '#005cc5' }];
       case 'STRING':
@@ -157,7 +157,7 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
       case 'NUMBER':
         return [baseStyle, { color: isDark ? '#b5cea8' : '#005cc5' }];
       case 'COMMENT':
-        return [baseStyle, { color: isDark ? '#6a9955' : '#6a737d', fontStyle: 'italic' }];
+        return [baseStyle, { color: isDark ? '#6a9955' : '#6a737d', fontStyle: 'italic' as const }];
       case 'FUNCTION':
         return [baseStyle, { color: isDark ? '#dcdcaa' : '#6f42c1' }];
       case 'OPERATOR':

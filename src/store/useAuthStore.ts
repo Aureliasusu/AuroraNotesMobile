@@ -4,6 +4,7 @@ import { Profile } from '../types/database'
 
 interface AuthState {
   user: any | null
+  session: any | null
   profile: Profile | null
   loading: boolean
   initialized: boolean
@@ -11,6 +12,7 @@ interface AuthState {
 
 interface AuthActions {
   setUser: (user: any | null) => void
+  setSession: (session: any | null) => void
   setProfile: (profile: Profile | null) => void
   setLoading: (loading: boolean) => void
   setInitialized: (initialized: boolean) => void
@@ -21,12 +23,14 @@ interface AuthActions {
 export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
   // State
   user: null,
+  session: null,
   profile: null,
   loading: false,
   initialized: false,
 
   // Actions
   setUser: (user) => set({ user }),
+  setSession: (session) => set({ session }),
   setProfile: (profile) => set({ profile }),
   setLoading: (loading) => set({ loading }),
   setInitialized: (initialized) => set({ initialized }),

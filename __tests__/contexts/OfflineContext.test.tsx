@@ -60,7 +60,7 @@ describe('OfflineContext', () => {
     const mockAddEventListener = jest.mocked(require('@react-native-community/netinfo').addEventListener)
     const mockCallback = jest.fn()
     
-    mockAddEventListener.mockImplementation((callback) => {
+    mockAddEventListener.mockImplementation((callback: any) => {
       // Simulate network state change
       callback({ isConnected: false })
       return mockCallback

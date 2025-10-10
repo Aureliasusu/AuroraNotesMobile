@@ -171,7 +171,7 @@ export const AdvancedCodeHighlighter: React.FC<AdvancedCodeHighlighterProps> = (
     `;
   };
 
-  const formatCodeWithSyntaxHighlighting = (codeText: string, language: string, showNumbers: boolean) => {
+  const formatCodeWithSyntaxHighlighting = (codeText: string, lang: string, showNumbers: boolean) => {
     const lines = codeText.split('\n');
     
     return lines.map((line, index) => {
@@ -180,15 +180,15 @@ export const AdvancedCodeHighlighter: React.FC<AdvancedCodeHighlighterProps> = (
       // Simple syntax highlighting based on language
       let highlightedLine = line;
       
-      if (language === 'javascript' || language === 'typescript') {
+      if (lang === 'javascript' || lang === 'typescript') {
         highlightedLine = highlightJavaScript(line);
-      } else if (language === 'python') {
+      } else if (lang === 'python') {
         highlightedLine = highlightPython(line);
-      } else if (language === 'html') {
+      } else if (lang === 'html') {
         highlightedLine = highlightHTML(line);
-      } else if (language === 'css') {
+      } else if (lang === 'css') {
         highlightedLine = highlightCSS(line);
-      } else if (language === 'json') {
+      } else if (lang === 'json') {
         highlightedLine = highlightJSON(line);
       }
       

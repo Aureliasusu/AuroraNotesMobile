@@ -46,7 +46,7 @@ export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> =
 
   const isEditing = !!noteId
   const currentNote = isEditing ? selectedNote || notes.find(n => n.id === noteId) : null
-  const loading = analysisLoading || fileUploading || apiLoading
+  const loading = analysisLoading || fileUploading
 
   useEffect(() => {
     if (currentNote) {
@@ -80,7 +80,7 @@ export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> =
       if (isEditing && currentNote) {
         await updateNote(currentNote.id, noteData)
       } else {
-        await createNote(noteData)
+        await createNote(noteData as any)
       }
 
       onSave()
@@ -100,7 +100,7 @@ export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> =
     }
 
     try {
-      const analysis = await analyzeNote(content)
+      const analysis = await analyzeNote('temp-id', content)
       setAnalysisSuggestions(analysis)
     } catch (error) {
       console.error('Content analysis error', error)

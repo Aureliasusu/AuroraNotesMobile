@@ -104,7 +104,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 }) => {
   const {
     uploading,
-    uploadedFiles,
+    files: uploadedFiles,
     pickImageFromGallery,
     takePhoto,
     pickDocument,

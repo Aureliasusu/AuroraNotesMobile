@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuthStore } from '../store/useAuthStore'
 
@@ -21,6 +21,8 @@ interface UserPresenceState {
 
 export function useUserPresence() {
   const { user } = useAuthStore()
+  const channelRef = useRef<any>(null)
+  
   const [state, setState] = useState<UserPresenceState>({
     onlineUsers: [],
     isOnline: false,
@@ -32,9 +34,9 @@ export function useUserPresence() {
   useEffect(() => {
     if (!user) return
 
-    const channel = supabase.channel('presence-channel')
+    channelRef.current = supabase.channel('presence-channel')
       .on('presence', { event: 'sync' }, () => {
-        const presenceState = channel.presenceState()
+        const presenceState = channelRef.current.presenceState()
         const onlineUsers = Object.values(presenceState)
           .flat()
           .map((presence: any) => ({
@@ -61,7 +63,7 @@ export function useUserPresence() {
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
-          await channel.track({
+          await channelRef.current.track({
             user_id: user.id,
             email: user.email || '',
             full_name: user.user_metadata?.full_name || user.email || 'Unknown',
@@ -73,7 +75,7 @@ export function useUserPresence() {
       })
 
     return () => {
-      channel.unsubscribe()
+      channelRef.current?.unsubscribe()
     }
   }, [user])
 
@@ -82,7 +84,7 @@ export function useUserPresence() {
     if (!user) return
 
     try {
-      await channel.track({
+      await channelRef.current.track({
         user_id: user.id,
         email: user.email || '',
         full_name: user.user_metadata?.full_name || user.email || 'Unknown',
@@ -106,7 +108,7 @@ export function useUserPresence() {
     if (!user) return
 
     try {
-      await channel.track({
+      await channelRef.current.track({
         user_id: user.id,
         email: user.email || '',
         full_name: user.user_metadata?.full_name || user.email || 'Unknown',

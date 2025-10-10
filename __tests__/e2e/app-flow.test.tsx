@@ -73,7 +73,7 @@ describe('App E2E Flow', () => {
     })
     
     jest.doMock('../../src/contexts/ThemeContext', () => ({
-      ThemeProvider: ({ children }) => children,
+      ThemeProvider: ({ children }: any) => children,
       useTheme: mockThemeContext,
     }))
 

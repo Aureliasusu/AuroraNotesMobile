@@ -41,7 +41,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
           onArchive && { text: note.is_archived ? 'Unarchive' : 'Archive', onPress: () => onArchive(note) },
           onDelete && { text: 'Delete', onPress: () => onDelete(note), style: 'destructive' as const },
           { text: 'Cancel', style: 'cancel' as const },
-        ].filter(Boolean)
+        ].filter(Boolean) as any
       )
     }
   }

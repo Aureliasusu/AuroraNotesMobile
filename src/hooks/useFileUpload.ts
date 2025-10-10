@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { Alert, Platform, PermissionsAndroid } from 'react-native'
-import { fileUploadService, FileUploadResult } from '../services/fileUpload'
+import { FileUploadService, FileUploadResult } from '../services/fileUpload'
 
 // Note: These libraries require native configuration, providing interface here
 // import { launchImageLibrary, launchCamera, ImagePickerResponse } from 'react-native-image-picker'
@@ -189,9 +189,9 @@ export function useFileUpload() {
       let uploadResult: FileUploadResult
       
       if (mimeType && mimeType.startsWith('image/')) {
-        uploadResult = await fileUploadService.uploadImage(fileUri, fileName)
+        uploadResult = await FileUploadService.uploadImage(fileUri, fileName)
       } else {
-        uploadResult = await fileUploadService.uploadDocument(fileUri, fileName, mimeType)
+        uploadResult = await FileUploadService.uploadDocument(fileUri, fileName, mimeType)
       }
 
       setFiles(prev => [...prev, uploadResult])
@@ -209,7 +209,7 @@ export function useFileUpload() {
   // delete file
   const deleteFile = useCallback(async (file: FileUploadResult) => {
     try {
-      await fileUploadService.deleteFile(file.path)
+      await FileUploadService.deleteFile(file.path)
       setFiles(prev => prev.filter(f => f.path !== file.path))
       Alert.alert('Success', 'File deleted successfully')
     } catch (err) {

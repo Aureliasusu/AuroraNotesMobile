@@ -60,7 +60,7 @@ export function useAuth() {
 
       return { success: true, user: data.user }
     } catch (err) {
-      const errorMessage = err instanceof Error ? error.message : 'Sign in failed'
+      const errorMessage = err instanceof Error ? err.message : 'Sign in failed'
       Alert.alert('Sign In Failed', errorMessage)
       return { success: false, error: errorMessage }
     } finally {
@@ -85,7 +85,7 @@ export function useAuth() {
       Alert.alert('Sign Up Success', 'Please check your email to verify your account')
       return { success: true, user: data.user }
     } catch (err) {
-      const errorMessage = err instanceof Error ? error.message : 'Sign up failed'
+      const errorMessage = err instanceof Error ? err.message : 'Sign up failed'
       Alert.alert('Sign Up Failed', errorMessage)
       return { success: false, error: errorMessage }
     } finally {
@@ -108,7 +108,7 @@ export function useAuth() {
       clearNotes()
       return { success: true }
     } catch (err) {
-      const errorMessage = err instanceof Error ? error.message : 'Sign out failed'
+      const errorMessage = err instanceof Error ? err.message : 'Sign out failed'
       Alert.alert('Sign Out Failed', errorMessage)
       return { success: false, error: errorMessage }
     } finally {
@@ -129,7 +129,7 @@ export function useAuth() {
       Alert.alert('Reset Password', 'Please check your email to reset your password')
       return { success: true }
     } catch (err) {
-      const errorMessage = err instanceof Error ? error.message : 'Reset password failed'
+      const errorMessage = err instanceof Error ? err.message : 'Reset password failed'
       Alert.alert('Reset Password Failed', errorMessage)
       return { success: false, error: errorMessage }
     }

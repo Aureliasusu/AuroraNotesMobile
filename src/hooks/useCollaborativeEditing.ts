@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuthStore } from '../store/useAuthStore'
 import { useNotesStore } from '../store/useNotesStore'
@@ -27,6 +27,8 @@ export function useCollaborativeEditing(noteId: string) {
   const { updateNote } = useNotesStore()
   const { } = useUserPresence()
   
+  const channelRef = useRef<any>(null)
+  
   const [state, setState] = useState<CollaborativeEditingState>({
     editingUsers: [],
     isEditing: false,
@@ -38,9 +40,9 @@ export function useCollaborativeEditing(noteId: string) {
   useEffect(() => {
     if (!noteId || !user) return
 
-    const channel = supabase.channel(`note-editing-${noteId}`)
+    channelRef.current = supabase.channel(`note-editing-${noteId}`)
       .on('presence', { event: 'sync' }, () => {
-        const presenceState = channel.presenceState()
+        const presenceState = channelRef.current.presenceState()
         const editingUsers = Object.values(presenceState)
           .flat()
           .map((presence: any) => ({
@@ -60,7 +62,7 @@ export function useCollaborativeEditing(noteId: string) {
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
-          await channel.track({
+          await channelRef.current.track({
             user_id: user.id,
             email: user.email || '',
             full_name: user.user_metadata?.full_name || user.email || 'Unknown',
@@ -71,16 +73,16 @@ export function useCollaborativeEditing(noteId: string) {
       })
 
     return () => {
-      channel.unsubscribe()
+      channelRef.current?.unsubscribe()
     }
   }, [noteId, user])
 
   // Start editing
   const startEditing = useCallback(async () => {
-    if (!user || !noteId) return
+    if (!user || !noteId || !channelRef.current) return
 
     try {
-      await channel.track({
+      await channelRef.current.track({
         user_id: user.id,
         email: user.email || '',
         full_name: user.user_metadata?.full_name || user.email || 'Unknown',
@@ -108,10 +110,10 @@ export function useCollaborativeEditing(noteId: string) {
 
   // Stop editing
   const stopEditing = useCallback(async () => {
-    if (!user || !noteId) return
+    if (!user || !noteId || !channelRef.current) return
 
     try {
-      await channel.untrack()
+      await channelRef.current.untrack()
       
       setState(prev => ({
         ...prev,
