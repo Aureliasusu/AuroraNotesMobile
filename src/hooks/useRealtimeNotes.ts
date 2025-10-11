@@ -2,7 +2,7 @@ import { useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { useNotesStore } from '../store/useNotesStore'
 import { useAuthStore } from '../store/useAuthStore'
-import { RealtimePostgresChangesPayload } from 'supabase/supabase-js'
+import { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
 import { Note } from '../types/database'
 import { Alert } from 'react-native'
 
@@ -39,7 +39,9 @@ export function useRealtimeNotes() {
         },
         (payload: RealtimePostgresChangesPayload<Note>) => {
           console.log('Note updated:', payload.new)
-          updateNote(payload.new.id, payload.new as Note)
+          if (payload.new && 'id' in payload.new) {
+            updateNote(payload.new.id, payload.new as Note)
+          }
         }
       )
       .on(
@@ -52,7 +54,9 @@ export function useRealtimeNotes() {
         },
         (payload: RealtimePostgresChangesPayload<Note>) => {
           console.log('Note deleted:', payload.old)
-          deleteNote(payload.old.id)
+          if (payload.old && 'id' in payload.old) {
+            deleteNote(payload.old.id)
+          }
         }
       )
       .subscribe((status) => {

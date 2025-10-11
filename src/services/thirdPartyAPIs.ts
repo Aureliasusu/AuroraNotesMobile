@@ -77,7 +77,7 @@ export class TextProcessingService {
 
       const data = await response.json()
       const keywords = data.choices[0].message.content.trim()
-      return keywords.split(',').map(k => k.trim()).filter(k => k.length > 0)
+      return keywords.split(',').map((k: string) => k.trim()).filter((k: string) => k.length > 0)
     } catch (error) {
       console.error('API error:', error)
       Alert.alert('Error', 'Failed to extract keywords')
@@ -160,7 +160,7 @@ export class TextProcessingService {
 
       const data = await response.json()
       const tags = data.choices[0].message.content.trim()
-      return tags.split(',').map(t => t.trim()).filter(t => t.length > 0)
+      return tags.split(',').map((t: string) => t.trim()).filter((t: string) => t.length > 0)
     } catch (error) {
       console.error('API error:', error)
       Alert.alert('Error', 'Failed to suggest tags')
@@ -242,10 +242,10 @@ export class BatchProcessingService {
   }> {
     try {
       const [summary, keywords, sentiment, tags] = await Promise.all([
-        OpenAIService.generateSummary(text),
-        OpenAIService.extractKeywords(text),
-        OpenAIService.analyzeSentiment(text),
-        OpenAIService.suggestTags(text),
+        TextProcessingService.generateSummary(text),
+        TextProcessingService.extractKeywords(text),
+        TextProcessingService.analyzeSentiment(text),
+        TextProcessingService.suggestTags(text),
       ])
 
       return { summary, keywords, sentiment, tags }

@@ -98,7 +98,7 @@ describe('useFileUpload', () => {
     }
     
     await act(async () => {
-      await result.current.uploadFile(mockFile)
+      await result.current.uploadFile(mockFile.uri, mockFile.name, mockFile.type)
     })
     
     // Should handle file upload
@@ -121,8 +121,8 @@ describe('useFileUpload', () => {
     
     await act(async () => {
       try {
-        await result.current.uploadFile(mockFile)
-      } catch (error) {
+        await result.current.uploadFile(mockFile.uri, mockFile.name, mockFile.type)
+      } catch (error: any) {
         expect(error.message).toBe('Upload failed')
       }
     })

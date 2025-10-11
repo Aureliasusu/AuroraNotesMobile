@@ -91,7 +91,7 @@ export function useNoteSharing() {
           shared_by: user.id,
           shared_with: targetUser.id,
           permission: permission,
-        })
+        } as any)
 
       if (error) {
         Alert.alert('Error', 'Failed to share note')
@@ -115,7 +115,7 @@ export function useNoteSharing() {
     try {
       const { error } = await supabase
         .from('note_shares')
-        .update({ permission })
+        .update({ permission } as any)
         .eq('id', shareId)
 
       if (error) {
