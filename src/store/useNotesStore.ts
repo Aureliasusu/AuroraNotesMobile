@@ -75,7 +75,7 @@ export const useNotesStore = create<NotesState & NotesActions>((set, get) => ({
       
       const { data, error } = await supabase
         .from('notes')
-        .insert([{ ...noteData, user_id: user.id }])
+        .insert([{ ...noteData, user_id: user.id } as any])
         .select()
         .single()
 
@@ -101,7 +101,7 @@ export const useNotesStore = create<NotesState & NotesActions>((set, get) => ({
       
       const { error } = await supabase
         .from('notes')
-        .update({ ...updates, updated_at: new Date().toISOString() })
+        .update({ ...updates, updated_at: new Date().toISOString() } as any)
         .eq('id', id)
 
       if (error) {

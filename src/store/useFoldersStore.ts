@@ -71,7 +71,7 @@ export const useFoldersStore = create<FoldersState>((set, _get) => ({
         .insert({
           ...folderData,
           user_id: user.id,
-        })
+        } as any)
         .select()
         .single()
       
@@ -103,7 +103,7 @@ export const useFoldersStore = create<FoldersState>((set, _get) => ({
         .update({
           ...updates,
           updated_at: new Date().toISOString()
-        })
+        } as any)
         .eq('id', id)
         .select()
         .single()
@@ -136,7 +136,7 @@ export const useFoldersStore = create<FoldersState>((set, _get) => ({
       // First, move all notes in this folder to unorganized
       await supabase
         .from('notes')
-        .update({ folder_id: null })
+        .update({ folder_id: null } as any)
         .eq('folder_id', id)
 
       // Then delete the folder
@@ -170,7 +170,7 @@ export const useFoldersStore = create<FoldersState>((set, _get) => ({
 }))
 
 // Set up real-time subscription (client-side only)
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && typeof window === 'object') {
   const { user } = useAuthStore.getState()
   if (user) {
     supabase
