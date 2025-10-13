@@ -89,7 +89,7 @@ export function useNoteSharing() {
         .insert({
           note_id: noteId,
           shared_by: user.id,
-          shared_with: targetUser.id,
+          shared_with: (targetUser as any).id,
           permission: permission,
         } as any)
 
@@ -98,7 +98,7 @@ export function useNoteSharing() {
         return
       }
 
-      Alert.alert('Success', `Note shared with ${targetUser.full_name || targetUser.email}`)
+      Alert.alert('Success', `Note shared with ${(targetUser as any).full_name || (targetUser as any).email}`)
       await loadShares(noteId)
     } catch (error) {
       Alert.alert('Error', 'Failed to share note')
@@ -115,7 +115,7 @@ export function useNoteSharing() {
     try {
       const { error } = await supabase
         .from('note_shares')
-        .update({ permission } as any)
+        .update({ permission: permission } as any)
         .eq('id', shareId)
 
       if (error) {

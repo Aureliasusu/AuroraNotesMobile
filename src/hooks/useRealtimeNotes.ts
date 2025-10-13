@@ -55,7 +55,7 @@ export function useRealtimeNotes() {
         (payload: RealtimePostgresChangesPayload<Note>) => {
           console.log('Note deleted:', payload.old)
           if (payload.old && 'id' in payload.old) {
-            deleteNote(payload.old.id)
+            deleteNote(payload.old.id as string)
           }
         }
       )

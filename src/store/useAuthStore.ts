@@ -17,7 +17,7 @@ interface AuthActions {
   setLoading: (loading: boolean) => void
   setInitialized: (initialized: boolean) => void
   signOut: () => Promise<void>
-  updateProfile: (updates: Partial<Profile>) => Promise<void>
+  updateProfile: (updates: any) => Promise<void>
 }
 
 export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
