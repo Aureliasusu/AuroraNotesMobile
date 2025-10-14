@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react'
-import { BackHandler } from 'react-native'
+import { BackHandler, Platform } from 'react-native'
 
 interface KeyboardShortcut {
   key: string
@@ -27,43 +27,25 @@ export function useKeyboardShortcuts({ shortcuts, enabled = true }: useKeyboardS
     return false
   }, [shortcuts, enabled])
 
-  // Handle hardware back button
+  // Handle hardware back button (Android)
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled || Platform.OS !== 'android') return
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress)
 
     return () => backHandler.remove()
   }, [handleBackPress, enabled])
 
-  // Handle keyboard shortcuts (for web/desktop)
-  const handleKeyPress = useCallback((event: KeyboardEvent) => {
-    if (!enabled) return
-
-    const shortcut = shortcuts.find(s => s.key === event.key)
-    if (shortcut) {
-      event.preventDefault()
-      shortcut.action()
-    }
-  }, [shortcuts, enabled])
-
-  // Add keyboard event listeners
-  useEffect(() => {
-    if (!enabled) return
-
-    document.addEventListener('keydown', handleKeyPress)
-    return () => document.removeEventListener('keydown', handleKeyPress)
-  }, [handleKeyPress, enabled])
-
   // Register shortcuts
   const registerShortcut = useCallback((shortcut: KeyboardShortcut) => {
-    // This would be implemented based on your specific needs
+    // In React Native, keyboard shortcuts are primarily handled via hardware back button
+    // For custom shortcuts, you would need to implement them in your component
     console.log('Registering shortcut:', shortcut)
   }, [])
 
   // Unregister shortcuts
   const unregisterShortcut = useCallback((key: string) => {
-    // This would be implemented based on your specific needs
+    // In React Native, keyboard shortcuts are primarily handled via hardware back button
     console.log('Unregistering shortcut:', key)
   }, [])
 

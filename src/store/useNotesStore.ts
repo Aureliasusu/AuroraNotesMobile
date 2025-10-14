@@ -75,7 +75,7 @@ export const useNotesStore = create<NotesState & NotesActions>((set, get) => ({
       
       const { data, error } = await supabase
         .from('notes')
-        .insert([{ ...noteData, user_id: user.id } as any])
+        .insert([{ ...noteData, user_id: user.id } as any] as any)
         .select()
         .single()
 

@@ -163,7 +163,7 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
       case 'OPERATOR':
         return [baseStyle, { color: isDark ? '#d4d4d4' : '#d73a49' }];
       case 'TAG':
-        return [baseStyle, { color: isDark ? '#569cd6' : '#0066cc', fontWeight: 'bold' }];
+        return [baseStyle, { color: isDark ? '#569cd6' : '#0066cc', fontWeight: 'bold' as const }];
       case 'ATTRIBUTE':
         return [baseStyle, { color: isDark ? '#9cdcfe' : '#e36209' }];
       case 'SELECTOR':

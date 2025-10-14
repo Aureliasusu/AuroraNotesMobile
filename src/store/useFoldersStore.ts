@@ -170,7 +170,7 @@ export const useFoldersStore = create<FoldersState>((set, _get) => ({
 }))
 
 // Set up real-time subscription (client-side only)
-if (typeof window !== 'undefined' && typeof window === 'object') {
+if (typeof (globalThis as any).window !== 'undefined') {
   const { user } = useAuthStore.getState()
   if (user) {
     supabase
