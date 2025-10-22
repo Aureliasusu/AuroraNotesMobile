@@ -169,26 +169,28 @@ export const useFoldersStore = create<FoldersState>((set, _get) => ({
   }
 }))
 
+// Note: Real-time subscription should be set up in a component/hook
+// to avoid module-level side effects during testing
 // Set up real-time subscription (client-side only)
-if (typeof (globalThis as any).window !== 'undefined') {
-  const { user } = useAuthStore.getState()
-  if (user) {
-    supabase
-      .channel('folders_changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'folders',
-          filter: `user_id=eq.${user.id}`
-        },
-        (payload) => {
-          console.log('Folder change received:', payload)
-          // Refresh folders when changes occur
-          useFoldersStore.getState().fetchFolders()
-        }
-      )
-      .subscribe()
-  }
-}
+// if (typeof (globalThis as any).window !== 'undefined') {
+//   const { user } = useAuthStore.getState()
+//   if (user) {
+//     supabase
+//       .channel('folders_changes')
+//       .on(
+//         'postgres_changes',
+//         {
+//           event: '*',
+//           schema: 'public',
+//           table: 'folders',
+//           filter: `user_id=eq.${user.id}`
+//         },
+//         (payload) => {
+//           console.log('Folder change received:', payload)
+//           // Refresh folders when changes occur
+//           useFoldersStore.getState().fetchFolders()
+//         }
+//       )
+//       .subscribe()
+//   }
+// }

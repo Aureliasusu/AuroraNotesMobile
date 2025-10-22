@@ -1,9 +1,11 @@
 import { renderHook, waitFor } from '@testing-library/react-native'
 import { useFolders } from '../../src/hooks/useFolders'
 import { useFoldersStore } from '../../src/store/useFoldersStore'
+import { useAuthStore } from '../../src/store/useAuthStore'
 
-// Mock the store
+// Mock the stores
 jest.mock('../../src/store/useFoldersStore')
+jest.mock('../../src/store/useAuthStore')
 
 describe('useFolders', () => {
   const mockFolders = [
@@ -35,6 +37,11 @@ describe('useFolders', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    
+    ;(useAuthStore as unknown as jest.Mock).mockReturnValue({
+      user: { id: 'user1', email: 'test@example.com' },
+    })
+    
     ;(useFoldersStore as unknown as jest.Mock).mockReturnValue({
       folders: mockFolders,
       loading: false,
