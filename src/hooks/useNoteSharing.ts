@@ -1,256 +1,192 @@
-import { stat, sallback } rom 'ract'
-import { spabas } rom '../lib/spabas'
-import { sthtor } rom '../stor/sthtor'
-import { lrt } rom 'ract-nativ'
+import { useState, useCallback } from 'react'
+import { supabase } from '../lib/supabase'
+import { useAuthStore } from '../store/useAuthStore'
+import { Alert } from 'react-native'
 
-intrac othar {
-  id string
-  not_id string
-  shard_by string
-  shard_with string
-  prmission 'rad' | 'dit' | 'admin'
-  cratd_at string
-  pdatd_at string
-  sr {
-    id string
-    mail string
-    ll_nam string
-    avatar_rl string
-  }
+interface NoteShare {
+  id: string
+  note_id: string
+  shared_by: string
+  shared_with: string
+  permission: 'read' | 'write' | 'admin'
+  created_at: string
+  updated_at: string
 }
 
-xport nction sotharing() {
-  const { sr }  sthtor()
-  const shars, sthars]  statothar](])
-  const isoading, stsoading]  stat(als)
+interface NoteSharingState {
+  shares: NoteShare[]
+  loading: boolean
+  error: string | null
+}
 
-  // t not shars
-  const gtothars  sallback(async (notd string)  {
-    i (!sr || !notd) {
-      consol.log('gtothars issing sr or notd', { sr !!sr, notd })
-      rtrn
-    }
+export function useNoteSharing() {
+  const { user } = useAuthStore()
+  const [state, setState] = useState<NoteSharingState>({
+    shares: [],
+    loading: false,
+    error: null,
+  })
 
-    stsoading(tr)
-    try {
-      consol.log('gtothars tching shars or not', notd)
-      
-      const { data, rror }  await spabas
-        .rom('not_shars')
-        .slct('*')
-        .q('not_id', notd)
-        .ordr('cratd_at', { ascnding als })
+  // Load note shares
+  const loadShares = useCallback(async (noteId: string) => {
+    if (!user) return
 
-      i (rror) {
-        consol.rror('rror tching not shars', rror)
-        //  tabl dosn't xist rror, don't show alrt
-        i (rror.cod  '') {
-          consol.warn('not_shars tabl dos not xist')
-          sthars(])
-          rtrn
-        }
-        lrt.alrt('rror', `aild to load not shars ${rror.mssag}`)
-        rtrn
-      }
-
-      consol.log('gtothars ccsslly tchd shars', data)
-      sthars(data || ])
-    } catch (rror) {
-      consol.rror('xcption tching not shars', rror)
-      lrt.alrt('rror', 'aild to load not shars')
-    } inally {
-      stsoading(als)
-    }
-  }, sr])
-
-  // har not with sr
-  const sharot  sallback(async (
-    notd string, 
-    srmail string, 
-    prmission 'rad' | 'dit' | 'admin'  'dit'
-  )  {
-    i (!sr || !notd || !srmail) {
-      lrt.alrt('rror', 'issing rqird inormation')
-      rtrn
-    }
-
-    stsoading(tr)
-    try {
-      // irst, ind th sr by mail
-      const { data targtsr, rror srrror }  await spabas
-        .rom('srs')
-        .slct('id, mail, ll_nam')
-        .q('mail', srmail)
-        .singl()
-
-      i (srrror || !targtsr) {
-        lrt.alrt('rror', 'sr not ond')
-        rtrn
-      }
-
-      i (targtsr.id  sr.id) {
-        lrt.alrt('rror', 'o cannot shar a not with yorsl')
-        rtrn
-      }
-
-      // rat th shar
-      const { data, rror }  await spabas
-        .rom('not_shars')
-        .insrt({
-          not_id notd,
-          shard_by sr.id,
-          shard_with targtsr.id,
-          prmission
-        })
-        .slct()
-        .singl()
-
-      i (rror) {
-        i (rror.cod  '') {
-          lrt.alrt('rror', 'his not is alrady shard with this sr')
-        } ls {
-          consol.rror('rror sharing not', rror)
-          lrt.alrt('rror', 'aild to shar not')
-        }
-        rtrn
-      }
-
-      lrt.alrt('ccss', `ot shard with ${targtsr.ll_nam || targtsr.mail}`)
-      
-      // rsh shars list
-      await gtothars(notd)
-      
-      rtrn data
-    } catch (rror) {
-      consol.rror('xcption sharing not', rror)
-      lrt.alrt('rror', 'aild to shar not')
-    } inally {
-      stsoading(als)
-    }
-  }, sr, gtothars])
-
-  // pdat shar prmission
-  const pdatharrmission  sallback(async (
-    shard string, 
-    prmission 'rad' | 'dit' | 'admin'
-  )  {
-    i (!sr) rtrn
-
-    stsoading(tr)
-    try {
-      const { data, rror }  await spabas
-        .rom('not_shars')
-        .pdat({ 
-          prmission,
-          pdatd_at nw at().totring()
-        })
-        .q('id', shard)
-        .slct()
-        .singl()
-
-      i (rror) {
-        consol.rror('rror pdating shar prmission', rror)
-        lrt.alrt('rror', 'aild to pdat prmission')
-        rtrn
-      }
-
-      lrt.alrt('ccss', 'rmission pdatd sccsslly')
-      
-      // pdat local stat
-      sthars(prv  
-        prv.map(shar  
-          shar.id  shard 
-             { ...shar, prmission, pdatd_at nw at().totring() }
-             shar
-        )
-      )
-      
-      rtrn data
-    } catch (rror) {
-      consol.rror('xcption pdating shar prmission', rror)
-      lrt.alrt('rror', 'aild to pdat prmission')
-    } inally {
-      stsoading(als)
-    }
-  }, sr])
-
-  // mov shar
-  const rmovhar  sallback(async (shard string)  {
-    i (!sr) rtrn
-
-    stsoading(tr)
-    try {
-      const { rror }  await spabas
-        .rom('not_shars')
-        .dlt()
-        .q('id', shard)
-
-      i (rror) {
-        consol.rror('rror rmoving shar', rror)
-        lrt.alrt('rror', 'aild to rmov shar')
-        rtrn
-      }
-
-      lrt.alrt('ccss', 'har rmovd sccsslly')
-      
-      // pdat local stat
-      sthars(prv  prv.iltr(shar  shar.id ! shard))
-    } catch (rror) {
-      consol.rror('xcption rmoving shar', rror)
-      lrt.alrt('rror', 'aild to rmov shar')
-    } inally {
-      stsoading(als)
-    }
-  }, sr])
-
-  // hck i sr can dit not
-  const canditot  sallback(async (notd string)  {
-    i (!sr || !notd) rtrn als
+    setState(prev => ({ ...prev, loading: true, error: null }))
 
     try {
-      const { data, rror }  await spabas
-        .rpc('can_dit_not', { not_id notd, sr_id sr.id })
+      const { data, error } = await supabase
+        .from('note_shares')
+        .select('*')
+        .eq('note_id', noteId)
 
-      i (rror) {
-        consol.rror('rmission chck rror', rror)
-        rtrn als
+      if (error) {
+        Alert.alert('Error', `Failed to load note shares: ${error.message}`)
+        return
       }
 
-      rtrn data
-    } catch (rror) {
-      consol.rror('rmission chck xcption', rror)
-      rtrn als
+      setState(prev => ({
+        ...prev,
+        shares: data || [],
+        loading: false,
+      }))
+    } catch (error) {
+      Alert.alert('Error', 'Failed to load note shares')
+      setState(prev => ({
+        ...prev,
+        loading: false,
+        error: 'Failed to load shares',
+      }))
     }
-  }, sr])
+  }, [user])
 
-  // hck i sr can rad not
-  const canadot  sallback(async (notd string)  {
-    i (!sr || !notd) rtrn als
+  // Share note with user
+  const shareNote = useCallback(async (
+    noteId: string,
+    userEmail: string,
+    permission: 'read' | 'write' | 'admin' = 'read'
+  ) => {
+    if (!user || !noteId || !userEmail) {
+      Alert.alert('Error', 'Missing required information')
+      return
+    }
 
     try {
-      const { data, rror }  await spabas
-        .rpc('can_rad_not', { not_id notd, sr_id sr.id })
+      // First, find the user by email
+      const { data: targetUser, error: userError } = await supabase
+        .from('profiles')
+        .select('id, email, full_name')
+        .eq('email', userEmail)
+        .single()
 
-      i (rror) {
-        consol.rror('rmission chck rror', rror)
-        rtrn als
+      if (userError || !targetUser) {
+        Alert.alert('Error', 'User not found')
+        return
       }
 
-      rtrn data
-    } catch (rror) {
-      consol.rror('rmission chck xcption', rror)
-      rtrn als
-    }
-  }, sr])
+      // Create the share
+      const { error } = await supabase
+        .from('note_shares')
+        .insert({
+          note_id: noteId,
+          shared_by: user.id,
+          shared_with: (targetUser as any).id,
+          permission: permission,
+        } as any)
 
-  rtrn {
-    shars,
-    isoading,
-    gtothars,
-    sharot,
-    pdatharrmission,
-    rmovhar,
-    canditot,
-    canadot
+      if (error) {
+        Alert.alert('Error', 'Failed to share note')
+        return
+      }
+
+      Alert.alert('Success', `Note shared with ${(targetUser as any).full_name || (targetUser as any).email}`)
+      await loadShares(noteId)
+    } catch (error) {
+      Alert.alert('Error', 'Failed to share note')
+    }
+  }, [user, loadShares])
+
+  // Update share permission
+  const updateSharePermission = useCallback(async (
+    shareId: string,
+    permission: 'read' | 'write' | 'admin'
+  ) => {
+    if (!user) return
+
+    try {
+      const { error } = await supabase
+        .from('note_shares')
+        .update({ permission: permission } as any)
+        .eq('id', shareId)
+
+      if (error) {
+        Alert.alert('Error', 'Failed to update permission')
+        return
+      }
+
+      Alert.alert('Success', 'Permission updated')
+    } catch (error) {
+      Alert.alert('Error', 'Failed to update permission')
+    }
+  }, [user])
+
+  // Remove share
+  const removeShare = useCallback(async (shareId: string) => {
+    if (!user) return
+
+    try {
+      const { error } = await supabase
+        .from('note_shares')
+        .delete()
+        .eq('id', shareId)
+
+      if (error) {
+        Alert.alert('Error', 'Failed to remove share')
+        return
+      }
+
+      Alert.alert('Success', 'Share removed')
+    } catch (error) {
+      Alert.alert('Error', 'Failed to remove share')
+    }
+  }, [user])
+
+  // Get shared notes
+  const getSharedNotes = useCallback(async () => {
+    if (!user) return []
+
+    try {
+      const { data, error } = await supabase
+        .from('note_shares')
+        .select(`
+          *,
+          notes (
+            id,
+            title,
+            content,
+            created_at,
+            updated_at
+          )
+        `)
+        .eq('shared_with', user.id)
+
+      if (error) {
+        Alert.alert('Error', `Failed to load shared notes: ${error.message}`)
+        return []
+      }
+
+      return data || []
+    } catch (error) {
+      Alert.alert('Error', 'Failed to load shared notes')
+      return []
+    }
+  }, [user])
+
+  return {
+    ...state,
+    loadShares,
+    shareNote,
+    updateSharePermission,
+    removeShare,
+    getSharedNotes,
   }
 }

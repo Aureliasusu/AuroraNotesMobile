@@ -1,77 +1,77 @@
-import { srv } rom "https//dno.land/std../http/srvr.ts"
-import { cratlint } rom 'https//sm.sh/spabas/spabas-js'
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const corsadrs  {
-  'ccss-ontrol-llow-rigin' '*',
-  'ccss-ontrol-llow-adrs' 'athorization, x-clint-ino, apiky, contnt-typ',
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-srv(async (rq)  {
-  i (rq.mthod  '') {
-    rtrn nw spons('ok', { hadrs corsadrs })
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    const spabaslint  cratlint(
-      no.nv.gt('_')  '',
-      no.nv.gt('__')  '',
+    createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
-        global {
-          hadrs { thorization rq.hadrs.gt('thorization')! },
+        global: {
+          headers: { Authorization: req.headers.get('Authorization')! },
         },
       }
     )
 
-    const { contnt }  await rq.json()
+    const { content } = await req.json()
 
-    i (!contnt) {
-      rtrn nw spons(
-        .stringiy({ rror 'ontnt is rqird' }),
-        { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
+    if (!content) {
+      return new Response(
+        JSON.stringify({ error: 'Content is required' }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
       )
     }
 
-    const kywords  xtractywords(contnt)
+    const keywords = extractKeywords(content)
 
-    rtrn nw spons(
-      .stringiy({ kywords }),
-      { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
+    return new Response(
+      JSON.stringify({ keywords }),
+      { 
+        status: 200, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
     )
 
-  } catch (rror) {
-    consol.rror('nction rror', rror)
-    rtrn nw spons(
-      .stringiy({ rror 'ntrnal srvr rror' }),
-      { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
+  } catch (error) {
+    console.error('Function error', error)
+    return new Response(
+      JSON.stringify({ error: 'Internal server error' }),
+      { 
+        status: 500, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
     )
   }
 })
 
-nction xtractywords(txt string) string] {
-  // mov common stop words
-  const stopords  nw t(
-    'th', 'a', 'an', 'and', 'or', 'bt', 'in', 'on', 'at', 'to', 'or', 'o', 'with', 'by',
-    'is', 'ar', 'was', 'wr', 'b', 'bn', 'bing', 'hav', 'has', 'had', 'do', 'dos', 'did',
-    'will', 'wold', 'cold', 'shold', 'may', 'might', 'mst', 'can', 'this', 'that', 'ths', 'thos',
-    'i', 'yo', 'h', 'sh', 'it', 'w', 'thy', 'm', 'him', 'hr', 's', 'thm'
-  ])
-
-  // xtract words and iltr
-  const words  txt
-    .toowras()
-    .rplac(/^ws]/g, ' ')
-    .split(/s+/)
-    .iltr(word  word.lngth   && !stopords.has(word))
-
-  // ont word rqncy
-  const wordont  nw apstring, nmbr()
-  words.orach(word  {
-    wordont.st(word, (wordont.gt(word) || ) + )
+function extractKeywords(text: string): string[] {
+  // Simple keyword extraction - in production, use NLP libraries
+  const words = text.toLowerCase()
+    .replace(/[^\w\s]/g, '')
+    .split(/\s+/)
+    .filter(word => word.length > 3)
+  
+  // Count word frequency
+  const wordCount: { [key: string]: number } = {}
+  words.forEach(word => {
+    wordCount[word] = (wordCount[word] || 0) + 1
   })
-
-  // ort by rqncy and rtrn top kywords
-  rtrn rray.rom(wordont.ntris())
-    .sort((a, b)  b] - a])
-    .slic(, )
-    .map((word])  word)
+  
+  // Return top 10 most frequent words
+  return Object.entries(wordCount)
+    .sort(([,a], [,b]) => b - a)
+    .slice(0, 10)
+    .map(([word]) => word)
 }

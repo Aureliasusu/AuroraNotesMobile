@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Platform } from 'react-native';
 
 interface SimpleCodeHighlighterProps {
   code: string;
@@ -43,12 +43,11 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
   };
 
   const copyToClipboard = () => {
-    // In a real implementation, you would use Clipboard from @react-native-clipboard/clipboard
-    console.log('Code copied:', code);
+    // will add clipboard later
   };
 
-  const formatCode = (code: string, lang: string) => {
-    const lines = code.split('\n');
+  const formatCode = (codeInput: string, lang: string) => {
+    const lines = codeInput.split('\n');
     
     return lines.map((line, index) => {
       const lineNumber = showLineNumbers ? String(index + 1).padStart(3, ' ') : '';
@@ -73,7 +72,7 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
   };
 
   const highlightJavaScript = (line: string) => {
-    // This is a simplified version - in a real app you'd use a proper syntax highlighter
+    // basic syntax highlighting
     return line
       .replace(/\b(const|let|var|function|if|else|for|while|return|import|export|class|interface|type|async|await|try|catch|finally|throw|new|this|super|extends|implements|static|public|private|protected|readonly|abstract|enum|namespace|module|declare|interface|type|as|is|in|of|typeof|instanceof|void|never|any|unknown|boolean|number|string|object|array|symbol|bigint)\b/g, 'KEYWORD:$1:KEYWORD')
       .replace(/\b(true|false|null|undefined|NaN|Infinity)\b/g, 'LITERAL:$1:LITERAL')
@@ -130,9 +129,9 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
       const type = parts[i - 1]?.replace(':', '');
       
       if (content) {
-        const style = getTokenStyle(type);
+        const tokenStyle = getTokenStyle(type);
         elements.push(
-          <Text key={i} style={style}>
+          <Text key={i} style={tokenStyle}>
             {content}
           </Text>
         );
@@ -150,7 +149,7 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
 
     switch (type) {
       case 'KEYWORD':
-        return [baseStyle, { color: isDark ? '#569cd6' : '#0066cc', fontWeight: 'bold' }];
+        return [baseStyle, { color: isDark ? '#569cd6' : '#0066cc', fontWeight: 'bold' as const }];
       case 'LITERAL':
         return [baseStyle, { color: isDark ? '#4fc1ff' : '#005cc5' }];
       case 'STRING':
@@ -158,13 +157,13 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
       case 'NUMBER':
         return [baseStyle, { color: isDark ? '#b5cea8' : '#005cc5' }];
       case 'COMMENT':
-        return [baseStyle, { color: isDark ? '#6a9955' : '#6a737d', fontStyle: 'italic' }];
+        return [baseStyle, { color: isDark ? '#6a9955' : '#6a737d', fontStyle: 'italic' as const }];
       case 'FUNCTION':
         return [baseStyle, { color: isDark ? '#dcdcaa' : '#6f42c1' }];
       case 'OPERATOR':
         return [baseStyle, { color: isDark ? '#d4d4d4' : '#d73a49' }];
       case 'TAG':
-        return [baseStyle, { color: isDark ? '#569cd6' : '#0066cc', fontWeight: 'bold' }];
+        return [baseStyle, { color: isDark ? '#569cd6' : '#0066cc', fontWeight: 'bold' as const }];
       case 'ATTRIBUTE':
         return [baseStyle, { color: isDark ? '#9cdcfe' : '#e36209' }];
       case 'SELECTOR':

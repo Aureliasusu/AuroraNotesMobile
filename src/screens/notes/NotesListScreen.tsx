@@ -4,18 +4,18 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  SafeAreaView,
   RefreshControl,
   ActivityIndicator,
   Alert,
   TouchableOpacity,
   Modal,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useNotes } from '../../hooks/useNotes';
 import { useAuth } from '../../hooks/useAuth';
 import { useFolders } from '../../hooks/useFolders';
-import { NoteCard, SearchBar, FloatingActionButton, FolderManager, AdvancedSearch } from '../../components/ui';
+import { NoteCard, SearchBar, FloatingActionButton, FolderManager, AdvancedSearch, ThemeToggle } from '../../components/ui';
 import { Note } from '../../types/database';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -23,11 +23,9 @@ export const NotesListScreen: React.FC = () => {
   const navigation = useNavigation();
   const { user, signOut } = useAuth();
   const {
-    notes,
     loading,
     fetchNotes,
     deleteNote,
-    togglePin,
     activeNotes,
     pinnedNotes,
     searchNotes,
@@ -115,7 +113,7 @@ export const NotesListScreen: React.FC = () => {
       [
         { text: 'Cancel', style: 'cancel' },
         { text: 'Confirm', onPress: () => {
-          // TODO: Implement batch move notes to folder functionality
+          // batch move not ready
           Alert.alert('Info', 'This feature will be implemented in future versions');
         }},
       ]
@@ -169,6 +167,7 @@ export const NotesListScreen: React.FC = () => {
           >
             <Icon name="search" size={20} color="#10b981" />
           </TouchableOpacity>
+          <ThemeToggle size={20} style={styles.headerButton} />
         </View>
         <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
           <Text style={styles.signOutText}>Sign Out</Text>

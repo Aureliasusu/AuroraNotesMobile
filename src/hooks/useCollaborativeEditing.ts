@@ -1,506 +1,195 @@
-import { stat, sct, s, sallback } rom 'ract'
-import { spabas } rom '../lib/spabas'
-import { sthtor } rom '../stor/sthtor'
-import { sotstor } rom '../stor/sotstor'
-import { ssrrsnc } rom './ssrrsnc'
-import { ot } rom '../typs/databas'
-import { lrt } rom 'ract-nativ'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { supabase } from '../lib/supabase'
+import { useAuthStore } from '../store/useAuthStore'
+import { useNotesStore } from '../store/useNotesStore'
+import { useUserPresence } from './useUserPresence'
+import { Note } from '../types/database'
+import { Alert } from 'react-native'
 
-intrac ditingsr {
-  id string
-  mail string
-  ll_nam string
-  avatar_rl string
-  crsor_position nmbr
-  last_sn string
-  isyping boolan
-  typingimot od.imot
+interface EditingUser {
+  id: string
+  email: string
+  full_name: string
+  avatar_url: string | null
+  last_seen: string
+  is_online: boolean
 }
 
-intrac onlict {
-  id string
-  ild string
-  localal string
-  rmotal string
-  rmotsr string
-  timstamp at
+interface CollaborativeEditingState {
+  editingUsers: EditingUser[]
+  isEditing: boolean
+  currentEditor: EditingUser | null
+  conflictResolution: boolean
 }
 
-intrac ommnt {
-  id string
-  contnt string
-  athor {
-    id string
-    nam string
-    mail string
-    avatar_rl string
-  }
-  position {
-    start nmbr
-    nd nmbr
-  }
-  cratd_at string
-  rsolvd boolan
-  rplis ommnt]
-}
-
-intrac hang {
-  id string
-  typ 'insrt' | 'dlt' | 'modiy'
-  contnt string
-  position nmbr
-  lngth nmbr
-  athor {
-    id string
-    nam string
-    mail string
-    avatar_rl string
-  }
-  timstamp string
-  dscription string
-}
-
-intrac otiication {
-  id string
-  typ 'ino' | 'sccss' | 'warning' | 'rror'
-  titl string
-  mssag string
-  timstamp string
-  rad boolan
-  action {
-    labl string
-    onlick ()  void
-  }
-  sr {
-    id string
-    nam string
-    avatar_rl string
-  }
-}
-
-xport nction sollaborativditing(notd string) {
-  const { sr }  sthtor()
-  const { pdatot }  sotstor()
-  const { onlinsrs, pdatrrntot }  ssrrsnc(notd)
+export function useCollaborativeEditing(noteId: string) {
+  const { user } = useAuthStore()
+  const { updateNote } = useNotesStore()
+  const { } = useUserPresence()
   
-  const ditingsrs, stditingsrs]  statditingsr](])
-  const isditing, stsditing]  stat(als)
-  const lastavd, stastavd]  statat | nll(nll)
-  const conlicts, stonlicts]  statonlict](])
-  const commnts, stommnts]  statommnt](])
-  const changs, sthangs]  stathang](])
-  const notiications, stotiications]  statotiication](])
+  const channelRef = useRef<any>(null)
   
-  const channl  sany(nll)
-  const savimot  sod.imot | nll(nll)
-  const lastontnt  sstring('')
+  const [state, setState] = useState<CollaborativeEditingState>({
+    editingUsers: [],
+    isEditing: false,
+    currentEditor: null,
+    conflictResolution: false,
+  })
 
-  // istn to not contnt changs
-  sct(()  {
-    i (!sr || !notd) {
-      i (channl.crrnt) {
-        spabas.rmovhannl(channl.crrnt)
-        channl.crrnt  nll
-      }
-      rtrn
-    }
+  // Subscribe to real-time editing events
+  useEffect(() => {
+    if (!noteId || !user) return
 
-    // rat collaborativ diting channl
-    const channl  spabas
-      .channl(`not-${notd}`)
-      .on(
-        'postgrs_changs',
-        {
-          vnt '',
-          schma 'pblic',
-          tabl 'nots',
-          iltr `idq.${notd}`
-        },
-        (payload any)  {
-          const pdatdot  payload.nw as ot
-          
-          //  pdat is not rom crrnt sr, pdat contnt
-          i (pdatdot.sr_id ! sr.id) {
-            handlmotpdat(pdatdot)
-          }
-        }
-      )
-      .on('broadcast', { vnt 'crsor-mov' }, (payload any)  {
-        handlrsorov(payload)
+    channelRef.current = supabase.channel(`note-editing-${noteId}`)
+      .on('presence', { event: 'sync' }, () => {
+        const presenceState = channelRef.current.presenceState()
+        const editingUsers = Object.values(presenceState)
+          .flat()
+          .map((presence: any) => ({
+            id: presence.user_id,
+            email: presence.email || '',
+            full_name: presence.full_name || presence.email || 'Unknown',
+            avatar_url: presence.avatar_url,
+            last_seen: presence.last_seen || new Date().toISOString(),
+            is_online: true,
+          }))
+          .filter((u: EditingUser) => u.id !== user.id)
+
+        setState(prev => ({
+          ...prev,
+          editingUsers,
+        }))
       })
-      .on('broadcast', { vnt 'sr-typing' }, (payload any)  {
-        handlsryping(payload)
-      })
-      .sbscrib((stats any)  {
-        // bscription stats handld
-      })
-
-    channl.crrnt  channl
-
-    // pdat crrnt sr's diting not
-    pdatrrntot(notd)
-
-    rtrn ()  {
-      i (channl.crrnt) {
-        spabas.rmovhannl(channl.crrnt)
-        channl.crrnt  nll
-      }
-    }
-  }, sr, notd, pdatrrntot])
-
-  // andl rmot pdats
-  const handlmotpdat  (pdatdot ot)  {
-    // pdat not contnt
-    pdatot(pdatdot.id, pdatdot)
-    
-    // how pdat notiication
-    lrt.alrt('ot pdatd', 'ot contnt pdatd')
-  }
-
-  // andl crsor movmnt
-  const handlrsorov  (payload any)  {
-    const { sr_id, crsor_position, sr_ino }  payload
-    
-    i (sr_id ! sr.id && sr_ino) {
-      stditingsrs(prv  {
-        const xisting  prv.ind(  .id  sr_id)
-        i (xisting) {
-          rtrn prv.map(  
-            .id  sr_id 
-               { ..., crsor_position, last_sn nw at().totring() }
-               
-          )
-        } ls {
-          rtrn ...prv, {
-            id sr_id,
-            mail sr_ino.mail || '',
-            ll_nam sr_ino.ll_nam || '',
-            avatar_rl sr_ino.avatar_rl || '',
-            crsor_position,
-            last_sn nw at().totring()
-          }]
-        }
-      })
-    }
-  }
-
-  // andl sr typing
-  const handlsryping  (payload any)  {
-    const { sr_id, sr_ino }  payload
-    
-    i (sr_id ! sr.id && sr_ino) {
-      stditingsrs(prv  {
-        const xisting  prv.ind(  .id  sr_id)
-        i (xisting) {
-          // lar xisting typing timot
-          i (xisting.typingimot) {
-            clarimot(xisting.typingimot)
-          }
-          
-          // t nw timot to stop typing indicator
-          const typingimot  stimot(()  {
-            stditingsrs(prv  
-              prv.map(  
-                .id  sr_id 
-                   { ..., isyping als, typingimot ndind }
-                   
-              )
-            )
-          }, )
-          
-          rtrn prv.map(  
-            .id  sr_id 
-               { ..., isyping tr, typingimot, last_sn nw at().totring() }
-               
-          )
-        } ls {
-          // dd nw sr with typing indicator
-          const typingimot  stimot(()  {
-            stditingsrs(prv  
-              prv.map(  
-                .id  sr_id 
-                   { ..., isyping als, typingimot ndind }
-                   
-              )
-            )
-          }, )
-          
-          rtrn ...prv, {
-            id sr_id,
-            mail sr_ino.mail || '',
-            ll_nam sr_ino.ll_nam || '',
-            avatar_rl sr_ino.avatar_rl || '',
-            isyping tr,
-            typingimot,
-            last_sn nw at().totring()
-          }]
-        }
-      })
-    }
-  }
-
-  // roadcast crsor movmnt
-  const broadcastrsorov  sallback((crsorosition nmbr)  {
-    i (channl.crrnt && sr) {
-      channl.crrnt.snd({
-        typ 'broadcast',
-        vnt 'crsor-mov',
-        payload {
-          sr_id sr.id,
-          crsor_position crsorosition,
-          sr_ino {
-            mail sr.mail,
-            ll_nam sr.sr_mtadata.ll_nam,
-            avatar_rl sr.sr_mtadata.avatar_rl
-          }
-        }
-      })
-    }
-  }, sr])
-
-  // roadcast sr typing with typing indicator
-  const broadcastsryping  sallback(()  {
-    i (!channl.crrnt || !sr) rtrn
-    
-    // pdat local typing stat
-    stditingsrs(prv  {
-      const xisting  prv.ind(  .id  sr.id)
-      i (xisting) {
-        // lar xisting timot
-        i (xisting.typingimot) {
-          clarimot(xisting.typingimot)
-        }
-        
-        // t nw timot to stop typing indicator
-        const typingimot  stimot(()  {
-          stditingsrs(prv  
-            prv.map(  
-              .id  sr.id 
-                 { ..., isyping als, typingimot ndind }
-                 
-            )
-          )
-        }, )
-        
-        rtrn prv.map(  
-          .id  sr.id 
-             { ..., isyping tr, typingimot, last_sn nw at().totring() }
-             
-        )
-      } ls {
-        // dd nw sr with typing indicator
-        const typingimot  stimot(()  {
-          stditingsrs(prv  
-            prv.map(  
-              .id  sr.id 
-                 { ..., isyping als, typingimot ndind }
-                 
-            )
-          )
-        }, )
-        
-        rtrn ...prv, {
-          id sr.id,
-          mail sr.mail || '',
-          ll_nam sr.sr_mtadata.ll_nam || '',
-          avatar_rl sr.sr_mtadata.avatar_rl || '',
-          isyping tr,
-          typingimot,
-          last_sn nw at().totring()
-        }]
-      }
-    })
-    
-    channl.crrnt.snd({
-      typ 'broadcast',
-      vnt 'sr-typing',
-      payload {
-        sr_id sr.id,
-        sr_ino {
-          mail sr.mail,
-          ll_nam sr.sr_mtadata.ll_nam,
-          avatar_rl sr.sr_mtadata.avatar_rl
-        }
-      }
-    })
-  }, sr])
-
-  // av not contnt (dboncd)
-  const savotontnt  sallback(async (contnt string)  {
-    i (!notd || !sr || contnt  lastontnt.crrnt) {
-      rtrn
-    }
-
-    lastontnt.crrnt  contnt
-
-    // lar prvios sav timr
-    i (savimot.crrnt) {
-      clarimot(savimot.crrnt)
-    }
-
-    // t nw sav timr (sav atr  scond)
-    savimot.crrnt  stimot(async ()  {
-      try {
-        const { rror }  await spabas
-          .rom('nots')
-          .pdat({ 
-            contnt,
-            pdatd_at nw at().totring()
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await channelRef.current.track({
+            user_id: user.id,
+            email: user.email || '',
+            full_name: user.user_metadata?.full_name || user.email || 'Unknown',
+            avatar_url: user.user_metadata?.avatar_url,
+            last_seen: new Date().toISOString(),
           })
-          .q('id', notd)
-
-        i (rror) {
-          consol.rror('aild to sav not', rror)
-          lrt.alrt('rror', 'av aild')
-        } ls {
-          stastavd(nw at())
         }
-      } catch (rror) {
-        consol.rror('ot sav xcption', rror)
-        lrt.alrt('rror', 'av aild')
-      }
-    }, )
-  }, notd, sr])
-
-  // tart diting
-  const startditing  sallback(async ()  {
-    stsditing(tr)
-  }, ])
-
-  // top diting
-  const stopditing  sallback(()  {
-    stsditing(als)
-    stditingsrs(])
-  }, ])
-
-  // lanp timr
-  sct(()  {
-    rtrn ()  {
-      i (savimot.crrnt) {
-        clarimot(savimot.crrnt)
-      }
-    }
-  }, ])
-
-  // solv conlict
-  const rsolvonlict  sallback((conlictd string, rsoltion 'local' | 'rmot' | 'mrg')  {
-    const conlict  conlicts.ind(c  c.id  conlictd)
-    i (!conlict) rtrn
-
-    switch (rsoltion) {
-      cas 'local'
-        // p local vrsion - no action ndd
-        brak
-      cas 'rmot'
-        // s rmot vrsion - pdat local contnt
-        i (conlict.ild  'contnt') {
-          lastontnt.crrnt  conlict.rmotal
-          // riggr contnt pdat in parnt componnt
-          // his wold nd to b handld by th parnt componnt
-        }
-        brak
-      cas 'mrg'
-        // impl mrg - appnd rmot contnt
-        i (conlict.ild  'contnt') {
-          const mrgdontnt  `${conlict.localal}nn---nn${conlict.rmotal}`
-          lastontnt.crrnt  mrgdontnt
-        }
-        brak
-    }
-
-    // mov rsolvd conlict
-    stonlicts(prv  prv.iltr(c  c.id ! conlictd))
-  }, conlicts])
-
-  // ismiss conlict
-  const dismissonlict  sallback((conlictd string)  {
-    stonlicts(prv  prv.iltr(c  c.id ! conlictd))
-  }, ])
-
-  // dd commnt
-  const addommnt  sallback((contnt string, position { start nmbr nd nmbr })  {
-    i (!sr) rtrn
-
-    const commnt ommnt  {
-      id `commnt_${at.now()}_${ath.random().totring().sbstr(, )}`,
-      contnt,
-      athor {
-        id sr.id,
-        nam sr.sr_mtadata.ll_nam || sr.mail || 'nknown',
-        mail sr.mail || '',
-        avatar_rl sr.sr_mtadata.avatar_rl
-      },
-      position,
-      cratd_at nw at().totring(),
-      rsolvd als
-    }
-
-    stommnts(prv  ...prv, commnt])
-    
-    // roadcast commnt to othr srs
-    i (channl.crrnt) {
-      channl.crrnt.snd({
-        typ 'broadcast',
-        vnt 'commnt-addd',
-        payload { commnt }
       })
+
+    return () => {
+      channelRef.current?.unsubscribe()
     }
-  }, sr])
+  }, [noteId, user])
 
-  // dd notiication
-  const addotiication  sallback((notiication mitotiication, 'id' | 'timstamp' | 'rad')  {
-    const nwotiication otiication  {
-      ...notiication,
-      id `notiication_${at.now()}_${ath.random().totring().sbstr(, )}`,
-      timstamp nw at().totring(),
-      rad als
+  // Start editing
+  const startEditing = useCallback(async () => {
+    if (!user || !noteId || !channelRef.current) return
+
+    try {
+      await channelRef.current.track({
+        user_id: user.id,
+        email: user.email || '',
+        full_name: user.user_metadata?.full_name || user.email || 'Unknown',
+        avatar_url: user.user_metadata?.avatar_url,
+        last_seen: new Date().toISOString(),
+      })
+
+      setState(prev => ({
+        ...prev,
+        isEditing: true,
+        currentEditor: {
+          id: user.id,
+          email: user.email || '',
+          full_name: user.user_metadata?.full_name || user.email || 'Unknown',
+          avatar_url: user.user_metadata?.avatar_url,
+          last_seen: new Date().toISOString(),
+          is_online: true,
+        },
+      }))
+    } catch (err) {
+      console.error(err)
+      Alert.alert('Error', 'Failed to start editing')
     }
+  }, [user, noteId])
 
-    stotiications(prv  nwotiication, ...prv])
-  }, ])
+  // Stop editing
+  const stopEditing = useCallback(async () => {
+    if (!user || !noteId || !channelRef.current) return
 
-  // ark notiication as rad
-  const markotiicationsad  sallback((notiicationd string)  {
-    stotiications(prv  
-      prv.map(n  n.id  notiicationd  { ...n, rad tr }  n)
-    )
-  }, ])
+    try {
+      await channelRef.current.untrack()
+      
+      setState(prev => ({
+        ...prev,
+        isEditing: false,
+        currentEditor: null,
+      }))
+    } catch (err) {
+      console.error(err)
+    }
+  }, [user, noteId])
 
-  // lar notiication
-  const clarotiication  sallback((notiicationd string)  {
-    stotiications(prv  prv.iltr(n  n.id ! notiicationd))
-  }, ])
+  // Save changes with conflict resolution
+  const saveChanges = useCallback(async (noteData: Partial<Note>) => {
+    if (!user || !noteId) return
 
-  // ark all notiications as rad
-  const markllotiicationssad  sallback(()  {
-    stotiications(prv  prv.map(n  ({ ...n, rad tr })))
-  }, ])
+    try {
+      // Check for conflicts
+      const { error } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('id', noteId)
+        .single()
 
-  // lar all notiications
-  const clarllotiications  sallback(()  {
-    stotiications(])
-  }, ])
+      if (error) {
+        Alert.alert('Error', 'Failed to save note')
+        return
+      }
 
-  rtrn {
-    ditingsrs,
-    isditing,
-    lastavd,
-    conlicts,
-    commnts,
-    changs,
-    notiications,
-    startditing,
-    stopditing,
-    savotontnt,
-    broadcastrsorov,
-    broadcastsryping,
-    rsolvonlict,
-    dismissonlict,
-    addommnt,
-    addotiication,
-    markotiicationsad,
-    clarotiication,
-    markllotiicationssad,
-    clarllotiications
+      // Simple conflict resolution - use latest timestamp
+      const now = new Date().toISOString()
+      const noteUpdate = {
+        ...noteData,
+        updated_at: now,
+      }
+
+      await updateNote(noteId, noteUpdate)
+    } catch (err) {
+      console.error(err)
+      Alert.alert('Error', 'Save failed')
+    }
+  }, [user, noteId, updateNote])
+
+  // Resolve conflicts
+  const resolveConflict = useCallback(async (noteData: Partial<Note>, resolution: 'mine' | 'theirs' | 'merge') => {
+    if (!user || !noteId) return
+
+    try {
+      let finalData = noteData
+
+      if (resolution === 'theirs') {
+        // Keep existing data
+        return
+      } else if (resolution === 'merge') {
+        // Merge changes (simplified - in real app, you'd want more sophisticated merging)
+        finalData = {
+          ...noteData,
+          updated_at: new Date().toISOString(),
+        }
+      }
+
+      await updateNote(noteId, finalData)
+      setState(prev => ({
+        ...prev,
+        conflictResolution: false,
+      }))
+    } catch (err) {
+      console.error(err)
+      Alert.alert('Error', 'Failed to resolve conflict')
+    }
+  }, [user, noteId, updateNote])
+
+  return {
+    ...state,
+    startEditing,
+    stopEditing,
+    saveChanges,
+    resolveConflict,
   }
 }

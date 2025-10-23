@@ -9,11 +9,11 @@ A powerful cross-platform note-taking app with advanced features
 
 ## 🎯 What is Aurora Notes Mobile
 
-Aurora Notes Mobile is a **modern, AI-powered note-taking application** built with React Native that runs on both iOS and Android. It's designed to be your intelligent digital companion for capturing, organizing, and enhancing your thoughts and ideas.
+Aurora Notes Mobile is a **modern, feature-rich note-taking application** built with React Native that runs on both iOS and Android. It's designed to be your digital companion for capturing, organizing, and enhancing your thoughts and ideas.
 
 ### 🌟 Key Highlights
 
-- **🤖 AI-Powered** Smart note analysis, summarization, and tag suggestions
+- **🧠 Smart Features** Advanced note analysis, summarization, and tag suggestions
 - **📁 File Management** Upload images, documents, and multimedia attachments
 - **🌐 Real-time Sync** Cloud synchronization across all your devices
 - **🔍 Advanced Search** Find notes instantly with intelligent search
@@ -24,15 +24,15 @@ Aurora Notes Mobile is a **modern, AI-powered note-taking application** built wi
 
 ### Core Functionality
 - **📝 Rich Text Editor** Create and edit notes with formatting options
-- **🏷️ Smart Tagging** AI-powered tag suggestions based on content
+- **🏷️ Smart Tagging** Intelligent tag suggestions based on content
 - **📌 Pin Notes** Keep important notes easily accessible
 - **🔍 Search & Filter** Find notes by content, tags, or date
 - **☁️ Cloud Sync** Automatic synchronization with Supabase backend
 
-### AI Features
+### Smart Features
 - **📊 Content Analysis** Get insights about your note content
 - **📋 Auto-summarization** Generate summaries of long notes
-- **🏷️ Smart Tags** AI suggests relevant tags for better organization
+- **🏷️ Smart Tags** Intelligent suggestions for relevant tags for better organization
 - **🔗 Similar Notes** Discover related content automatically
 
 ### File Management
@@ -160,12 +160,12 @@ src/
 1. Create a new Supabase project
 2. Set up database tables (profiles, notes)
 3. Configure Row Level Security policies
-4. Deploy Edge Functions for AI features
+4. Deploy Edge Functions for smart features
 5. Set up storage buckets for file uploads
 
 ### API Keys Required
 - **Supabase** Project URL and anonymous key
-- **OpenAI** for AI-powered features
+- **OpenAI** for smart features
 - **OpenWeather** for weather integration
 - **News** for news features
 - **Memory** for translation services

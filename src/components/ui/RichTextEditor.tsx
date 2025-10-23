@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
-  Platform,
 } from 'react-native';
 
 interface RichTextEditorProps {
@@ -16,6 +15,29 @@ interface RichTextEditorProps {
   placeholder?: string;
   style?: any;
 }
+
+interface ToolbarButtonProps {
+  onPress: () => void;
+  icon: string;
+  isActive?: boolean;
+  title: string;
+}
+
+const ToolbarButton: React.FC<ToolbarButtonProps> = ({ 
+  onPress, 
+  icon, 
+  isActive = false, 
+}) => (
+  <TouchableOpacity
+    style={[styles.toolbarButton, isActive && styles.activeButton]}
+    onPress={onPress}
+    activeOpacity={0.7}
+  >
+    <Text style={[styles.toolbarButtonText, isActive && styles.activeButtonText]}>
+      {icon}
+    </Text>
+  </TouchableOpacity>
+);
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   value,
@@ -100,28 +122,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }
     );
   };
-
-  const ToolbarButton = ({ 
-    onPress, 
-    icon, 
-    isActive = false, 
-    title 
-  }: { 
-    onPress: () => void; 
-    icon: string; 
-    isActive?: boolean; 
-    title: string;
-  }) => (
-    <TouchableOpacity
-      style={[styles.toolbarButton, isActive && styles.activeButton]}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
-      <Text style={[styles.toolbarButtonText, isActive && styles.activeButtonText]}>
-        {icon}
-      </Text>
-    </TouchableOpacity>
-  );
 
   return (
     <View style={[styles.container, style]}>

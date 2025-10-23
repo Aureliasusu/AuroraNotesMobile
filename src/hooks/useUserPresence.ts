@@ -1,127 +1,156 @@
-import { stat, sct, s } rom 'ract'
-import { spabas } rom '../lib/spabas'
-import { sthtor } rom '../stor/sthtor'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { supabase } from '../lib/supabase'
+import { useAuthStore } from '../store/useAuthStore'
 
-intrac nlinsr {
-  id string
-  mail string
-  ll_nam string
-  avatar_rl string
-  onlin_at string
-  not_id string
+interface OnlineUser {
+  id: string
+  email: string
+  full_name: string
+  avatar_url: string
+  online_at: string
+  last_seen: string
+  is_online: boolean
 }
 
-xport nction ssrrsnc(notd string) {
-  const { sr }  sthtor()
-  const onlinsrs, stnlinsrs]  statnlinsr](])
-  const isnlin, stsnlin]  stat(als)
-  const channl  sany(nll)
+interface UserPresenceState {
+  onlineUsers: OnlineUser[]
+  isOnline: boolean
+  lastSeen: string
+  loading: boolean
+}
 
-  sct(()  {
-    i (!sr) {
-      // sr not loggd in, clan p stat
-      stnlinsrs(])
-      stsnlin(als)
-      i (channl.crrnt) {
-        spabas.rmovhannl(channl.crrnt)
-        channl.crrnt  nll
-      }
-      rtrn
-    }
+export function useUserPresence() {
+  const { user } = useAuthStore()
+  const channelRef = useRef<any>(null)
+  
+  const [state, setState] = useState<UserPresenceState>({
+    onlineUsers: [],
+    isOnline: false,
+    lastSeen: new Date().toISOString(),
+    loading: false,
+  })
 
-    // or now, st sr as onlin immdiatly (simpliid vrsion)
-    stsnlin(tr)
-    stnlinsrs({
-      id sr.id,
-      mail sr.mail || '',
-      ll_nam sr.sr_mtadata.ll_nam || '',
-      avatar_rl sr.sr_mtadata.avatar_rl || '',
-      onlin_at nw at().totring(),
-      not_id notd
-    }])
+  // Subscribe to presence changes
+  useEffect(() => {
+    if (!user) return
 
-    //  mplmnt ll altim prsnc whn pabas altim is nabld
-    // rat onlin stats channl
-    const channl  spabas
-      .channl('sr-prsnc')
-      .on('prsnc', { vnt 'sync' }, ()  {
-        const stat  channl.prsnctat()
-        const allsrs  bjct.vals(stat).lat() as nlinsr]
-        // nly show srs rom crrnt not
-        const crrntotsrs  allsrs.iltr(sr  sr.not_id  notd)
-        consol.log('🔍 rsnc sync - rrnt notd', notd)
-        consol.log('🔍 ll srs', allsrs.map(  ({ id .id, not_id .not_id })))
-        consol.log('🔍 iltrd srs or crrnt not', crrntotsrs.map(  ({ id .id, not_id .not_id })))
-        stnlinsrs(crrntotsrs)
+    channelRef.current = supabase.channel('presence-channel')
+      .on('presence', { event: 'sync' }, () => {
+        const presenceState = channelRef.current.presenceState()
+        const onlineUsers = Object.values(presenceState)
+          .flat()
+          .map((presence: any) => ({
+            id: presence.user_id,
+            email: presence.email || '',
+            full_name: presence.full_name || presence.email || 'Unknown',
+            avatar_url: presence.avatar_url || '',
+            online_at: presence.online_at || new Date().toISOString(),
+            last_seen: presence.last_seen || new Date().toISOString(),
+            is_online: true,
+          }))
+          .filter((u: OnlineUser) => u.id !== user.id)
+
+        setState(prev => ({
+          ...prev,
+          onlineUsers,
+        }))
       })
-      .on('prsnc', { vnt 'join' }, ({ ky, nwrsncs } any)  {
-        const srs  bjct.vals(nwrsncs).lat() as nlinsr]
-        // nly add srs rom crrnt not
-        const crrntotsrs  srs.iltr(sr  sr.not_id  notd)
-        consol.log('🔍 sr joind - rrnt notd', notd)
-        consol.log('🔍 w srs', srs.map(  ({ id .id, not_id .not_id })))
-        consol.log('🔍 iltrd nw srs or crrnt not', crrntotsrs.map(  ({ id .id, not_id .not_id })))
-        stnlinsrs(prv  ...prv, ...crrntotsrs])
+      .on('presence', { event: 'join' }, ({ key, newPresences }) => {
+        console.log('User joined:', key, newPresences)
       })
-      .on('prsnc', { vnt 'lav' }, ({ ky, ltrsncs } any)  {
-        const srs  bjct.vals(ltrsncs).lat() as nlinsr]
-        // nly rmov srs rom crrnt not
-        const crrntotsrs  srs.iltr(sr  sr.not_id  notd)
-        consol.log('🔍 sr lt - rrnt notd', notd)
-        consol.log('🔍 t srs', srs.map(  ({ id .id, not_id .not_id })))
-        consol.log('🔍 iltrd lt srs or crrnt not', crrntotsrs.map(  ({ id .id, not_id .not_id })))
-        stnlinsrs(prv  
-          prv.iltr(sr  !crrntotsrs.som(ltsr  ltsr.id  sr.id))
-        )
+      .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
+        console.log('User left:', key, leftPresences)
       })
-      .sbscrib(async (stats any)  {
-        i (stats  '') {
-          // tr sccssl sbscription, snd own onlin stats
-          try {
-            await channl.track({
-              id sr.id,
-              mail sr.mail || '',
-              ll_nam sr.sr_mtadata.ll_nam || '',
-              avatar_rl sr.sr_mtadata.avatar_rl || '',
-              onlin_at nw at().totring(),
-              not_id notd
-            })
-            stsnlin(tr)
-          } catch (rror) {
-            // p onlin stats vn i tracking ails
-          }
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await channelRef.current.track({
+            user_id: user.id,
+            email: user.email || '',
+            full_name: user.user_metadata?.full_name || user.email || 'Unknown',
+            avatar_url: user.user_metadata?.avatar_url || '',
+            online_at: new Date().toISOString(),
+            last_seen: new Date().toISOString(),
+          })
         }
       })
 
-    channl.crrnt  channl
-
-    // lanp nction
-    rtrn ()  {
-      i (channl.crrnt) {
-        spabas.rmovhannl(channl.crrnt)
-        channl.crrnt  nll
-      }
-      stsnlin(als)
+    return () => {
+      channelRef.current?.unsubscribe()
     }
-  }, sr, notd])
+  }, [user])
 
-  // pdat crrnt sr's diting not
-  const pdatrrntot  async (nwotd string)  {
-    i (channl.crrnt && sr) {
-      await channl.crrnt.track({
-        id sr.id,
-        mail sr.mail || '',
-        ll_nam sr.sr_mtadata.ll_nam || '',
-        avatar_rl sr.sr_mtadata.avatar_rl || '',
-        onlin_at nw at().totring(),
-        not_id nwotd
+  // Update online status
+  const updateOnlineStatus = useCallback(async (isOnline: boolean) => {
+    if (!user) return
+
+    try {
+      await channelRef.current.track({
+        user_id: user.id,
+        email: user.email || '',
+        full_name: user.user_metadata?.full_name || user.email || 'Unknown',
+        avatar_url: user.user_metadata?.avatar_url || '',
+        online_at: new Date().toISOString(),
+        last_seen: new Date().toISOString(),
       })
-    }
-  }
 
-  rtrn {
-    onlinsrs,
-    isnlin,
-    pdatrrntot
+      setState(prev => ({
+        ...prev,
+        isOnline,
+        lastSeen: new Date().toISOString(),
+      }))
+    } catch (error) {
+      console.error('Failed to update online status', error)
+    }
+  }, [user])
+
+  // Update last seen
+  const updateLastSeen = useCallback(async () => {
+    if (!user) return
+
+    try {
+      await channelRef.current.track({
+        user_id: user.id,
+        email: user.email || '',
+        full_name: user.user_metadata?.full_name || user.email || 'Unknown',
+        avatar_url: user.user_metadata?.avatar_url || '',
+        online_at: new Date().toISOString(),
+        last_seen: new Date().toISOString(),
+      })
+
+      setState(prev => ({
+        ...prev,
+        lastSeen: new Date().toISOString(),
+      }))
+    } catch (error) {
+      console.error('Failed to update last seen', error)
+    }
+  }, [user])
+
+  // Get user presence info
+  const getUserPresence = useCallback(async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, email, full_name, avatar_url, last_seen')
+        .eq('id', userId)
+        .single()
+
+      if (error) {
+        console.error('Failed to get user presence', error)
+        return null
+      }
+
+      return data
+    } catch (error) {
+      console.error('Failed to get user presence', error)
+      return null
+    }
+  }, [])
+
+  return {
+    ...state,
+    updateOnlineStatus,
+    updateLastSeen,
+    getUserPresence,
   }
 }

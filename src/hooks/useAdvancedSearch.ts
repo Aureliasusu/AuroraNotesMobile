@@ -2,7 +2,6 @@ import { useCallback, useEffect } from 'react'
 import { useSearchStore } from '../store/useSearchStore'
 import { useNotes } from './useNotes'
 import { useFolders } from './useFolders'
-import { Note } from '../types/database'
 
 export function useAdvancedSearch() {
   const { notes } = useNotes()
@@ -22,14 +21,17 @@ export function useAdvancedSearch() {
   // Perform search when filters change
   useEffect(() => {
     if (notes.length > 0) {
-      setLoading(true)
-      try {
-        searchNotes(notes)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Search failed')
-      } finally {
-        setLoading(false)
+      const performSearch = async () => {
+        setLoading(true)
+        try {
+          searchNotes(notes)
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Search failed')
+        } finally {
+          setLoading(false)
+        }
       }
+      performSearch()
     }
   }, [notes, filters, searchNotes, setLoading, setError])
 

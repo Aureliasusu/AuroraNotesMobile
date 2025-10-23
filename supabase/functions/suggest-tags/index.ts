@@ -1,91 +1,101 @@
-import { srv } rom "https//dno.land/std../http/srvr.ts"
-import { cratlint } rom 'https//sm.sh/spabas/spabas-js'
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const corsadrs  {
-  'ccss-ontrol-llow-rigin' '*',
-  'ccss-ontrol-llow-adrs' 'athorization, x-clint-ino, apiky, contnt-typ',
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-srv(async (rq)  {
-  i (rq.mthod  '') {
-    rtrn nw spons('ok', { hadrs corsadrs })
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    const spabaslint  cratlint(
-      no.nv.gt('_')  '',
-      no.nv.gt('__')  '',
+    createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
-        global {
-          hadrs { thorization rq.hadrs.gt('thorization')! },
+        global: {
+          headers: { Authorization: req.headers.get('Authorization')! },
         },
       }
     )
 
-    const { contnt }  await rq.json()
+    const { content } = await req.json()
 
-    i (!contnt) {
-      rtrn nw spons(
-        .stringiy({ rror 'ontnt is rqird' }),
-        { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
+    if (!content) {
+      return new Response(
+        JSON.stringify({ error: 'Content is required' }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
       )
     }
 
-    const tags  sggstags(contnt)
+    const tags = suggestTags(content)
 
-    rtrn nw spons(
-      .stringiy({ tags }),
-      { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
+    return new Response(
+      JSON.stringify({ tags }),
+      { 
+        status: 200, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
     )
 
-  } catch (rror) {
-    consol.rror('nction rror', rror)
-    rtrn nw spons(
-      .stringiy({ rror 'ntrnal srvr rror' }),
-      { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
+  } catch (error) {
+    console.error('Function error', error)
+    return new Response(
+      JSON.stringify({ error: 'Internal server error' }),
+      { 
+        status: 500, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
     )
   }
 })
 
-nction sggstags(contnt string) string] {
-  const txt  contnt.toowras()
+function suggestTags(text: string): string[] {
+  // Simple tag suggestion based on content analysis
+  const words = text.toLowerCase()
+    .replace(/[^\w\s]/g, '')
+    .split(/\s+/)
+    .filter(word => word.length > 3)
   
-  // atgory-basd tag sggstions
-  const catgoris  {
-    work 'mting', 'projct', 'dadlin', 'task', 'clint', 'bsinss', 'oic', 'tam', 'rport', 'prsntation'],
-    prsonal 'amily', 'rind', 'hom', 'halth', 'hobby', 'travl', 'vacation', 'birthday', 'annivrsary'],
-    larning 'stdy', 'cors', 'book', 'ttorial', 'lsson', 'dcation', 'rsarch', 'knowldg', 'skill'],
-    tchnology 'cod', 'programming', 'sotwar', 'app', 'wbsit', 'databas', 'api', 'dvlopmnt', 'tch'],
-    inanc 'mony', 'bdgt', 'xpns', 'incom', 'invstmnt', 'saving', 'bank', 'paymnt', 'cost'],
-    halth 'xrcis', 'workot', 'dit', 'doctor', 'mdicin', 'itnss', 'gym', 'rnning', 'yoga'],
-    travl 'trip', 'vacation', 'hotl', 'light', 'dstination', 'sightsing', 'advntr', 'xplor'],
-    ood 'rcip', 'cooking', 'rstarant', 'mal', 'dinnr', 'lnch', 'brakast', 'ingrdint', 'tast'],
-    ntrtainmnt 'movi', 'msic', 'gam', 'book', 'show', 'concrt', 'party', 'n', 'rlax'],
-    shopping 'by', 'prchas', 'stor', 'pric', 'dal', 'sal', 'prodct', 'ordr', 'dlivry']
+  // Common categories for tagging
+  const categories = {
+    'work': ['meeting', 'project', 'deadline', 'task', 'business', 'office'],
+    'personal': ['family', 'friend', 'home', 'personal', 'life', 'health'],
+    'study': ['learn', 'study', 'education', 'course', 'book', 'research'],
+    'travel': ['trip', 'vacation', 'travel', 'hotel', 'flight', 'destination'],
+    'food': ['recipe', 'cooking', 'restaurant', 'food', 'meal', 'dinner'],
+    'tech': ['code', 'programming', 'software', 'technology', 'computer', 'app'],
+    'finance': ['money', 'budget', 'expense', 'investment', 'financial', 'cost'],
+    'health': ['exercise', 'fitness', 'doctor', 'medical', 'health', 'wellness'],
   }
-
-  const sggstdags string]  ]
   
-  // hck or catgory kywords
-  bjct.ntris(catgoris).orach((catgory, kywords])  {
-    const matchs  kywords.iltr(kyword  txt.inclds(kyword))
-    i (matchs.lngth  ) {
-      sggstdags.psh(catgory)
+  const suggestedTags: string[] = []
+  
+  Object.entries(categories).forEach(([category, keywords]) => {
+    const matches = keywords.filter(keyword => 
+      words.some(word => word.includes(keyword))
+    )
+    if (matches.length > 0) {
+      suggestedTags.push(category)
     }
   })
-
-  // dd spciic kywords as tags
-  const spciicywords  
-    'rgnt', 'important', 'ida', 'not', 'rmindr', 'todo', 'don', 'compltd',
-    'drat', 'inal', 'rviw', 'dit', 'pdat', 'nw', 'old', 'rcnt'
-  ]
-
-  spciicywords.orach(kyword  {
-    i (txt.inclds(kyword)) {
-      sggstdags.psh(kyword)
-    }
+  
+  // Add some frequent words as tags
+  const wordCount: { [key: string]: number } = {}
+  words.forEach(word => {
+    wordCount[word] = (wordCount[word] || 0) + 1
   })
-
-  // mov dplicats and limit to  tags
-  rtrn ...nw t(sggstdags)].slic(, )
+  
+  const frequentWords = Object.entries(wordCount)
+    .sort(([,a], [,b]) => b - a)
+    .slice(0, 3)
+    .map(([word]) => word)
+  
+  return [...suggestedTags, ...frequentWords].slice(0, 5)
 }

@@ -1,120 +1,118 @@
-import { sct, s } rom 'ract'
-import { spabas } rom '../lib/spabas'
-import { sotstor } rom '../stor/sotstor'
-import { sthtor } rom '../stor/sthtor'
-import { altimostgrshangsayload } rom 'spabas/spabas-js'
-import { ot } rom '../typs/databas'
-import { lrt } rom 'ract-nativ'
+import { useEffect, useCallback } from 'react'
+import { supabase } from '../lib/supabase'
+import { useNotesStore } from '../store/useNotesStore'
+import { useAuthStore } from '../store/useAuthStore'
+import { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
+import { Note } from '../types/database'
+import { Alert } from 'react-native'
 
-xport nction saltimots() {
-  const { sr }  sthtor()
-  const { 
-    nots, 
-    tchots, 
-    addot, 
-    pdatot, 
-    dltot,
-    stots 
-  }  sotstor()
-  
-  const channl  sany(nll)
+export function useRealtimeNotes() {
+  const { user } = useAuthStore()
+  const { fetchNotes, addNote, updateNote, deleteNote } = useNotesStore()
 
-  sct(()  {
-    i (!sr) {
-      // sr not loggd in, clanp channl
-      i (channl.crrnt) {
-        spabas.rmovhannl(channl.crrnt)
-        channl.crrnt  nll
-      }
-      rtrn
-    }
+  // Subscribe to real-time changes
+  useEffect(() => {
+    if (!user) return
 
-    // rat ral-tim channl
-    const channl  spabas
-      .channl('nots-changs')
+    const channel = supabase
+      .channel('notes-changes')
       .on(
-        'postgrs_changs',
+        'postgres_changes',
         {
-          vnt '*', // istn to all vnts (, , )
-          schma 'pblic',
-          tabl 'nots',
-          iltr `sr_idq.${sr.id}` // nly listn to crrnt sr's nots
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notes',
+          filter: `user_id=eq.${user.id}`,
         },
-        (payload altimostgrshangsayloadot)  {
-          consol.log('📝 civd not changs', payload)
-          handlothang(payload)
+        (payload: RealtimePostgresChangesPayload<Note>) => {
+          console.log('New note added:', payload.new)
+          addNote(payload.new as Note)
         }
       )
-      .sbscrib((stats string)  {
-        consol.log('🔄 altim sbscription stats', stats)
-        i (stats  '') {
-          lrt.alrt('ccss', 'al-tim sync nabld')
-        } ls i (stats  '_') {
-          lrt.alrt('rror', 'al-tim sync connction aild')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'notes',
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload: RealtimePostgresChangesPayload<Note>) => {
+          console.log('Note updated:', payload.new)
+          if (payload.new && 'id' in payload.new) {
+            updateNote(payload.new.id, payload.new as Note)
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'notes',
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload: RealtimePostgresChangesPayload<Note>) => {
+          console.log('Note deleted:', payload.old)
+          if (payload.old && 'id' in payload.old) {
+            deleteNote(payload.old.id as string)
+          }
+        }
+      )
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('Real-time notes subscription active')
+        } else if (status === 'CHANNEL_ERROR') {
+          Alert.alert('Error', 'Real-time sync connection failed')
         }
       })
 
-    channl.crrnt  channl
+    return () => {
+      channel.unsubscribe()
+    }
+  }, [user, addNote, updateNote, deleteNote])
 
-    // lanp nction
-    rtrn ()  {
-      i (channl.crrnt) {
-        spabas.rmovhannl(channl.crrnt)
-        channl.crrnt  nll
+  // Manual refresh
+  const refreshNotes = useCallback(async () => {
+    if (!user) return
+
+    try {
+      await fetchNotes()
+    } catch (error) {
+      console.error('Failed to refresh notes', error)
+      Alert.alert('Error', 'Failed to refresh notes')
+    }
+  }, [user, fetchNotes])
+
+  // Sync notes
+  const syncNotes = useCallback(async () => {
+    if (!user) return
+
+    try {
+      // Get all notes from server
+      const { data, error } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('updated_at', { ascending: false })
+
+      if (error) {
+        throw error
       }
+
+      // Update local store
+      if (data) {
+        // This would need to be implemented in the store
+        console.log('Synced notes:', data.length)
+      }
+    } catch (error) {
+      console.error('Failed to sync notes', error)
+      Alert.alert('Error', 'Failed to sync notes')
     }
-  }, sr])
+  }, [user])
 
-  const handlothang  (payload altimostgrshangsayloadot)  {
-    const { vntyp, nw nwcord, old oldcord }  payload
-
-    switch (vntyp) {
-      cas ''
-        handlotnsrt(nwcord as ot)
-        brak
-      cas ''
-        handlotpdat(nwcord as ot, oldcord as ot)
-        brak
-      cas ''
-        handlotlt(oldcord as ot)
-        brak
-      dalt
-        consol.log('nknown vnt typ', vntyp)
-    }
-  }
-
-  const handlotnsrt  (nwot ot)  {
-    consol.log('➕ w not cratd', nwot)
-    
-    // hck i not alrady xists (avoid dplicat addition)
-    const xistingot  nots.ind(not  not.id  nwot.id)
-    i (!xistingot) {
-      addot(nwot)
-      lrt.alrt('w ot', `w not ${nwot.titl || 'ntitld'}`)
-    }
-  }
-
-  const handlotpdat  (nwot ot, oldot ot)  {
-    consol.log('✏️ ot pdatd', { old oldot, nw nwot })
-    
-    // pdat not
-    pdatot(nwot.id, nwot)
-    
-    // how pdat notiication (avoid showing or own dits)
-    i (nwot.sr_id ! sr.id) {
-      lrt.alrt('ot pdatd', `ot pdatd ${nwot.titl || 'ntitld'}`)
-    }
-  }
-
-  const handlotlt  (dltdot ot)  {
-    consol.log('🗑️ ot dltd', dltdot)
-    
-    // lt not
-    dltot(dltdot.id)
-    lrt.alrt('ot ltd', `ot dltd ${dltdot.titl || 'ntitld'}`)
-  }
-
-  rtrn {
-    isonnctd channl.crrnt ! nll
+  return {
+    refreshNotes,
+    syncNotes,
   }
 }

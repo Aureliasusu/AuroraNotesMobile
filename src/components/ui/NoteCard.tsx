@@ -1,154 +1,181 @@
-import act rom 'ract'
+import React from 'react'
 import {
-  iw,
-  xt,
-  tylht,
-  ochablpacity,
-  ochablpacityrops,
-} rom 'ract-nativ'
-import { ard } rom './ard'
-import { ot } rom '../../hooks/sots'
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import { Note } from '../../types/database'
 
-intrac otardrops xtnds ochablpacityrops {
-  not ot
-  onrss ()  void
-  onongrss ()  void
+interface NoteCardProps {
+  note: Note
+  onPress: (note: Note) => void
+  onLongPress?: (note: Note) => void
+  onEdit?: (note: Note) => void
+  onDelete?: (note: Note) => void
+  onPin?: (note: Note) => void
+  onArchive?: (note: Note) => void
 }
 
-xport const otard act.otardrops  ({
-  not,
-  onrss,
-  onongrss,
-  ...props
-})  {
-  const ormatat  (dattring string)  {
-    const dat  nw at(dattring)
-    const now  nw at()
-    const dinors  (now.gtim() - dat.gtim()) / ( *  * )
-
-    i (dinors  ) {
-      rtrn dat.toocalimtring('zh-', { 
-        hor '-digit', 
-        mint '-digit' 
-      })
-    } ls i (dinors  ) { //  days
-      rtrn dat.toocalattring('zh-', { wkday 'short' })
-    } ls {
-      rtrn dat.toocalattring('zh-', { 
-        month 'short', 
-        day 'nmric' 
-      })
+export const NoteCard: React.FC<NoteCardProps> = ({
+  note,
+  onPress,
+  onLongPress,
+  onEdit,
+  onDelete,
+  onPin,
+  onArchive,
+}) => {
+  const handleLongPress = () => {
+    if (onLongPress) {
+      onLongPress(note)
+    } else {
+      Alert.alert(
+        'Note Options',
+        'What would you like to do with this note?',
+        [
+          onEdit && { text: 'Edit', onPress: () => onEdit(note) },
+          onPin && { text: note.is_pinned ? 'Unpin' : 'Pin', onPress: () => onPin(note) },
+          onArchive && { text: note.is_archived ? 'Unarchive' : 'Archive', onPress: () => onArchive(note) },
+          onDelete && { text: 'Delete', onPress: () => onDelete(note), style: 'destructive' as const },
+          { text: 'Cancel', style: 'cancel' as const },
+        ].filter(Boolean) as any
+      )
     }
   }
 
-  const gtrviw  (contnt string)  {
-    rtrn contnt.lngth   
-       contnt.sbstring(, ) + '...' 
-       contnt
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })
   }
 
-  rtrn (
-    ard
-      styl{styls.card}
-      onrss{onrss}
-      onongrss{onongrss}
-      variant"lvatd"
-      {...props}
-    
-      iw styl{styls.hadr}
-        xt styl{styls.titl} nmbrins{}
-          {not.titl || 'ntitld'}
-        /xt
-        {not.is_pinnd && (
-          iw styl{styls.pincon}
-            xt styl{styls.pinxt}📌/xt
-          /iw
+  return (
+    <TouchableOpacity
+      style={[
+        styles.container,
+        note.is_pinned && styles.pinned,
+        note.is_archived && styles.archived,
+      ]}
+      onPress={() => onPress(note)}
+      onLongPress={handleLongPress}
+    >
+      <View style={styles.header}>
+        <Text style={styles.title} numberOfLines={2}>
+          {note.title}
+        </Text>
+        {note.is_pinned && (
+          <Icon name="push-pin" size={16} color="#3b82f6" style={styles.pinIcon} />
         )}
-      /iw
-
-      xt styl{styls.prviw} nmbrins{}
-        {gtrviw(not.contnt)}
-      /xt
-
-      iw styl{styls.ootr}
-        xt styl{styls.dat}
-          {ormatat(not.pdatd_at)}
-        /xt
-        
-        {not.tags && not.tags.lngth   && (
-          iw styl{styls.tags}
-            {not.tags.slic(, ).map((tag, indx)  (
-              iw ky{indx} styl{styls.tag}
-                xt styl{styls.tagxt}#{tag}/xt
-              /iw
-            ))}
-            {not.tags.lngth   && (
-              xt styl{styls.morags}+{not.tags.lngth - }/xt
-            )}
-          /iw
+      </View>
+      
+      <Text style={styles.content} numberOfLines={3}>
+        {note.content}
+      </Text>
+      
+      {note.tags && note.tags.length > 0 && (
+        <View style={styles.tagsContainer}>
+          {note.tags.slice(0, 3).map((tag, index) => (
+            <View key={index} style={styles.tag}>
+              <Text style={styles.tagText}>#{tag}</Text>
+            </View>
+          ))}
+          {note.tags.length > 3 && (
+            <Text style={styles.moreTags}>+{note.tags.length - 3} more</Text>
+          )}
+        </View>
+      )}
+      
+      <View style={styles.footer}>
+        <Text style={styles.date}>
+          {formatDate(note.updated_at)}
+        </Text>
+        {note.is_archived && (
+          <Icon name="archive" size={14} color="#6b7280" />
         )}
-      /iw
-    /ard
+      </View>
+    </TouchableOpacity>
   )
 }
 
-const styls  tylht.crat({
-  card {
-    marginottom ,
-    marginorizontal ,
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
-  hadr {
-    lxirction 'row',
-    jstiyontnt 'spac-btwn',
-    aligntms 'lx-start',
-    marginottom ,
+  pinned: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#3b82f6',
   },
-  titl {
-    ontiz ,
-    ontight '',
-    color '#',
-    lx ,
-    marginight ,
+  archived: {
+    opacity: 0.7,
   },
-  pincon {
-    padding ,
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 8,
   },
-  pinxt {
-    ontiz ,
+  title: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+    flex: 1,
+    marginRight: 8,
   },
-  prviw {
-    ontiz ,
-    color '#b',
-    linight ,
-    marginottom ,
+  pinIcon: {
+    marginTop: 2,
   },
-  ootr {
-    lxirction 'row',
-    jstiyontnt 'spac-btwn',
-    aligntms 'cntr',
+  content: {
+    fontSize: 14,
+    color: '#374151',
+    lineHeight: 20,
+    marginBottom: 12,
   },
-  dat {
-    ontiz ,
-    color '#caa',
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 12,
   },
-  tags {
-    lxirction 'row',
-    aligntms 'cntr',
+  tag: {
+    backgroundColor: '#f3f4f6',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginRight: 6,
+    marginBottom: 4,
   },
-  tag {
-    backgrondolor '#',
-    paddingorizontal ,
-    paddingrtical ,
-    bordradis ,
-    margint ,
+  tagText: {
+    fontSize: 12,
+    color: '#374151',
   },
-  tagxt {
-    ontiz ,
-    color '#b',
+  moreTags: {
+    fontSize: 12,
+    color: '#6b7280',
+    fontStyle: 'italic',
   },
-  morags {
-    ontiz ,
-    color '#caa',
-    margint ,
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  date: {
+    fontSize: 12,
+    color: '#6b7280',
   },
 })

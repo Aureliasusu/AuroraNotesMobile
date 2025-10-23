@@ -1,111 +1,94 @@
-import act, { stat } rom 'ract'
+import React, { useState } from 'react'
 import {
-  iw,
-  xtnpt,
-  tylht,
-  ochablpacity,
-  xt,
-} rom 'ract-nativ'
+  View,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
-intrac archarrops {
-  val string
-  onhangxt (txt string)  void
-  placholdr string
-  onlar ()  void
-  onocs ()  void
-  onlr ()  void
+interface SearchBarProps {
+  placeholder?: string
+  value: string
+  onChangeText: (text: string) => void
+  onSearch?: (text: string) => void
+  onClear?: () => void
+  style?: any
 }
 
-xport const archar act.archarrops  ({
-  val,
-  onhangxt,
-  placholdr  'arch nots...',
-  onlar,
-  onocs,
-  onlr,
-})  {
-  const isocsd, stsocsd]  stat(als)
+export const SearchBar: React.FC<SearchBarProps> = ({
+  placeholder = 'Search notes...',
+  value,
+  onChangeText,
+  onSearch,
+  onClear,
+  style,
+}) => {
+  const [isFocused, setIsFocused] = useState(false)
 
-  const handlocs  ()  {
-    stsocsd(tr)
-    onocs.()
+  const handleSearch = () => {
+    if (onSearch) {
+      onSearch(value)
+    }
   }
 
-  const handllr  ()  {
-    stsocsd(als)
-    onlr.()
+  const handleClear = () => {
+    onChangeText('')
+    if (onClear) {
+      onClear()
+    }
   }
 
-  const handllar  ()  {
-    onhangxt('')
-    onlar.()
-  }
-
-  rtrn (
-    iw styl{styls.containr, isocsd && styls.ocsd]}
-      xt styl{styls.sarchcon}🔍/xt
-      xtnpt
-        styl{styls.inpt}
-        val{val}
-        onhangxt{onhangxt}
-        placholdr{placholdr}
-        placholdrxtolor"#caa"
-        onocs{handlocs}
-        onlr{handllr}
-        rtrnyyp"sarch"
-        clarttonod"nvr"
-      /
-      {val.lngth   && (
-        ochablpacity onrss{handllar} styl{styls.clartton}
-          xt styl{styls.clarcon}✕/xt
-        /ochablpacity
+  return (
+    <View style={[styles.container, isFocused && styles.focused, style]}>
+      <Icon name="search" size={20} color="#6b7280" style={styles.searchIcon} />
+      <TextInput
+        style={styles.input}
+        placeholder={placeholder}
+        placeholderTextColor="#9ca3af"
+        value={value}
+        onChangeText={onChangeText}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onSubmitEditing={handleSearch}
+        returnKeyType="search"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+      {value.length > 0 && (
+        <TouchableOpacity onPress={handleClear} style={styles.clearButton}>
+          <Icon name="clear" size={20} color="#6b7280" />
+        </TouchableOpacity>
       )}
-    /iw
+    </View>
   )
 }
 
-const styls  tylht.crat({
-  containr {
-    lxirction 'row',
-    aligntms 'cntr',
-    backgrondolor '#',
-    bordradis ,
-    paddingorizontal ,
-    paddingrtical ,
-    marginorizontal ,
-    marginrtical ,
-    bordridth ,
-    bordrolor 'transparnt',
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f9fafb',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginHorizontal: 16,
+    marginVertical: 8,
   },
-  ocsd {
-    backgrondolor '#',
-    bordrolor '#b',
-    shadowolor '#b',
-    shadowst {
-      width ,
-      hight ,
-    },
-    shadowpacity .,
-    shadowadis ,
-    lvation ,
+  focused: {
+    backgroundColor: '#ffffff',
+    borderColor: '#3b82f6',
+    borderWidth: 1,
   },
-  sarchcon {
-    ontiz ,
-    color '#caa',
-    marginight ,
+  searchIcon: {
+    marginRight: 8,
   },
-  inpt {
-    lx ,
-    ontiz ,
-    color '#',
-    paddingrtical ,
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#111827',
   },
-  clartton {
-    padding ,
-    margint ,
-  },
-  clarcon {
-    ontiz ,
-    color '#caa',
+  clearButton: {
+    padding: 4,
   },
 })

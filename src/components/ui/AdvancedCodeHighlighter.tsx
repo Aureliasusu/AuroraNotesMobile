@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Alert } from 'react-native';
+import { View, StyleSheet, Platform, Alert } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 interface AdvancedCodeHighlighterProps {
@@ -42,9 +42,8 @@ export const AdvancedCodeHighlighter: React.FC<AdvancedCodeHighlighterProps> = (
   };
 
   const copyToClipboard = () => {
-    // In a real implementation, you would use Clipboard from @react-native-clipboard/clipboard
+    // clipboard not implemented yet
     Alert.alert('Copied', 'Code copied to clipboard');
-    console.log('Code copied:', code);
   };
 
   const getHTML = () => {
@@ -172,11 +171,11 @@ export const AdvancedCodeHighlighter: React.FC<AdvancedCodeHighlighterProps> = (
     `;
   };
 
-  const formatCodeWithSyntaxHighlighting = (code: string, lang: string, showLineNumbers: boolean) => {
-    const lines = code.split('\n');
+  const formatCodeWithSyntaxHighlighting = (codeText: string, lang: string, showNumbers: boolean) => {
+    const lines = codeText.split('\n');
     
     return lines.map((line, index) => {
-      const lineNumber = showLineNumbers ? `<span class="line-numbers">${String(index + 1).padStart(2, ' ')}</span>` : '';
+      const lineNumber = showNumbers ? `<span class="line-numbers">${String(index + 1).padStart(2, ' ')}</span>` : '';
       
       // Simple syntax highlighting based on language
       let highlightedLine = line;
@@ -216,7 +215,7 @@ export const AdvancedCodeHighlighter: React.FC<AdvancedCodeHighlighterProps> = (
       .replace(/"([^"]*)"/g, '<span class="string">"$1"</span>')
       .replace(/'([^']*)'/g, '<span class="string">\'$1\'</span>')
       .replace(/\b(\d+\.?\d*)\b/g, '<span class="number">$1</span>')
-      .replace/(#.*$)/g, '<span class="comment">$1</span>');
+      .replace(/(#.*$)/g, '<span class="comment">$1</span>');
   };
 
   const highlightHTML = (line: string) => {

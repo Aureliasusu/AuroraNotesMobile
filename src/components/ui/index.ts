@@ -12,3 +12,5 @@ export { MarkdownRenderer } from './MarkdownRenderer';
 export { FolderManager } from './FolderManager';
 export { AdvancedSearch } from './AdvancedSearch';
 export { FileUpload } from './FileUpload';
+export { ThemeToggle } from './ThemeToggle';
+export { OfflineIndicator } from './OfflineIndicator';

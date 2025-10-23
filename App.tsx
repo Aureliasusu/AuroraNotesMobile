@@ -1,74 +1,63 @@
 /**
- * rora ots obil pp
- * -owrd ot aking pplication
+ * AuroraNotes Mobile App
+ * Advanced note taking application
  *
- * ormat
+ * @format
  */
 
-import act, { sct } rom 'ract'
-import { tatsar, tylht, solorchm, iw, ctivityndicator } rom 'ract-nativ'
-import {
-  ararovidr,
-  saransts,
-} rom 'ract-nativ-sa-ara-contxt'
-import { sthtor } rom './src/stor/sthtor'
-import { ignncrn } rom './src/scrns/ath/ignncrn'
-import { otsistcrn } rom './src/scrns/nots/otsistcrn'
-import { ilploadrvic } rom './src/srvics/ilpload'
+import React, { useEffect } from 'react'
+import { StatusBar, StyleSheet, View, ActivityIndicator } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { Colors } from './src/constants/colors'
+import { NavigationContainer } from '@react-navigation/native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
-nction pp() {
-  const isarkod  solorchm()  'dark'
+import { AppNavigator } from './src/navigation/AppNavigator'
+import { useAuth } from './src/hooks/useAuth'
+import { ThemeProvider } from './src/contexts/ThemeContext'
+import { OfflineProvider } from './src/contexts/OfflineContext'
 
-  rtrn (
-    ararovidr
-      tatsar bartyl{isarkod  'light-contnt'  'dark-contnt'} /
-      ppavigator /
-    /ararovidr
-  )
-}
+const App: React.FC = () => {
+  const { user, loading, initializeAuth } = useAuth()
 
-nction ppontnt() {
-  const { sr, loading }  sthtor()
-  const saransts  saransts()
+  useEffect(() => {
+    initializeAuth()
+  }, [initializeAuth])
 
-  sct(()  {
-    // nitializ ath stat
-    sthtor.gttat().stoading(als)
-    
-    // st il pload nctionality
-    ilploadrvic.tstpload().thn(sccss  {
-      i (sccss) {
-        consol.log('✅ il pload tst passd')
-      } ls {
-        consol.log('❌ il pload tst aild')
-      }
-    })
-  }, ])
-
-  i (loading) {
-    rtrn (
-      iw styl{styls.containr, styls.loadingontainr]}
-        ctivityndicator siz"larg" color"#b" /
-      /iw
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
     )
   }
 
-  rtrn (
-    iw styl{styls.containr, { paddingop saransts.top }]}
-      {sr  otsistcrn /  ignncrn /}
-    /iw
+  return (
+    <OfflineProvider>
+      <ThemeProvider>
+        <GestureHandlerRootView style={styles.container}>
+          <SafeAreaProvider>
+            <NavigationContainer>
+              <StatusBar barStyle="dark-content" backgroundColor={Colors.white} />
+              <AppNavigator user={user} />
+            </NavigationContainer>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </ThemeProvider>
+    </OfflineProvider>
   )
 }
 
-const styls  tylht.crat({
-  containr {
-    lx ,
-    backgrondolor '#ab',
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
   },
-  loadingontainr {
-    jstiyontnt 'cntr',
-    aligntms 'cntr',
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.white,
   },
 })
 
-xport dalt pp
+export default App

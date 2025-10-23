@@ -1,82 +1,113 @@
-import act rom 'ract'
+import React from 'react'
 import {
-  iw,
-  tylht,
-  iwtyl,
-  ochablpacity,
-  ochablpacityrops,
-} rom 'ract-nativ'
+  View,
+  ViewStyle,
+  TouchableOpacity,
+  GestureResponderEvent,
+} from 'react-native'
+import { Colors } from '../../constants/colors'
 
-intrac ardrops xtnds ochablpacityrops {
-  childrn act.actod
-  styl iwtyl
-  onrss ()  void
-  variant 'dalt' | 'lvatd' | 'otlind'
+interface CardProps {
+  children: React.ReactNode
+  style?: ViewStyle
+  onPress?: (event: GestureResponderEvent) => void
+  variant?: 'default' | 'elevated' | 'outlined'
+  padding?: 'none' | 'small' | 'medium' | 'large'
+  margin?: 'none' | 'small' | 'medium' | 'large'
+  shadow?: boolean
 }
 
-xport const ard act.ardrops  ({
-  childrn,
-  styl,
-  onrss,
-  variant  'dalt',
-  ...props
-})  {
-  const cardtyl  
-    styls.bas,
-    stylsvariant],
-    styl,
-  ]
+export const Card: React.FC<CardProps> = ({
+  children,
+  style,
+  onPress,
+  variant = 'default',
+  padding = 'medium',
+  margin = 'none',
+  shadow = true,
+}) => {
+  const getCardStyle = (): ViewStyle => {
+    const baseStyle: ViewStyle = {
+      backgroundColor: Colors.surface,
+      borderRadius: 8,
+    }
 
-  i (onrss) {
-    rtrn (
-      ochablpacity
-        styl{cardtyl}
-        onrss{onrss}
-        activpacity{.}
-        {...props}
-      
-        {childrn}
-      /ochablpacity
+    // Variant styles
+    switch (variant) {
+      case 'elevated':
+        baseStyle.backgroundColor = Colors.surface
+        if (shadow) {
+          baseStyle.shadowColor = Colors.black
+          baseStyle.shadowOffset = { width: 0, height: 2 }
+          baseStyle.shadowOpacity = 0.1
+          baseStyle.shadowRadius = 4
+          baseStyle.elevation = 3
+        }
+        break
+      case 'outlined':
+        baseStyle.backgroundColor = Colors.surface
+        baseStyle.borderWidth = 1
+        baseStyle.borderColor = Colors.border
+        break
+      default:
+        baseStyle.backgroundColor = Colors.surface
+        if (shadow) {
+          baseStyle.shadowColor = Colors.black
+          baseStyle.shadowOffset = { width: 0, height: 1 }
+          baseStyle.shadowOpacity = 0.05
+          baseStyle.shadowRadius = 2
+          baseStyle.elevation = 1
+        }
+    }
+
+    // Padding styles
+    switch (padding) {
+      case 'none':
+        baseStyle.padding = 0
+        break
+      case 'small':
+        baseStyle.padding = 8
+        break
+      case 'large':
+        baseStyle.padding = 24
+        break
+      default: // medium
+        baseStyle.padding = 16
+    }
+
+    // Margin styles
+    switch (margin) {
+      case 'small':
+        baseStyle.margin = 8
+        break
+      case 'medium':
+        baseStyle.margin = 16
+        break
+      case 'large':
+        baseStyle.margin = 24
+        break
+      default: // none
+        baseStyle.margin = 0
+    }
+
+    return baseStyle
+  }
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        style={[getCardStyle(), style]}
+        onPress={onPress}
+        activeOpacity={0.7}
+      >
+        {children}
+      </TouchableOpacity>
     )
   }
 
-  rtrn (
-    iw styl{cardtyl} {...props}
-      {childrn}
-    /iw
+  return (
+    <View style={[getCardStyle(), style]}>
+      {children}
+    </View>
   )
 }
-
-const styls  tylht.crat({
-  bas {
-    backgrondolor '#',
-    bordradis ,
-    padding ,
-  },
-  dalt {
-    shadowolor '#',
-    shadowst {
-      width ,
-      hight ,
-    },
-    shadowpacity .,
-    shadowadis ,
-    lvation ,
-  },
-  lvatd {
-    shadowolor '#',
-    shadowst {
-      width ,
-      hight ,
-    },
-    shadowpacity .,
-    shadowadis ,
-    lvation ,
-  },
-  otlind {
-    bordridth ,
-    bordrolor '#b',
-    shadowpacity ,
-    lvation ,
-  },
-})

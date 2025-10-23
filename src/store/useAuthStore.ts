@@ -1,105 +1,78 @@
-import { crat } rom 'zstand'
-import { spabas } rom '../lib/spabas'
-import { roil } rom '../typs/databas'
+import { create } from 'zustand'
+import { supabase } from '../lib/supabase'
+import { Profile } from '../types/database'
 
-intrac thtat {
-  sr roil | nll
-  loading boolan
-  signn (mail string, password string)  romis{ sccss boolan rror string }
-  signp (mail string, password string, llam string)  romis{ sccss boolan rror string }
-  signt ()  romisvoid
-  stsr (sr roil | nll)  void
-  stoading (loading boolan)  void
+interface AuthState {
+  user: any | null
+  session: any | null
+  profile: Profile | null
+  loading: boolean
+  initialized: boolean
 }
 
-xport const sthtor  cratthtat((st, gt)  ({
-  sr nll,
-  loading tr,
+interface AuthActions {
+  setUser: (user: any | null) => void
+  setSession: (session: any | null) => void
+  setProfile: (profile: Profile | null) => void
+  setLoading: (loading: boolean) => void
+  setInitialized: (initialized: boolean) => void
+  signOut: () => Promise<void>
+  updateProfile: (updates: any) => Promise<void>
+}
 
-  signn async (mail string, password string)  {
+export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
+  // State
+  user: null,
+  session: null,
+  profile: null,
+  loading: false,
+  initialized: false,
+
+  // Actions
+  setUser: (user) => set({ user }),
+  setSession: (session) => set({ session }),
+  setProfile: (profile) => set({ profile }),
+  setLoading: (loading) => set({ loading }),
+  setInitialized: (initialized) => set({ initialized }),
+
+  signOut: async () => {
     try {
-      st({ loading tr })
-      const { data, rror }  await spabas.ath.signnithassword({
-        mail,
-        password,
-      })
-
-      i (rror) {
-        rtrn { sccss als, rror rror.mssag }
-      }
-
-      i (data.sr) {
-        // t sr proil
-        const { data proil }  await spabas
-          .rom('proils')
-          .slct('*')
-          .q('id', data.sr.id)
-          .singl()
-
-        st({ sr proil, loading als })
-        rtrn { sccss tr }
-      }
-
-      rtrn { sccss als, rror 'o sr data rtrnd' }
-    } catch (rror) {
-      rtrn { sccss als, rror 'n nxpctd rror occrrd' }
-    } inally {
-      st({ loading als })
+      set({ loading: true })
+      await supabase.auth.signOut()
+      set({ user: null, profile: null })
+    } catch (error) {
+      // console.error('Sign out error:', error)
+    } finally {
+      set({ loading: false })
     }
   },
 
-  signp async (mail string, password string, llam string)  {
-    try {
-      st({ loading tr })
-      const { data, rror }  await spabas.ath.signp({
-        mail,
-        password,
-        options {
-          data {
-            ll_nam llam,
-          },
-        },
-      })
+  updateProfile: async (updates) => {
+    const { user } = get()
+    if (!user) return
 
-      i (rror) {
-        rtrn { sccss als, rror rror.mssag }
+    try {
+      set({ loading: true })
+      
+      const { error } = await supabase
+        .from('profiles')
+        .update(updates as any)
+        .eq('id', user.id)
+
+      if (error) {
+        // console.error('Profile update error:', error)
+        return
       }
 
-      i (data.sr) {
-        // rat sr proil
-        const { rror proilrror }  await spabas
-          .rom('proils')
-          .insrt({
-            id data.sr.id,
-            mail data.sr.mail!,
-            ll_nam llam,
-          })
-
-        i (proilrror) {
-          consol.rror('roil cration rror', proilrror)
-        }
-
-        st({ sr data.sr as any, loading als })
-        rtrn { sccss tr }
+      // Update local state
+      const { profile } = get()
+      if (profile) {
+        set({ profile: { ...profile, ...updates } })
       }
-
-      rtrn { sccss als, rror 'o sr data rtrnd' }
-    } catch (rror) {
-      rtrn { sccss als, rror 'n nxpctd rror occrrd' }
-    } inally {
-      st({ loading als })
+    } catch (error) {
+      // console.error('Profile update error:', error)
+    } finally {
+      set({ loading: false })
     }
   },
-
-  signt async ()  {
-    try {
-      await spabas.ath.signt()
-      st({ sr nll, loading als })
-    } catch (rror) {
-      consol.rror('ign ot rror', rror)
-    }
-  },
-
-  stsr (sr)  st({ sr }),
-  stoading (loading)  st({ loading }),
 }))

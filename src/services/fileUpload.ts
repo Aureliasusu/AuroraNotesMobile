@@ -1,5 +1,5 @@
 import { supabase } from '../lib/supabase'
-import { Platform, Alert } from 'react-native'
+import { Alert } from 'react-native'
 
 export interface FileUploadResult {
   url: string
@@ -73,7 +73,6 @@ export class FileUploadService {
       
       // Generate unique filename
       const timestamp = Date.now()
-      const fileExtension = fileName.split('.').pop() || 'pdf'
       const uniqueFileName = `documents/${timestamp}-${fileName}`
 
       const { data, error } = await supabase.storage

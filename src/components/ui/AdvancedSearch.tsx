@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useAdvancedSearch } from '../../hooks/useAdvancedSearch'
 import { SearchResult } from '../../store/useSearchStore'
+import { Colors } from '../../constants/colors'
 
 interface AdvancedSearchProps {
   visible: boolean
@@ -28,7 +29,7 @@ interface SearchResultItemProps {
 
 // Search result item component
 const SearchResultItem: React.FC<SearchResultItemProps> = ({ result, onPress }) => {
-  const { note, relevanceScore, matchedFields, highlights } = result
+  const { note, relevanceScore, highlights } = result
 
   return (
     <TouchableOpacity style={styles.resultItem} onPress={onPress}>
@@ -106,10 +107,8 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
     loading,
     error,
     updateQuery,
-    updateTags,
     addTag,
     removeTag,
-    updateDateRange,
     updateSort,
     updateFolder,
     updatePinned,
@@ -466,7 +465,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9fafb',
+    backgroundColor: Colors.gray50,
   },
   
   // Header styles

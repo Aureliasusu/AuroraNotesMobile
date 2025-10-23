@@ -100,11 +100,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   onFileSelect,
   onFilesSelect,
   allowMultiple = false,
-  acceptedTypes = []
+  acceptedTypes = [] // eslint-disable-line @typescript-eslint/no-unused-vars
 }) => {
   const {
     uploading,
-    uploadedFiles,
+    files: uploadedFiles,
     pickImageFromGallery,
     takePhoto,
     pickDocument,

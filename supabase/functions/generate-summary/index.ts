@@ -1,81 +1,69 @@
-import { srv } rom "https//dno.land/std../http/srvr.ts"
-import { cratlint } rom 'https//sm.sh/spabas/spabas-js'
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const corsadrs  {
-  'ccss-ontrol-llow-rigin' '*',
-  'ccss-ontrol-llow-adrs' 'athorization, x-clint-ino, apiky, contnt-typ',
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-srv(async (rq)  {
-  i (rq.mthod  '') {
-    rtrn nw spons('ok', { hadrs corsadrs })
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    const spabaslint  cratlint(
-      no.nv.gt('_')  '',
-      no.nv.gt('__')  '',
+    createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
-        global {
-          hadrs { thorization rq.hadrs.gt('thorization')! },
+        global: {
+          headers: { Authorization: req.headers.get('Authorization')! },
         },
       }
     )
 
-    const { not_id, contnt, max_lngth   }  await rq.json()
+    const { content } = await req.json()
 
-    i (!contnt) {
-      rtrn nw spons(
-        .stringiy({ rror 'ontnt is rqird' }),
-        { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
+    if (!content) {
+      return new Response(
+        JSON.stringify({ error: 'Content is required' }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
       )
     }
 
-    const smmary  gnratmmary(contnt, max_lngth)
+    const summary = generateSummary(content)
 
-    // av smmary to databas
-    const { rror }  await spabaslint
-      .rom('not_smmaris')
-      .psrt({
-        not_id,
-        smmary,
-        cratd_at nw at().totring(),
-        pdatd_at nw at().totring(),
-      })
-
-    i (rror) {
-      consol.rror('atabas rror', rror)
-      rtrn nw spons(
-        .stringiy({ rror 'aild to sav smmary' }),
-        { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
-      )
-    }
-
-    rtrn nw spons(
-      .stringiy({ smmary, not_id }),
-      { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
+    return new Response(
+      JSON.stringify({ summary }),
+      { 
+        status: 200, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
     )
 
-  } catch (rror) {
-    consol.rror('nction rror', rror)
-    rtrn nw spons(
-      .stringiy({ rror 'ntrnal srvr rror' }),
-      { stats , hadrs { ...corsadrs, 'ontnt-yp' 'application/json' } }
+  } catch (error) {
+    console.error('Function error', error)
+    return new Response(
+      JSON.stringify({ error: 'Internal server error' }),
+      { 
+        status: 500, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
     )
   }
 })
 
-nction gnratmmary(txt string, maxngth nmbr) string {
-  const sntncs  txt.split(/.!]+/).iltr(s  s.trim().lngth  )
+function generateSummary(text: string): string {
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0)
   
-  i (sntncs.lngth  ) {
-    rtrn txt.sbstring(, maxngth) + (txt.lngth  maxngth  '...'  '')
+  if (sentences.length <= 2) {
+    return text.substring(0, 200) + (text.length > 200 ? '...' : '')
   }
   
-  // impl xtractiv smmarization
-  const wordont  txt.split(/s+/).lngth
-  const targtntncs  ath.max(, ath.min(sntncs.lngth, ath.cil(wordont / )))
-  
-  const smmary  sntncs.slic(, targtntncs).join('. ')
-  rtrn smmary.sbstring(, maxngth) + (smmary.lngth  maxngth  '...'  '')
+  // Take first and last sentences for summary
+  const summary = sentences.slice(0, 2).concat(sentences.slice(-1)).join('. ')
+  return summary.substring(0, 300) + (summary.length > 300 ? '...' : '')
 }
