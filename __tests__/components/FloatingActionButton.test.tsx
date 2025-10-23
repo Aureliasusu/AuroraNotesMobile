@@ -4,8 +4,8 @@ import { FloatingActionButton } from '../../src/components/ui/FloatingActionButt
 
 // Mock react-native-vector-icons
 jest.mock('react-native-vector-icons/MaterialIcons', () => {
-  const React = require('react')
-  return React.forwardRef((props: any, ref: any) => {
+  const ReactMock = require('react')
+  return ReactMock.forwardRef((props: any, ref: any) => {
     const { Text } = require('react-native')
     return <Text ref={ref} testID="mock-icon">{props.name}</Text>
   })
