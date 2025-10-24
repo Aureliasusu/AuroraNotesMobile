@@ -11,8 +11,10 @@ jest.mock('../../src/lib/supabase', () => ({
   },
 }))
 
-jest.mock('react-native/Libraries/Alert/Alert', () => ({
-  alert: jest.fn(),
+jest.mock('react-native', () => ({
+  Alert: {
+    alert: jest.fn(),
+  },
 }))
 
 // Mock global fetch
@@ -181,7 +183,7 @@ describe('FileUploadService', () => {
           'test.pdf',
           'application/pdf'
         )
-      ).rejects.toThrow('Upload failed: Upload failed')
+      ).rejects.toThrow('Document upload failed: Upload failed')
     })
   })
 

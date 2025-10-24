@@ -174,6 +174,12 @@ export class FileUploadService {
       return false
     }
   }
+
+  // Get public URL for a file
+  static getFileUrl(filePath: string, bucket: string = 'note-attachments'): string {
+    const { data } = supabase.storage.from(bucket).getPublicUrl(filePath)
+    return data.publicUrl
+  }
 }
 
 // Export singleton instance

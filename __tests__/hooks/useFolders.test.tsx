@@ -79,6 +79,7 @@ describe('useFolders', () => {
     expect(mockCreateFolder).toHaveBeenCalledWith({
       name: 'New Folder',
       color: '#0000ff',
+      parent_id: null,
     })
   })
 
