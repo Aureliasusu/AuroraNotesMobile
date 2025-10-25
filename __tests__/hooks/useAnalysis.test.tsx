@@ -1,12 +1,14 @@
-import { renderHook, waitFor } from '@testing-library/react-native'
+import { renderHook, waitFor, act } from '@testing-library/react-native'
 import { Alert } from 'react-native'
 import { useAnalysis } from '../../src/hooks/useAnalysis'
 import { EdgeFunctionService } from '../../src/services/edgeFunctions'
 
 // Mock dependencies
 jest.mock('../../src/services/edgeFunctions')
-jest.mock('react-native/Libraries/Alert/Alert', () => ({
-  alert: jest.fn(),
+jest.mock('react-native', () => ({
+  Alert: {
+    alert: jest.fn(),
+  },
 }))
 
 describe('useAnalysis', () => {
@@ -33,7 +35,7 @@ describe('useAnalysis', () => {
     const { result } = renderHook(() => useAnalysis())
 
     let analysisResult
-    await waitFor(async () => {
+    await act(async () => {
       analysisResult = await result.current.analyzeNote('note1', 'Test content')
     })
 
@@ -49,9 +51,11 @@ describe('useAnalysis', () => {
 
     const { result } = renderHook(() => useAnalysis())
 
-    await expect(
-      result.current.analyzeNote('note1', 'Test content')
-    ).rejects.toThrow('Analysis failed')
+    await act(async () => {
+      await expect(
+        result.current.analyzeNote('note1', 'Test content')
+      ).rejects.toThrow('Analysis failed')
+    })
 
     await waitFor(() => {
       expect(result.current.error).toBe('Analysis failed')
@@ -70,7 +74,7 @@ describe('useAnalysis', () => {
     const { result } = renderHook(() => useAnalysis())
 
     let summaryResult
-    await waitFor(async () => {
+    await act(async () => {
       summaryResult = await result.current.generateSummary('note1', 'Long content here')
     })
 
@@ -88,7 +92,7 @@ describe('useAnalysis', () => {
     const { result } = renderHook(() => useAnalysis())
 
     let keywordsResult
-    await waitFor(async () => {
+    await act(async () => {
       keywordsResult = await result.current.extractKeywords('React testing with hooks')
     })
 
@@ -106,7 +110,7 @@ describe('useAnalysis', () => {
     const { result } = renderHook(() => useAnalysis())
 
     let tagsResult
-    await waitFor(async () => {
+    await act(async () => {
       tagsResult = await result.current.suggestTags('React Native development and testing')
     })
 
@@ -127,7 +131,7 @@ describe('useAnalysis', () => {
     const { result } = renderHook(() => useAnalysis())
 
     let similarResult
-    await waitFor(async () => {
+    await act(async () => {
       similarResult = await result.current.findSimilarNotes('note1', 'Content to match')
     })
 
@@ -148,7 +152,7 @@ describe('useAnalysis', () => {
 
     const noteIds = ['note1', 'note2', 'note3']
     let batchResult
-    await waitFor(async () => {
+    await act(async () => {
       batchResult = await result.current.batchProcessNotes(noteIds, 'analyze')
     })
 
@@ -162,9 +166,11 @@ describe('useAnalysis', () => {
 
     const { result } = renderHook(() => useAnalysis())
 
-    await expect(
-      result.current.batchProcessNotes(['note1', 'note2'], 'analyze')
-    ).rejects.toThrow('Batch processing failed')
+    await act(async () => {
+      await expect(
+        result.current.batchProcessNotes(['note1', 'note2'], 'analyze')
+      ).rejects.toThrow('Batch processing failed')
+    })
 
     await waitFor(() => {
       expect(result.current.error).toBe('Batch processing failed')

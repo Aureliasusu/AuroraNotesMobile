@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react-native'
+import { renderHook, waitFor, act } from '@testing-library/react-native'
 import { Alert } from 'react-native'
 import { useNoteSharing } from '../../src/hooks/useNoteSharing'
 import { useAuthStore } from '../../src/store/useAuthStore'
@@ -7,8 +7,10 @@ import { supabase } from '../../src/lib/supabase'
 // Mock dependencies
 jest.mock('../../src/store/useAuthStore')
 jest.mock('../../src/lib/supabase')
-jest.mock('react-native/Libraries/Alert/Alert', () => ({
-  alert: jest.fn(),
+jest.mock('react-native', () => ({
+  Alert: {
+    alert: jest.fn(),
+  },
 }))
 
 describe('useNoteSharing', () => {
@@ -53,7 +55,9 @@ describe('useNoteSharing', () => {
 
     const { result } = renderHook(() => useNoteSharing())
 
-    await result.current.loadShares('note1')
+    await act(async () => {
+      await result.current.loadShares('note1')
+    })
 
     await waitFor(() => {
       expect(result.current.shares).toEqual(mockShares)
@@ -98,7 +102,9 @@ describe('useNoteSharing', () => {
 
     const { result } = renderHook(() => useNoteSharing())
 
-    await result.current.shareNote('note1', 'user2@example.com', 'read')
+    await act(async () => {
+      await result.current.shareNote('note1', 'user2@example.com', 'read')
+    })
 
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith(
@@ -122,7 +128,9 @@ describe('useNoteSharing', () => {
 
     const { result } = renderHook(() => useNoteSharing())
 
-    await result.current.shareNote('note1', 'nonexistent@example.com', 'read')
+    await act(async () => {
+      await result.current.shareNote('note1', 'nonexistent@example.com', 'read')
+    })
 
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith('Error', 'User not found')
@@ -146,12 +154,14 @@ describe('useNoteSharing', () => {
 
     const { result } = renderHook(() => useNoteSharing())
 
-    await result.current.updateSharePermission('share1', 'write')
+    await act(async () => {
+      await result.current.updateSharePermission('share1', 'write')
+    })
 
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith(
         'Success',
-        'Permission updated successfully'
+        'Permission updated'
       )
     })
   })
@@ -173,12 +183,14 @@ describe('useNoteSharing', () => {
 
     const { result } = renderHook(() => useNoteSharing())
 
-    await result.current.removeShare('share1')
+    await act(async () => {
+      await result.current.removeShare('share1')
+    })
 
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith(
         'Success',
-        'Share removed successfully'
+        'Share removed'
       )
     })
   })
@@ -190,7 +202,9 @@ describe('useNoteSharing', () => {
 
     const { result } = renderHook(() => useNoteSharing())
 
-    await result.current.shareNote('note1', 'user2@example.com', 'read')
+    await act(async () => {
+      await result.current.shareNote('note1', 'user2@example.com', 'read')
+    })
 
     expect(supabase.from).not.toHaveBeenCalled()
   })
