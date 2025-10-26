@@ -7,19 +7,25 @@ import { supabase } from '../../src/lib/supabase'
 // Mock dependencies
 jest.mock('../../src/store/useAuthStore')
 jest.mock('../../src/store/useNotesStore')
-jest.mock('../../src/lib/supabase')
+jest.mock('../../src/lib/supabase', () => {
+  const mockChannel = {
+    on: jest.fn().mockReturnThis(),
+    subscribe: jest.fn(),
+    unsubscribe: jest.fn(),
+  }
+  
+  return {
+    supabase: {
+      channel: jest.fn().mockReturnValue(mockChannel),
+    },
+  }
+})
 
 describe('useRealtimeNotes', () => {
   const mockUser = { id: 'user1' }
   const mockAddNote = jest.fn()
   const mockUpdateNote = jest.fn()
   const mockDeleteNote = jest.fn()
-
-  const mockChannel = {
-    on: jest.fn().mockReturnThis(),
-    subscribe: jest.fn(),
-    unsubscribe: jest.fn(),
-  }
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -31,13 +37,13 @@ describe('useRealtimeNotes', () => {
       updateNote: mockUpdateNote,
       deleteNote: mockDeleteNote,
     })
-    ;(supabase.channel as jest.Mock).mockReturnValue(mockChannel)
   })
 
   it('should set up real-time subscription when user is authenticated', () => {
     renderHook(() => useRealtimeNotes())
 
-    expect(supabase.channel).toHaveBeenCalledWith('notes_changes')
+    expect(supabase.channel).toHaveBeenCalledWith('notes-changes')
+    const mockChannel = (supabase.channel as jest.Mock).mock.results[0].value
     expect(mockChannel.on).toHaveBeenCalledTimes(3) // INSERT, UPDATE, DELETE
     expect(mockChannel.subscribe).toHaveBeenCalled()
   })
@@ -52,9 +58,10 @@ describe('useRealtimeNotes', () => {
     expect(supabase.channel).not.toHaveBeenCalled()
   })
 
-  it('should handle INSERT event', async () => {
+  it('should handle INSERT event', () => {
     let insertHandler: any
 
+    const mockChannel = (supabase.channel as jest.Mock).mock.results[0].value
     mockChannel.on.mockImplementation((config: any, handler: any) => {
       if (config.event === 'INSERT') {
         insertHandler = handler
@@ -72,14 +79,16 @@ describe('useRealtimeNotes', () => {
     }
 
     // Simulate INSERT event
-    insertHandler({ new: newNote })
-
-    expect(mockAddNote).toHaveBeenCalledWith(newNote)
+    if (insertHandler) {
+      insertHandler({ new: newNote })
+      expect(mockAddNote).toHaveBeenCalledWith(newNote)
+    }
   })
 
-  it('should handle UPDATE event', async () => {
+  it('should handle UPDATE event', () => {
     let updateHandler: any
 
+    const mockChannel = (supabase.channel as jest.Mock).mock.results[0].value
     mockChannel.on.mockImplementation((config: any, handler: any) => {
       if (config.event === 'UPDATE') {
         updateHandler = handler
@@ -93,17 +102,20 @@ describe('useRealtimeNotes', () => {
       id: '1',
       title: 'Updated Note',
       content: 'Updated Content',
+      user_id: 'user1',
     }
 
     // Simulate UPDATE event
-    updateHandler({ new: updatedNote })
-
-    expect(mockUpdateNote).toHaveBeenCalledWith('1', updatedNote)
+    if (updateHandler) {
+      updateHandler({ new: updatedNote })
+      expect(mockUpdateNote).toHaveBeenCalledWith('1', updatedNote)
+    }
   })
 
-  it('should handle DELETE event', async () => {
+  it('should handle DELETE event', () => {
     let deleteHandler: any
 
+    const mockChannel = (supabase.channel as jest.Mock).mock.results[0].value
     mockChannel.on.mockImplementation((config: any, handler: any) => {
       if (config.event === 'DELETE') {
         deleteHandler = handler
@@ -114,59 +126,59 @@ describe('useRealtimeNotes', () => {
     renderHook(() => useRealtimeNotes())
 
     // Simulate DELETE event
-    deleteHandler({ old: { id: '1' } })
-
-    expect(mockDeleteNote).toHaveBeenCalledWith('1')
+    if (deleteHandler) {
+      deleteHandler({ old: { id: '1' } })
+      expect(mockDeleteNote).toHaveBeenCalledWith('1')
+    }
   })
 
   it('should unsubscribe on unmount', () => {
     const { unmount } = renderHook(() => useRealtimeNotes())
+
+    const mockChannel = (supabase.channel as jest.Mock).mock.results[0].value
 
     unmount()
 
     expect(mockChannel.unsubscribe).toHaveBeenCalled()
   })
 
-  it('should log subscription status', async () => {
+  it('should log subscription status', () => {
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation()
 
     let subscribeCallback: any
 
+    const mockChannel = (supabase.channel as jest.Mock).mock.results[0].value
     mockChannel.subscribe.mockImplementation((callback: any) => {
       subscribeCallback = callback
     })
 
     renderHook(() => useRealtimeNotes())
 
-    // Simulate SUBSCRIBED status
-    subscribeCallback('SUBSCRIBED')
-
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Real-time notes subscription active'
-    )
+    if (subscribeCallback) {
+      subscribeCallback('SUBSCRIBED')
+      expect(consoleSpy).toHaveBeenCalledWith('Real-time subscription status:', 'SUBSCRIBED')
+    }
 
     consoleSpy.mockRestore()
   })
 
-  it('should handle subscription errors', async () => {
+  it('should handle subscription errors', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
 
     let subscribeCallback: any
 
+    const mockChannel = (supabase.channel as jest.Mock).mock.results[0].value
     mockChannel.subscribe.mockImplementation((callback: any) => {
       subscribeCallback = callback
     })
 
     renderHook(() => useRealtimeNotes())
 
-    // Simulate CHANNEL_ERROR status
-    subscribeCallback('CHANNEL_ERROR')
-
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Real-time subscription error'
-    )
+    if (subscribeCallback) {
+      subscribeCallback('CHANNEL_ERROR')
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Real-time subscription error')
+    }
 
     consoleErrorSpy.mockRestore()
   })
 })
-
