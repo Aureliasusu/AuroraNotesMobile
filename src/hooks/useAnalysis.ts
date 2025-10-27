@@ -49,6 +49,7 @@ export function useAnalysis() {
       const result = await EdgeFunctionService.extractKeywords(content)
       return result
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Failed to extract keywords', err)
       Alert.alert('Error', 'Failed to extract keywords')
       throw err
@@ -65,6 +66,7 @@ export function useAnalysis() {
       const result = await EdgeFunctionService.suggestTags(content)
       return result
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Failed to suggest tags', err)
       Alert.alert('Error', 'Failed to suggest tags')
       throw err
@@ -81,6 +83,7 @@ export function useAnalysis() {
       const result = await EdgeFunctionService.findSimilarNotes(noteId, content)
       return result
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Failed to find similar notes', err)
       Alert.alert('Error', 'Failed to find similar notes')
       throw err

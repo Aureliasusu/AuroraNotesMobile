@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Platform } from 'react-native';
+import { colors } from '../../constants/colors';
 
 interface SimpleCodeHighlighterProps {
   code: string;
@@ -182,8 +183,8 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
   const formattedCode = formatCode(code, language);
 
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? '#1e1e1e' : '#ffffff' }, style]}>
-      <View style={[styles.header, { backgroundColor: isDark ? '#2d2d2d' : '#f8f9fa' }]}>
+    <View style={[styles.container, isDark ? styles.containerDark : styles.containerLight, style]}>
+      <View style={[styles.header, isDark ? styles.headerDark : styles.headerLight]}>
         <View style={styles.languageContainer}>
           <View 
             style={[
@@ -191,15 +192,15 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
               { backgroundColor: getLanguageColor(language) }
             ]} 
           />
-          <Text style={[styles.languageText, { color: isDark ? '#d4d4d4' : '#6b7280' }]}>
+          <Text style={[styles.languageText, isDark ? styles.languageTextDark : styles.languageTextLight]}>
             {language.toUpperCase()}
           </Text>
         </View>
         <TouchableOpacity 
-          style={[styles.copyButton, { backgroundColor: isDark ? '#404040' : '#e5e7eb' }]}
+          style={[styles.copyButton, isDark ? styles.copyButtonDark : styles.copyButtonLight]}
           onPress={copyToClipboard}
         >
-          <Text style={[styles.copyButtonText, { color: isDark ? '#d4d4d4' : '#374151' }]}>
+          <Text style={[styles.copyButtonText, isDark ? styles.copyButtonTextDark : styles.copyButtonTextLight]}>
             Copy
           </Text>
         </TouchableOpacity>
@@ -214,11 +215,11 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
           {formattedCode.map((line, index) => (
             <View key={index} style={styles.lineContainer}>
               {showLineNumbers && (
-                <Text style={[styles.lineNumber, { color: isDark ? '#6b7280' : '#9ca3af' }]}>
+                <Text style={[styles.lineNumber, isDark ? styles.lineNumberDark : styles.lineNumberLight]}>
                   {line.lineNumber}
                 </Text>
               )}
-              <Text style={[styles.codeText, { color: isDark ? '#d4d4d4' : '#333333' }]}>
+              <Text style={[styles.codeText, isDark ? styles.codeTextDark : styles.codeTextLight]}>
                 {renderHighlightedText(line.content)}
               </Text>
             </View>
@@ -235,6 +236,12 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     overflow: 'hidden',
   },
+  containerDark: {
+    backgroundColor: colors.code.background,
+  },
+  containerLight: {
+    backgroundColor: colors.codeLight.background,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -242,7 +249,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#404040',
+    borderBottomColor: colors.code.border,
+  },
+  headerDark: {
+    backgroundColor: colors.code.backgroundSecondary,
+  },
+  headerLight: {
+    backgroundColor: colors.codeLight.backgroundSecondary,
   },
   languageContainer: {
     flexDirection: 'row',
@@ -258,14 +271,32 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
+  languageTextDark: {
+    color: colors.code.text,
+  },
+  languageTextLight: {
+    color: colors.codeLight.textSecondary,
+  },
   copyButton: {
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
   },
+  copyButtonDark: {
+    backgroundColor: colors.code.border,
+  },
+  copyButtonLight: {
+    backgroundColor: colors.codeLight.border,
+  },
   copyButtonText: {
     fontSize: 12,
     fontWeight: '500',
+  },
+  copyButtonTextDark: {
+    color: colors.code.text,
+  },
+  copyButtonTextLight: {
+    color: colors.codeLight.textSecondary,
   },
   codeContainer: {
     maxHeight: 300,
@@ -282,10 +313,22 @@ const styles = StyleSheet.create({
     minWidth: 30,
     textAlign: 'right',
   },
+  lineNumberDark: {
+    color: colors.code.textSecondary,
+  },
+  lineNumberLight: {
+    color: colors.codeLight.textSecondary,
+  },
   codeText: {
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     fontSize: 14,
     lineHeight: 20,
     flex: 1,
+  },
+  codeTextDark: {
+    color: colors.code.text,
+  },
+  codeTextLight: {
+    color: colors.codeLight.text,
   },
 });

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import { colors } from '../../constants/colors'
 
 interface SearchBarProps {
   placeholder?: string
@@ -57,7 +58,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       />
       {value.length > 0 && (
         <TouchableOpacity onPress={handleClear} style={styles.clearButton}>
-          <Icon name="clear" size={20} color="#6b7280" />
+          <Icon name="clear" size={20} color={colors.text.tertiary} />
         </TouchableOpacity>
       )}
     </View>
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f9fafb',
+    backgroundColor: colors.gray[50],
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -76,8 +77,8 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   focused: {
-    backgroundColor: '#ffffff',
-    borderColor: '#3b82f6',
+    backgroundColor: colors.background.primary,
+    borderColor: colors.primary[500],
     borderWidth: 1,
   },
   searchIcon: {
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#111827',
+    color: colors.text.primary,
   },
   clearButton: {
     padding: 4,

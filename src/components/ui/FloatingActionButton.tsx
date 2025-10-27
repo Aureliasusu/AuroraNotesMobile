@@ -4,6 +4,7 @@ import {
   StyleSheet,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import { colors } from '../../constants/colors'
 
 interface FloatingActionButtonProps {
   onPress: () => void
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
-    shadowColor: '#000',
+    shadowColor: colors.shadow.light,
     shadowOffset: {
       width: 0,
       height: 4,

@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { Note } from '../../types/database'
+import { colors } from '../../constants/colors'
 
 interface NoteCardProps {
   note: Note
@@ -70,7 +71,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
           {note.title}
         </Text>
         {note.is_pinned && (
-          <Icon name="push-pin" size={16} color="#3b82f6" style={styles.pinIcon} />
+          <Icon name="push-pin" size={16} color={colors.primary[500]} style={styles.pinIcon} />
         )}
       </View>
       
@@ -96,7 +97,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
           {formatDate(note.updated_at)}
         </Text>
         {note.is_archived && (
-          <Icon name="archive" size={14} color="#6b7280" />
+          <Icon name="archive" size={14} color={colors.text.tertiary} />
         )}
       </View>
     </TouchableOpacity>
@@ -105,11 +106,11 @@ export const NoteCard: React.FC<NoteCardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.background.primary,
     borderRadius: 8,
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: colors.shadow.light,
     shadowOffset: {
       width: 0,
       height: 1,
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
   },
   pinned: {
     borderLeftWidth: 4,
-    borderLeftColor: '#3b82f6',
+    borderLeftColor: colors.primary[500],
   },
   archived: {
     opacity: 0.7,
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#111827',
+    color: colors.text.primary,
     flex: 1,
     marginRight: 8,
   },
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 14,
-    color: '#374151',
+    color: colors.text.secondary,
     lineHeight: 20,
     marginBottom: 12,
   },
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   tag: {
-    backgroundColor: '#f3f4f6',
+    backgroundColor: colors.gray[100],
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
@@ -162,11 +163,11 @@ const styles = StyleSheet.create({
   },
   tagText: {
     fontSize: 12,
-    color: '#374151',
+    color: colors.text.secondary,
   },
   moreTags: {
     fontSize: 12,
-    color: '#6b7280',
+    color: colors.text.tertiary,
     fontStyle: 'italic',
   },
   footer: {
@@ -176,6 +177,6 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 12,
-    color: '#6b7280',
+    color: colors.text.tertiary,
   },
 })
