@@ -6,7 +6,7 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native'
-import { Colors } from '../../constants/colors'
+import { colors } from '../../constants/colors'
 
 interface ButtonProps {
   title: string
@@ -63,14 +63,14 @@ export const Button: React.FC<ButtonProps> = ({
     // Variant styles
     switch (variant) {
       case 'primary':
-        baseStyle.backgroundColor = disabled ? Colors.gray300 : Colors.primary
+        baseStyle.backgroundColor = disabled ? colors.gray[300] : colors.primary[500]
         break
       case 'secondary':
-        baseStyle.backgroundColor = disabled ? Colors.gray300 : Colors.secondary
+        baseStyle.backgroundColor = disabled ? colors.gray[300] : colors.gray[500]
         break
       case 'outline':
         baseStyle.backgroundColor = 'transparent'
-        baseStyle.borderColor = disabled ? Colors.gray300 : Colors.primary
+        baseStyle.borderColor = disabled ? colors.gray[300] : colors.primary[500]
         break
       case 'ghost':
         baseStyle.backgroundColor = 'transparent'
@@ -106,13 +106,13 @@ export const Button: React.FC<ButtonProps> = ({
     switch (variant) {
       case 'primary':
       case 'secondary':
-        baseTextStyle.color = disabled ? Colors.gray500 : Colors.white
+        baseTextStyle.color = disabled ? colors.gray[500] : colors.text.inverse
         break
       case 'outline':
-        baseTextStyle.color = disabled ? Colors.gray500 : Colors.primary
+        baseTextStyle.color = disabled ? colors.gray[500] : colors.primary[500]
         break
       case 'ghost':
-        baseTextStyle.color = disabled ? Colors.gray500 : Colors.primary
+        baseTextStyle.color = disabled ? colors.gray[500] : colors.primary[500]
         break
     }
 
@@ -132,7 +132,7 @@ export const Button: React.FC<ButtonProps> = ({
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === 'outline' || variant === 'ghost' ? Colors.primary : Colors.white}
+          color={variant === 'outline' || variant === 'ghost' ? colors.primary[500] : colors.text.inverse}
         />
       ) : (
         <>

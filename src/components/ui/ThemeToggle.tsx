@@ -2,7 +2,7 @@ import React from 'react'
 import { TouchableOpacity, StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useTheme } from '../../contexts/ThemeContext'
-import { colors } from '../../constants/colors'
+import { colors as colorConstants } from '../../constants/colors'
 
 interface ThemeToggleProps {
   size?: number
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 2,
-    shadowColor: colors.shadow.light,
+    shadowColor: colorConstants.shadow.light,
     shadowOffset: {
       width: 0,
       height: 1,

@@ -14,7 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useAdvancedSearch } from '../../hooks/useAdvancedSearch'
 import { SearchResult } from '../../store/useSearchStore'
-import { Colors } from '../../constants/colors'
+import { colors } from '../../constants/colors'
 
 interface AdvancedSearchProps {
   visible: boolean
@@ -35,7 +35,7 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({ result, onPress }) 
     <TouchableOpacity style={styles.resultItem} onPress={onPress}>
       <View style={styles.resultHeader}>
         <Text style={styles.resultTitle} numberOfLines={1}>
-          {note.is_pinned && <Icon name="star" size={16} color="#f59e0b" />}
+          {note.is_pinned && <Icon name="star" size={16} color={colors.warning[500]} />}
           {note.title || 'Untitled'}
         </Text>
         <View style={styles.resultMeta}>
@@ -84,7 +84,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({ title, children, isExpand
       <Icon 
         name={isExpanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} 
         size={20} 
-        color="#6b7280" 
+        color={colors.text.tertiary} 
       />
     </TouchableOpacity>
     {isExpanded && (
@@ -201,7 +201,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                 value={filters.query}
                 onChangeText={updateQuery}
                 placeholder="Enter search terms..."
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor={colors.text.quaternary}
                 autoFocus
               />
               {filters.query.length > 0 && (
@@ -235,11 +235,11 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                   value={newTag}
                   onChangeText={setNewTag}
                   placeholder="Add tag..."
-                  placeholderTextColor="#9ca3af"
+                  placeholderTextColor={colors.text.quaternary}
                   onSubmitEditing={handleAddTag}
                 />
                 <TouchableOpacity onPress={handleAddTag} style={styles.addTagButton}>
-                  <Icon name="add" size={16} color="#3b82f6" />
+                  <Icon name="add" size={16} color={colors.primary[500]} />
                 </TouchableOpacity>
               </View>
               
@@ -253,7 +253,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                       onPress={() => removeTag(tag)}
                     >
                       <Text style={styles.selectedTagText}>{tag}</Text>
-                      <Icon name="close" size={14} color="#ffffff" />
+                      <Icon name="close" size={14} color={colors.text.inverse} />
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -325,7 +325,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                     ]}
                     onPress={() => updateSort(filters.sortBy, 'desc')}
                   >
-                    <Icon name="arrow-downward" size={16} color={filters.sortOrder === 'desc' ? '#ffffff' : '#6b7280'} />
+                    <Icon name="arrow-downward" size={16} color={filters.sortOrder === 'desc' ? 'colors.background.primary' : '#6b7280'} />
                     <Text style={[
                       styles.orderButtonText,
                       filters.sortOrder === 'desc' && styles.orderButtonTextActive
@@ -340,7 +340,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                     ]}
                     onPress={() => updateSort(filters.sortBy, 'asc')}
                   >
-                    <Icon name="arrow-upward" size={16} color={filters.sortOrder === 'asc' ? '#ffffff' : '#6b7280'} />
+                    <Icon name="arrow-upward" size={16} color={filters.sortOrder === 'asc' ? 'colors.background.primary' : '#6b7280'} />
                     <Text style={[
                       styles.orderButtonText,
                       filters.sortOrder === 'asc' && styles.orderButtonTextActive
@@ -366,7 +366,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                   ]}
                   onPress={() => updatePinned(filters.isPinned === true ? null : true)}
                 >
-                  <Icon name="star" size={16} color={filters.isPinned === true ? '#ffffff' : '#6b7280'} />
+                  <Icon name="star" size={16} color={filters.isPinned === true ? 'colors.background.primary' : '#6b7280'} />
                   <Text style={[
                     styles.quickFilterText,
                     filters.isPinned === true && styles.quickFilterTextActive
@@ -382,7 +382,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
                   ]}
                   onPress={() => updateArchived(filters.isArchived === true ? null : true)}
                 >
-                  <Icon name="archive" size={16} color={filters.isArchived === true ? '#ffffff' : '#6b7280'} />
+                  <Icon name="archive" size={16} color={filters.isArchived === true ? 'colors.background.primary' : '#6b7280'} />
                   <Text style={[
                     styles.quickFilterText,
                     filters.isArchived === true && styles.quickFilterTextActive
@@ -424,7 +424,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
               <Text style={styles.sectionTitle}>
                 Results ({stats.filteredNotes} of {stats.totalNotes})
               </Text>
-              {loading && <ActivityIndicator size="small" color="#3b82f6" />}
+              {loading && <ActivityIndicator size="small" color="colors.primary[500]" />}
             </View>
 
             {error && (
@@ -435,7 +435,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 
             {results.length === 0 && !loading ? (
               <View style={styles.emptyContainer}>
-                <Icon name="search-off" size={48} color="#d1d5db" />
+                <Icon name="search-off" size={48} color="colors.gray[300]" />
                 <Text style={styles.emptyTitle}>No results found</Text>
                 <Text style={styles.emptySubtitle}>
                   Try adjusting your search terms or filters
@@ -465,7 +465,7 @@ export const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.gray50,
+    backgroundColor: colors.gray[50],
   },
   
   // Header styles
@@ -475,9 +475,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.background.primary,
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: colors.border.light,
   },
   headerLeft: {
     flexDirection: 'row',
@@ -486,17 +486,17 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#111827',
+    color: 'colors.text.primary',
   },
   filterBadge: {
     marginLeft: 8,
-    backgroundColor: '#3b82f6',
+    backgroundColor: 'colors.primary[500]',
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
   filterBadgeText: {
-    color: '#ffffff',
+    color: 'colors.background.primary',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -512,20 +512,20 @@ const styles = StyleSheet.create({
   // Search section styles
   searchSection: {
     padding: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'colors.background.primary',
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: 'colors.border.light',
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#374151',
+    color: 'colors.text.secondary',
     marginBottom: 12,
   },
   searchInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'colors.gray[100]',
     borderRadius: 8,
     paddingHorizontal: 12,
   },
@@ -536,14 +536,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#111827',
+    color: 'colors.text.primary',
   },
 
   // Filters styles
   filtersContainer: {
-    backgroundColor: '#ffffff',
+    backgroundColor: 'colors.background.primary',
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: 'colors.border.light',
   },
   filtersHeader: {
     flexDirection: 'row',
@@ -553,7 +553,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   clearButton: {
-    color: '#ef4444',
+    color: 'colors.error[500]',
     fontSize: 14,
     fontWeight: '500',
   },
@@ -561,7 +561,7 @@ const styles = StyleSheet.create({
   // Filter section styles
   filterSection: {
     borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
+    borderBottomColor: 'colors.gray[100]',
   },
   filterSectionHeader: {
     flexDirection: 'row',
@@ -573,7 +573,7 @@ const styles = StyleSheet.create({
   filterSectionTitle: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#374151',
+    color: 'colors.text.secondary',
   },
   filterSectionContent: {
     paddingHorizontal: 16,
@@ -589,18 +589,18 @@ const styles = StyleSheet.create({
   tagInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: 'colors.gray[300]',
     borderRadius: 6,
     paddingHorizontal: 12,
     paddingVertical: 8,
     fontSize: 14,
-    color: '#111827',
-    backgroundColor: '#ffffff',
+    color: 'colors.text.primary',
+    backgroundColor: 'colors.background.primary',
   },
   addTagButton: {
     marginLeft: 8,
     padding: 8,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'colors.gray[100]',
     borderRadius: 6,
   },
   selectedTags: {
@@ -611,7 +611,7 @@ const styles = StyleSheet.create({
   selectedTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#3b82f6',
+    backgroundColor: 'colors.primary[500]',
     borderRadius: 16,
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -619,7 +619,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   selectedTagText: {
-    color: '#ffffff',
+    color: 'colors.background.primary',
     fontSize: 12,
     fontWeight: '500',
     marginRight: 4,
@@ -631,20 +631,20 @@ const styles = StyleSheet.create({
   availableTag: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'colors.gray[100]',
     borderRadius: 16,
     marginRight: 8,
     marginBottom: 8,
   },
   availableTagSelected: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: 'colors.primary[500]',
   },
   availableTagText: {
     fontSize: 12,
     color: '#6b7280',
   },
   availableTagTextSelected: {
-    color: '#ffffff',
+    color: 'colors.background.primary',
   },
 
   // Sort styles
@@ -654,7 +654,7 @@ const styles = StyleSheet.create({
   sortLabel: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#374151',
+    color: 'colors.text.secondary',
   },
   sortButtons: {
     flexDirection: 'row',
@@ -664,18 +664,18 @@ const styles = StyleSheet.create({
   sortButton: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'colors.gray[100]',
     borderRadius: 16,
   },
   sortButtonActive: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: 'colors.primary[500]',
   },
   sortButtonText: {
     fontSize: 12,
     color: '#6b7280',
   },
   sortButtonTextActive: {
-    color: '#ffffff',
+    color: 'colors.background.primary',
   },
   orderButtons: {
     flexDirection: 'row',
@@ -686,11 +686,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'colors.gray[100]',
     borderRadius: 16,
   },
   orderButtonActive: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: 'colors.primary[500]',
   },
   orderButtonText: {
     marginLeft: 4,
@@ -698,7 +698,7 @@ const styles = StyleSheet.create({
     color: '#6b7280',
   },
   orderButtonTextActive: {
-    color: '#ffffff',
+    color: 'colors.background.primary',
   },
 
   // Quick filters styles
@@ -712,11 +712,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 8,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'colors.gray[100]',
     borderRadius: 16,
   },
   quickFilterButtonActive: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: 'colors.primary[500]',
   },
   quickFilterText: {
     marginLeft: 4,
@@ -724,7 +724,7 @@ const styles = StyleSheet.create({
     color: '#6b7280',
   },
   quickFilterTextActive: {
-    color: '#ffffff',
+    color: 'colors.background.primary',
   },
 
   // Folder filter styles
@@ -734,30 +734,30 @@ const styles = StyleSheet.create({
   folderLabel: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#374151',
+    color: 'colors.text.secondary',
   },
   folderOption: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'colors.gray[100]',
     borderRadius: 16,
     marginRight: 8,
   },
   folderOptionActive: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: 'colors.primary[500]',
   },
   folderOptionText: {
     fontSize: 12,
     color: '#6b7280',
   },
   folderOptionTextActive: {
-    color: '#ffffff',
+    color: 'colors.background.primary',
   },
 
   // Results styles
   resultsSection: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'colors.background.primary',
   },
   resultsHeader: {
     flexDirection: 'row',
@@ -766,16 +766,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: 'colors.border.light',
   },
   errorContainer: {
     padding: 16,
-    backgroundColor: '#fef2f2',
+    backgroundColor: 'colors.error[50]',
     margin: 16,
     borderRadius: 8,
   },
   errorText: {
-    color: '#dc2626',
+    color: 'colors.error[600]',
     fontSize: 14,
   },
   emptyContainer: {
@@ -785,7 +785,7 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#374151',
+    color: 'colors.text.secondary',
     marginTop: 16,
     marginBottom: 8,
   },
@@ -802,7 +802,7 @@ const styles = StyleSheet.create({
   resultItem: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
+    borderBottomColor: 'colors.gray[100]',
   },
   resultHeader: {
     flexDirection: 'row',
@@ -814,14 +814,14 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: '600',
-    color: '#111827',
+    color: 'colors.text.primary',
   },
   resultMeta: {
     alignItems: 'flex-end',
   },
   relevanceScore: {
     fontSize: 12,
-    color: '#10b981',
+    color: 'colors.success[500]',
     fontWeight: '600',
   },
   resultContent: {
@@ -841,7 +841,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tag: {
-    backgroundColor: '#e5e7eb',
+    backgroundColor: 'colors.border.light',
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 4,
@@ -849,7 +849,7 @@ const styles = StyleSheet.create({
   },
   tagText: {
     fontSize: 10,
-    color: '#374151',
+    color: 'colors.text.secondary',
     fontWeight: '500',
   },
   moreTags: {

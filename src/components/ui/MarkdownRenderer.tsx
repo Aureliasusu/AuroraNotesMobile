@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Platform } from 'react-native';
 import { CodeHighlighter } from './CodeHighlighter';
+import { colors } from '../../constants/colors';
 
 interface MarkdownRendererProps {
   content: string;
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
   header: {
     fontWeight: 'bold',
     marginVertical: 8,
-    color: '#111827',
+    color: 'colors.text.primary',
   },
   h1: {
     fontSize: 24,
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#374151',
+    color: 'colors.text.secondary',
     marginBottom: 8,
   },
   paragraphSpacing: {
@@ -200,17 +201,17 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontWeight: 'bold',
-    color: '#111827',
+    color: 'colors.text.primary',
   },
   italic: {
     fontStyle: 'italic',
-    color: '#111827',
+    color: 'colors.text.primary',
   },
   inlineCode: {
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     fontSize: 14,
-    backgroundColor: '#f3f4f6',
-    color: '#e11d48',
+    backgroundColor: 'colors.gray[100]',
+    color: 'colors.error[500]',
     paddingHorizontal: 4,
     paddingVertical: 2,
     borderRadius: 4,
@@ -227,7 +228,7 @@ const styles = StyleSheet.create({
   },
   listBullet: {
     fontSize: 16,
-    color: '#6b7280',
+    color: 'colors.text.tertiary',
     marginRight: 8,
     marginTop: 2,
   },
@@ -235,6 +236,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     lineHeight: 24,
-    color: '#374151',
+    color: 'colors.text.secondary',
   },
 });

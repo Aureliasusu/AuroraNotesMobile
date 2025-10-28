@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useOffline } from '../../contexts/OfflineContext'
 import { useTheme } from '../../contexts/ThemeContext'
+import { colors as themeColors } from '../../constants/colors'
 
 interface OfflineIndicatorProps {
   style?: any
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: themeColors.border.light,
   },
   statusContainer: {
     flexDirection: 'row',

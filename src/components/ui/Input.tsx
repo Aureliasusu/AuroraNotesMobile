@@ -8,7 +8,7 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native'
-import { Colors } from '../../constants/colors'
+import { colors } from '../../constants/colors'
 
 interface InputProps extends TextInputProps {
   label?: string
@@ -56,7 +56,7 @@ export const Input: React.FC<InputProps> = ({
       alignItems: 'center',
       borderRadius: 8,
       borderWidth: 1,
-      backgroundColor: Colors.surface,
+      backgroundColor: colors.background.primary,
     }
 
     // Size styles
@@ -80,25 +80,25 @@ export const Input: React.FC<InputProps> = ({
     // Variant styles
     switch (variant) {
       case 'filled':
-        baseStyle.backgroundColor = Colors.surfaceSecondary
+        baseStyle.backgroundColor = colors.background.primarySecondary
         baseStyle.borderWidth = 0
         break
       case 'outlined':
-        baseStyle.backgroundColor = Colors.surface
+        baseStyle.backgroundColor = colors.background.primary
         baseStyle.borderWidth = 1
         break
       default:
-        baseStyle.backgroundColor = Colors.surface
+        baseStyle.backgroundColor = colors.background.primary
         baseStyle.borderWidth = 1
     }
 
     // Focus and error states
     if (isFocused) {
-      baseStyle.borderColor = Colors.primary
+      baseStyle.borderColor = colors.primary[500]
     } else if (error) {
-      baseStyle.borderColor = Colors.error
+      baseStyle.borderColor = colors.error[500]
     } else {
-      baseStyle.borderColor = Colors.border
+      baseStyle.borderColor = colors.border.light
     }
 
     return baseStyle
@@ -107,7 +107,7 @@ export const Input: React.FC<InputProps> = ({
   const getInputStyle = (): TextStyle => {
     const baseStyle: TextStyle = {
       flex: 1,
-      color: Colors.textPrimary,
+      color: colors.text.primary,
       fontSize: 16,
     }
 
@@ -130,12 +130,12 @@ export const Input: React.FC<InputProps> = ({
     const baseStyle: TextStyle = {
       fontSize: 14,
       fontWeight: '500',
-      color: Colors.textSecondary,
+      color: colors.text.secondary,
       marginBottom: 8,
     }
 
     if (error) {
-      baseStyle.color = Colors.error
+      baseStyle.color = colors.error[500]
     }
 
     return baseStyle
@@ -144,7 +144,7 @@ export const Input: React.FC<InputProps> = ({
   const getErrorStyle = (): TextStyle => {
     return {
       fontSize: 12,
-      color: Colors.error,
+      color: colors.error[500],
       marginTop: 4,
     }
   }
@@ -152,7 +152,7 @@ export const Input: React.FC<InputProps> = ({
   const getHelperStyle = (): TextStyle => {
     return {
       fontSize: 12,
-      color: Colors.textTertiary,
+      color: colors.text.tertiary,
       marginTop: 4,
     }
   }
@@ -174,7 +174,7 @@ export const Input: React.FC<InputProps> = ({
           style={[getInputStyle(), inputStyle]}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          placeholderTextColor={Colors.textTertiary}
+          placeholderTextColor={colors.text.tertiary}
           {...textInputProps}
         />
         

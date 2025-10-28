@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { colors as themeColors } from '../../constants/colors';
 
 interface CodeHighlighterProps {
   code: string;
@@ -46,6 +47,7 @@ export const CodeHighlighter: React.FC<CodeHighlighterProps> = ({
           style={styles.copyButton}
           onPress={() => {
             // Copy to clipboard functionality would go here
+            // eslint-disable-next-line no-console
             console.log('Copy code to clipboard');
           }}
         >
@@ -68,7 +70,7 @@ export const CodeHighlighter: React.FC<CodeHighlighterProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#1e1e1e',
+    backgroundColor: themeColors.code.background,
     borderRadius: 8,
     marginVertical: 8,
     overflow: 'hidden',
@@ -79,9 +81,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 8,
-    backgroundColor: '#2d2d2d',
+    backgroundColor: themeColors.code.backgroundSecondary,
     borderBottomWidth: 1,
-    borderBottomColor: '#404040',
+    borderBottomColor: themeColors.code.border,
   },
   languageContainer: {
     flexDirection: 'row',
@@ -94,18 +96,18 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   languageText: {
-    color: '#d4d4d4',
+    color: themeColors.code.text,
     fontSize: 12,
     fontWeight: '600',
   },
   copyButton: {
     paddingHorizontal: 8,
     paddingVertical: 4,
-    backgroundColor: '#404040',
+    backgroundColor: themeColors.code.border,
     borderRadius: 4,
   },
   copyButtonText: {
-    color: '#d4d4d4',
+    color: themeColors.code.text,
     fontSize: 12,
     fontWeight: '500',
   },
@@ -116,8 +118,8 @@ const styles = StyleSheet.create({
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
     fontSize: 14,
     lineHeight: 20,
-    color: '#d4d4d4',
+    color: themeColors.code.text,
     padding: 16,
-    backgroundColor: '#1e1e1e',
+    backgroundColor: themeColors.code.background,
   },
 });

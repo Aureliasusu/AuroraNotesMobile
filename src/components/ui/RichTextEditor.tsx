@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
+import { colors } from '../../constants/colors';
 
 interface RichTextEditorProps {
   value: string;
@@ -199,14 +200,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: 'colors.border.light',
     borderRadius: 8,
-    backgroundColor: '#fff',
+    backgroundColor: 'colors.background.primary',
   },
   toolbar: {
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-    backgroundColor: '#f9fafb',
+    borderBottomColor: 'colors.border.light',
+    backgroundColor: 'colors.gray[50]',
   },
   toolbarContent: {
     paddingHorizontal: 8,
@@ -218,28 +219,28 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginHorizontal: 2,
     borderRadius: 6,
-    backgroundColor: '#fff',
+    backgroundColor: 'colors.background.primary',
     borderWidth: 1,
     borderColor: '#d1d5db',
   },
   activeButton: {
-    backgroundColor: '#3b82f6',
-    borderColor: '#3b82f6',
+    backgroundColor: 'colors.primary[500]',
+    borderColor: 'colors.primary[500]',
   },
   toolbarButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#374151',
+    color: 'colors.text.secondary',
   },
   activeButtonText: {
-    color: '#fff',
+    color: 'colors.background.primary',
   },
   textInput: {
     flex: 1,
     padding: 16,
     fontSize: 16,
     lineHeight: 24,
-    color: '#111827',
+    color: 'colors.text.primary',
     minHeight: 200,
   },
 });

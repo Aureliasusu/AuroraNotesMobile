@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { colors } from '../../constants/colors';
 import { 
   AdvancedCodeHighlighter, 
   SimpleCodeHighlighter, 
@@ -202,20 +203,20 @@ for i in range(10):
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9fafb',
+    backgroundColor: colors.gray[50],
     padding: 16,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#111827',
+    color: colors.text.primary,
     marginBottom: 20,
     textAlign: 'center',
   },
   selector: {
     flexDirection: 'row',
     marginBottom: 20,
-    backgroundColor: '#fff',
+    backgroundColor: colors.background.primary,
     borderRadius: 8,
     padding: 4,
   },
@@ -227,15 +228,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   activeSelector: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: colors.primary[500],
   },
   selectorText: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#6b7280',
+    color: colors.text.tertiary,
   },
   activeSelectorText: {
-    color: '#fff',
+    color: colors.text.inverse,
   },
   exampleContainer: {
     marginBottom: 24,
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
   languageTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#111827',
+    color: colors.text.primary,
     marginBottom: 8,
   },
   editorContainer: {
@@ -252,7 +253,7 @@ const styles = StyleSheet.create({
   editorTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#111827',
+    color: colors.text.primary,
     marginBottom: 8,
   },
   editor: {

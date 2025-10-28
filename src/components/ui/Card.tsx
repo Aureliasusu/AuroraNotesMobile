@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   GestureResponderEvent,
 } from 'react-native'
-import { Colors } from '../../constants/colors'
+import { colors } from '../../constants/colors'
 
 interface CardProps {
   children: React.ReactNode
@@ -28,16 +28,16 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   const getCardStyle = (): ViewStyle => {
     const baseStyle: ViewStyle = {
-      backgroundColor: Colors.surface,
+      backgroundColor: colors.background.primary,
       borderRadius: 8,
     }
 
     // Variant styles
     switch (variant) {
       case 'elevated':
-        baseStyle.backgroundColor = Colors.surface
+        baseStyle.backgroundColor = colors.background.primary
         if (shadow) {
-          baseStyle.shadowColor = Colors.black
+          baseStyle.shadowColor = colors.shadow.light
           baseStyle.shadowOffset = { width: 0, height: 2 }
           baseStyle.shadowOpacity = 0.1
           baseStyle.shadowRadius = 4
@@ -45,14 +45,14 @@ export const Card: React.FC<CardProps> = ({
         }
         break
       case 'outlined':
-        baseStyle.backgroundColor = Colors.surface
+        baseStyle.backgroundColor = colors.background.primary
         baseStyle.borderWidth = 1
-        baseStyle.borderColor = Colors.border
+        baseStyle.borderColor = colors.border.light
         break
       default:
-        baseStyle.backgroundColor = Colors.surface
+        baseStyle.backgroundColor = colors.background.primary
         if (shadow) {
-          baseStyle.shadowColor = Colors.black
+          baseStyle.shadowColor = colors.shadow.light
           baseStyle.shadowOffset = { width: 0, height: 1 }
           baseStyle.shadowOpacity = 0.05
           baseStyle.shadowRadius = 2

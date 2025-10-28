@@ -13,6 +13,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useFileUpload } from '../../hooks/useFileUpload'
 import { FileUploadResult } from '../../services/fileUpload'
+import { colors } from '../../constants/colors'
 
 interface FileUploadProps {
   visible: boolean
@@ -46,7 +47,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onSelect }) => {
           <Icon 
             name={getFileIcon(file.type)} 
             size={24} 
-            color="#6b7280" 
+            color="colors.text.tertiary" 
           />
         )}
       </View>
@@ -67,7 +68,7 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete, onSelect }) => {
         style={styles.deleteButton}
         onPress={onDelete}
       >
-        <Icon name="delete" size={20} color="#ef4444" />
+        <Icon name="delete" size={20} color="colors.error[500]" />
       </TouchableOpacity>
     </TouchableOpacity>
   )
@@ -209,7 +210,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
             )}
           </View>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Icon name="close" size={24} color="#6b7280" />
+            <Icon name="close" size={24} color="colors.text.tertiary" />
           </TouchableOpacity>
         </View>
 
@@ -222,7 +223,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
               onPress={handlePickImage}
               disabled={uploading}
             >
-              <Icon name="photo-library" size={24} color="#3b82f6" />
+              <Icon name="photo-library" size={24} color="colors.primary[500]" />
               <Text style={styles.uploadButtonText}>Gallery</Text>
             </TouchableOpacity>
 
@@ -231,7 +232,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
               onPress={handleTakePhoto}
               disabled={uploading}
             >
-              <Icon name="camera-alt" size={24} color="#10b981" />
+              <Icon name="camera-alt" size={24} color="colors.success[500]" />
               <Text style={styles.uploadButtonText}>Camera</Text>
             </TouchableOpacity>
 
@@ -240,7 +241,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
               onPress={handlePickDocument}
               disabled={uploading}
             >
-              <Icon name="description" size={24} color="#f59e0b" />
+              <Icon name="description" size={24} color="colors.warning[500]" />
               <Text style={styles.uploadButtonText}>Document</Text>
             </TouchableOpacity>
           </View>
@@ -249,7 +250,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         {/* Loading Indicator */}
         {uploading && (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#3b82f6" />
+            <ActivityIndicator size="large" color="colors.primary[500]" />
             <Text style={styles.loadingText}>Uploading file...</Text>
           </View>
         )}
@@ -269,7 +270,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
           {uploadedFiles.length === 0 ? (
             <View style={styles.emptyContainer}>
-              <Icon name="cloud-upload" size={48} color="#d1d5db" />
+              <Icon name="cloud-upload" size={48} color="colors.gray[300]" />
               <Text style={styles.emptyTitle}>No files uploaded</Text>
               <Text style={styles.emptySubtitle}>
                 Use the upload options above to add files
@@ -345,7 +346,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9fafb',
+    backgroundColor: 'colors.gray[50]',
   },
   
   // Header styles
@@ -355,9 +356,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'colors.background.primary',
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: 'colors.border.light',
   },
   headerLeft: {
     flexDirection: 'row',
@@ -366,17 +367,17 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#111827',
+    color: 'colors.text.primary',
   },
   countBadge: {
     marginLeft: 8,
-    backgroundColor: '#3b82f6',
+    backgroundColor: 'colors.primary[500]',
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
   countText: {
-    color: '#ffffff',
+    color: 'colors.background.primary',
     fontSize: 12,
     fontWeight: '600',
   },
@@ -387,14 +388,14 @@ const styles = StyleSheet.create({
   // Upload section styles
   uploadSection: {
     padding: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'colors.background.primary',
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: 'colors.border.light',
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#374151',
+    color: 'colors.text.secondary',
     marginBottom: 12,
   },
   uploadButtons: {
@@ -404,14 +405,14 @@ const styles = StyleSheet.create({
   uploadButton: {
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'colors.gray[100]',
     borderRadius: 12,
     minWidth: 80,
   },
   uploadButtonText: {
     marginTop: 8,
     fontSize: 12,
-    color: '#374151',
+    color: 'colors.text.secondary',
     fontWeight: '500',
   },
 
@@ -419,18 +420,18 @@ const styles = StyleSheet.create({
   loadingContainer: {
     alignItems: 'center',
     padding: 32,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'colors.background.primary',
   },
   loadingText: {
     marginTop: 12,
     fontSize: 16,
-    color: '#6b7280',
+    color: 'colors.text.tertiary',
   },
 
   // Files section styles
   filesSection: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'colors.background.primary',
   },
   filesHeader: {
     flexDirection: 'row',
@@ -439,10 +440,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: 'colors.border.light',
   },
   clearButton: {
-    color: '#ef4444',
+    color: 'colors.error[500]',
     fontSize: 14,
     fontWeight: '500',
   },
@@ -453,13 +454,13 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#374151',
+    color: 'colors.text.secondary',
     marginTop: 16,
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 14,
-    color: '#6b7280',
+    color: 'colors.text.tertiary',
     textAlign: 'center',
   },
   filesList: {
@@ -472,13 +473,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
+    borderBottomColor: 'colors.gray[100]',
   },
   fileIcon: {
     width: 48,
     height: 48,
     borderRadius: 8,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'colors.gray[100]',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -494,17 +495,17 @@ const styles = StyleSheet.create({
   fileName: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#111827',
+    color: 'colors.text.primary',
     marginBottom: 4,
   },
   fileSize: {
     fontSize: 12,
-    color: '#6b7280',
+    color: 'colors.text.tertiary',
     marginBottom: 2,
   },
   fileType: {
     fontSize: 12,
-    color: '#9ca3af',
+    color: 'colors.text.quaternary',
   },
   deleteButton: {
     padding: 8,
@@ -512,9 +513,9 @@ const styles = StyleSheet.create({
 
   // Selected files styles
   selectedSection: {
-    backgroundColor: '#ffffff',
+    backgroundColor: 'colors.background.primary',
     borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
+    borderTopColor: 'colors.border.light',
     padding: 16,
   },
   selectedList: {
@@ -525,36 +526,36 @@ const styles = StyleSheet.create({
   actionButtons: {
     flexDirection: 'row',
     padding: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'colors.background.primary',
     borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
+    borderTopColor: 'colors.border.light',
     gap: 12,
   },
   cancelButton: {
     flex: 1,
     paddingVertical: 12,
     alignItems: 'center',
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'colors.gray[100]',
     borderRadius: 8,
   },
   cancelButtonText: {
     fontSize: 16,
-    color: '#6b7280',
+    color: 'colors.text.tertiary',
     fontWeight: '500',
   },
   confirmButton: {
     flex: 1,
     paddingVertical: 12,
     alignItems: 'center',
-    backgroundColor: '#3b82f6',
+    backgroundColor: 'colors.primary[500]',
     borderRadius: 8,
   },
   disabledButton: {
-    backgroundColor: '#d1d5db',
+    backgroundColor: 'colors.gray[300]',
   },
   confirmButtonText: {
     fontSize: 16,
-    color: '#ffffff',
+    color: 'colors.background.primary',
     fontWeight: '500',
   },
 })

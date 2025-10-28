@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useAuth } from '../../hooks/useAuth'
+import { colors } from '../../constants/colors'
 
 export const SignUpScreen: React.FC = () => {
   const [fullName, setFullName] = useState('')
@@ -62,7 +63,7 @@ export const SignUpScreen: React.FC = () => {
               <TextInput
                 style={styles.input}
                 placeholder="Full Name"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor={colors.text.quaternary}
                 value={fullName}
                 onChangeText={setFullName}
                 autoCapitalize="words"
@@ -72,7 +73,7 @@ export const SignUpScreen: React.FC = () => {
               <TextInput
                 style={styles.input}
                 placeholder="Email"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor={colors.text.quaternary}
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -83,7 +84,7 @@ export const SignUpScreen: React.FC = () => {
               <TextInput
                 style={styles.input}
                 placeholder="Password"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor={colors.text.quaternary}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -94,7 +95,7 @@ export const SignUpScreen: React.FC = () => {
               <TextInput
                 style={styles.input}
                 placeholder="Confirm Password"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor={colors.text.quaternary}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 secureTextEntry
@@ -129,7 +130,7 @@ export const SignUpScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.background.primary,
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -146,13 +147,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#111827',
+    color: colors.text.primary,
     textAlign: 'center',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#6b7280',
+    color: colors.text.tertiary,
     textAlign: 'center',
     marginBottom: 48,
   },
@@ -160,27 +161,27 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   input: {
-    backgroundColor: '#f9fafb',
+    backgroundColor: colors.gray[50],
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#111827',
+    color: colors.text.primary,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: colors.border.light,
   },
   button: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: colors.primary[500],
     borderRadius: 8,
     paddingVertical: 12,
     alignItems: 'center',
   },
   buttonDisabled: {
-    backgroundColor: '#9ca3af',
+    backgroundColor: colors.gray[400],
   },
   buttonText: {
-    color: '#ffffff',
+    color: colors.text.inverse,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -191,11 +192,11 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 14,
-    color: '#6b7280',
+    color: colors.text.tertiary,
   },
   linkText: {
     fontSize: 14,
-    color: '#3b82f6',
+    color: colors.primary[500],
     fontWeight: '600',
   },
 })
