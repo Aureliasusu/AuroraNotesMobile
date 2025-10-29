@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNotes } from '../../hooks/useNotes'
 import { useAuth } from '../../hooks/useAuth'
+import { colors } from '../../constants/colors'
 
 interface NoteEditorScreenProps {
   route: {
@@ -147,7 +148,7 @@ export const NoteEditorScreen: React.FC<NoteEditorScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'colors.background.primary,
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: 'colors.border.light,
   },
   backButton: {
     paddingVertical: 8,
@@ -167,11 +168,11 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 16,
-    color: '#3b82f6',
+    color: 'colors.primary[500],
     fontWeight: '600',
   },
   saveButton: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: 'colors.primary[500],
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 6,
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#9ca3af',
   },
   saveButtonText: {
-    color: '#ffffff',
+    color: 'colors.background.primary,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -191,15 +192,15 @@ const styles = StyleSheet.create({
   titleInput: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#111827',
+    color: 'colors.text.primary,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: 'colors.border.light,
     marginBottom: 16,
   },
   contentInput: {
     fontSize: 16,
-    color: '#111827',
+    color: 'colors.text.primary,
     lineHeight: 24,
     minHeight: 400,
     paddingVertical: 16,

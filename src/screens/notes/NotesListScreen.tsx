@@ -18,6 +18,7 @@ import { useFolders } from '../../hooks/useFolders';
 import { NoteCard, SearchBar, FloatingActionButton, FolderManager, AdvancedSearch, ThemeToggle } from '../../components/ui';
 import { Note } from '../../types/database';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { colors } from '../../constants/colors';
 
 export const NotesListScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -144,7 +145,7 @@ export const NotesListScreen: React.FC = () => {
   if (loading && !refreshing) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#3b82f6" />
+        <ActivityIndicator size="large" color="colors.primary[500]" />
         <Text style={styles.loadingText}>Loading notes...</Text>
       </View>
     );
@@ -159,7 +160,7 @@ export const NotesListScreen: React.FC = () => {
             onPress={() => setShowFolderManager(true)} 
             style={styles.headerButton}
           >
-            <Icon name="folder" size={20} color="#3b82f6" />
+            <Icon name="folder" size={20} color="colors.primary[500]" />
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => setShowAdvancedSearch(true)} 
@@ -282,13 +283,13 @@ export const NotesListScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9fafb',
+    backgroundColor: 'colors.gray[50],
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f9fafb',
+    backgroundColor: 'colors.gray[50],
   },
   loadingText: {
     marginTop: 16,
@@ -303,7 +304,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: 'colors.border.light,
   },
   headerLeft: {
     flexDirection: 'row',
@@ -312,13 +313,13 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#111827',
+    color: 'colors.text.primary,
   },
   headerButton: {
     marginLeft: 8,
     padding: 8,
     borderRadius: 6,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'colors.gray[100],
   },
   signOutButton: {
     paddingHorizontal: 12,
@@ -345,10 +346,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginRight: 8,
     borderRadius: 20,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'colors.gray[100],
   },
   activeFilterButton: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: 'colors.primary[500],
   },
   filterButtonText: {
     fontSize: 14,
@@ -370,7 +371,7 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#111827',
+    color: 'colors.text.primary,
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -384,7 +385,7 @@ const styles = StyleSheet.create({
   // Modal styles
   modalContainer: {
     flex: 1,
-    backgroundColor: '#f9fafb',
+    backgroundColor: 'colors.gray[50],
   },
   modalHeader: {
     flexDirection: 'row',
@@ -394,12 +395,12 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: 'colors.border.light,
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#111827',
+    color: 'colors.text.primary,
   },
   closeButton: {
     padding: 8,

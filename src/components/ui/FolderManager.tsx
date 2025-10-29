@@ -32,7 +32,7 @@ interface FolderItemProps {
 
 // Folder color options
 const FOLDER_COLORS = [
-  'colors.primary[500]', 'colors.error[500]', 'colors.success[500]', 'colors.warning[500]', 
+  colors.primary[500], colors.error[500], colors.success[500], colors.warning[500], 
   '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'
 ]
 
@@ -341,7 +341,7 @@ export const FolderManager: React.FC<FolderManagerProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'colors.gray[50]',
+    backgroundColor: colors.gray[50],
   },
   
   // Special folder styles
@@ -353,19 +353,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     marginVertical: 4,
     borderRadius: 8,
-    backgroundColor: 'colors.background.primary',
+    backgroundColor: colors.background.primary,
   },
   selectedSpecialFolderButton: {
-    backgroundColor: 'colors.primary[100]',
+    backgroundColor: colors.primary[100],
   },
   specialFolderText: {
     marginLeft: 12,
     fontSize: 16,
-    color: 'colors.text.secondary',
+    color: colors.text.secondary,
     fontWeight: '500',
   },
   selectedSpecialFolderText: {
-    color: 'colors.primary[700]',
+    color: colors.primary[700],
     fontWeight: '600',
   },
 
@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 8,
     marginVertical: 2,
-    backgroundColor: 'colors.background.primary',
+    backgroundColor: colors.background.primary,
     borderRadius: 8,
   },
   folderButton: {
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   selectedFolderButton: {
-    backgroundColor: 'colors.primary[100]',
+    backgroundColor: colors.primary[100],
     borderRadius: 6,
     paddingHorizontal: 8,
   },
@@ -404,11 +404,11 @@ const styles = StyleSheet.create({
   },
   folderName: {
     fontSize: 16,
-    color: 'colors.text.secondary',
+    color: colors.text.secondary,
     fontWeight: '500',
   },
   selectedFolderName: {
-    color: 'colors.primary[700]',
+    color: colors.primary[700],
     fontWeight: '600',
   },
   
@@ -430,16 +430,16 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginHorizontal: 8,
     marginVertical: 8,
-    backgroundColor: 'colors.background.primary',
+    backgroundColor: colors.background.primary,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: 'colors.gray[300]',
+    borderColor: colors.gray[300],
     borderStyle: 'dashed',
   },
   createButtonText: {
     marginLeft: 8,
     fontSize: 16,
-    color: 'colors.primary[500]',
+    color: colors.primary[500],
     fontWeight: '500',
   },
 
@@ -453,7 +453,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '90%',
     maxWidth: 400,
-    backgroundColor: 'colors.background.primary',
+    backgroundColor: colors.background.primary,
     borderRadius: 12,
     overflow: 'hidden',
   },
@@ -464,12 +464,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'colors.border.light',
+    borderBottomColor: colors.border.light,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: 'colors.text.primary',
+    color: colors.text.primary,
   },
   modalBody: {
     padding: 20,
@@ -477,18 +477,18 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 14,
     fontWeight: '500',
-    color: 'colors.text.secondary',
+    color: colors.text.secondary,
     marginBottom: 8,
   },
   textInput: {
     borderWidth: 1,
-    borderColor: 'colors.gray[300]',
+    borderColor: colors.gray[300],
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
-    color: 'colors.text.primary',
-    backgroundColor: 'colors.background.primary',
+    color: colors.text.primary,
+    backgroundColor: colors.background.primary,
     marginBottom: 16,
   },
   colorPicker: {
@@ -504,7 +504,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   selectedColorOption: {
-    borderColor: 'colors.gray[800]',
+    borderColor: colors.gray[800],
   },
   modalFooter: {
     flexDirection: 'row',
@@ -512,7 +512,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderTopWidth: 1,
-    borderTopColor: 'colors.border.light',
+    borderTopColor: colors.border.light,
     gap: 12,
   },
   cancelButton: {
@@ -521,12 +521,12 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     fontSize: 16,
-    color: 'colors.text.tertiary',
+    color: colors.text.tertiary,
   },
   submitButton: {
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: 'colors.primary[500]',
+    backgroundColor: colors.primary[500],
     borderRadius: 8,
   },
   disabledButton: {
@@ -534,7 +534,7 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     fontSize: 16,
-    color: 'colors.background.primary',
+    color: colors.background.primary,
     fontWeight: '500',
   },
 })
