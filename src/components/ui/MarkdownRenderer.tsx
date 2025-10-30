@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   link: {
-    color: '#3b82f6',
+    color: colors.primary[500],
     textDecorationLine: 'underline',
   },
   listItem: {

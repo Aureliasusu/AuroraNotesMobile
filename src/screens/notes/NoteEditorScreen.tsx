@@ -148,7 +148,7 @@ export const NoteEditorScreen: React.FC<NoteEditorScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'colors.background.primary,
+    backgroundColor: colors.background.primary,
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'colors.border.light,
+    borderBottomColor: colors.border.light,
   },
   backButton: {
     paddingVertical: 8,
@@ -168,11 +168,11 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 16,
-    color: 'colors.primary[500],
+    color: colors.primary[500],
     fontWeight: '600',
   },
   saveButton: {
-    backgroundColor: 'colors.primary[500],
+    backgroundColor: colors.primary[500],
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 6,
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#9ca3af',
   },
   saveButtonText: {
-    color: 'colors.background.primary,
+    color: colors.background.primary,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -192,15 +192,15 @@ const styles = StyleSheet.create({
   titleInput: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'colors.text.primary,
+    color: colors.text.primary,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'colors.border.light,
+    borderBottomColor: colors.border.light,
     marginBottom: 16,
   },
   contentInput: {
     fontSize: 16,
-    color: 'colors.text.primary,
+    color: colors.text.primary,
     lineHeight: 24,
     minHeight: 400,
     paddingVertical: 16,

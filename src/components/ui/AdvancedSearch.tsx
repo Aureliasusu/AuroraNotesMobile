@@ -641,7 +641,7 @@ const styles = StyleSheet.create({
   },
   availableTagText: {
     fontSize: 12,
-    color: 'colors.text.tertiary',
+    color: colors.text.tertiary,
   },
   availableTagTextSelected: {
     color: colors.background.primary,
@@ -672,7 +672,7 @@ const styles = StyleSheet.create({
   },
   sortButtonText: {
     fontSize: 12,
-    color: 'colors.text.tertiary',
+    color: colors.text.tertiary,
   },
   sortButtonTextActive: {
     color: colors.background.primary,
@@ -695,7 +695,7 @@ const styles = StyleSheet.create({
   orderButtonText: {
     marginLeft: 4,
     fontSize: 12,
-    color: 'colors.text.tertiary',
+    color: colors.text.tertiary,
   },
   orderButtonTextActive: {
     color: colors.background.primary,
@@ -721,7 +721,7 @@ const styles = StyleSheet.create({
   quickFilterText: {
     marginLeft: 4,
     fontSize: 12,
-    color: 'colors.text.tertiary',
+    color: colors.text.tertiary,
   },
   quickFilterTextActive: {
     color: colors.background.primary,
@@ -748,7 +748,7 @@ const styles = StyleSheet.create({
   },
   folderOptionText: {
     fontSize: 12,
-    color: 'colors.text.tertiary',
+    color: colors.text.tertiary,
   },
   folderOptionTextActive: {
     color: colors.background.primary,
@@ -791,7 +791,7 @@ const styles = StyleSheet.create({
   },
   emptySubtitle: {
     fontSize: 14,
-    color: 'colors.text.tertiary',
+    color: colors.text.tertiary,
     textAlign: 'center',
   },
   resultsList: {
@@ -826,7 +826,7 @@ const styles = StyleSheet.create({
   },
   resultContent: {
     fontSize: 14,
-    color: 'colors.text.tertiary',
+    color: colors.text.tertiary,
     lineHeight: 20,
     marginBottom: 12,
   },
@@ -854,10 +854,10 @@ const styles = StyleSheet.create({
   },
   moreTags: {
     fontSize: 10,
-    color: 'colors.text.tertiary',
+    color: colors.text.tertiary,
   },
   resultDate: {
     fontSize: 12,
-    color: '#9ca3af',
+    color: 'colors.text.quaternary',
   },
 })

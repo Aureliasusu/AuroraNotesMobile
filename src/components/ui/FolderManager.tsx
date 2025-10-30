@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import { withOpacity } from '../../constants/colors'
 import { useFolders } from '../../hooks/useFolders'
 import { Folder } from '../../types/database'
 import { colors } from '../../constants/colors'
@@ -446,7 +447,7 @@ const styles = StyleSheet.create({
   // Modal styles
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: withOpacity(colors.shadow.light, 0.5),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -501,7 +502,7 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 16,
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: colors.border.transparent,
   },
   selectedColorOption: {
     borderColor: colors.gray[800],
