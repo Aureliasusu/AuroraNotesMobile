@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     backgroundColor: colors.background.primary,
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: 'colors.gray[300]',
   },
   activeButton: {
     backgroundColor: colors.primary[500],

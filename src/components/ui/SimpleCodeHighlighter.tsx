@@ -20,7 +20,7 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
   const isDark = theme === 'dark';
   
   const getLanguageColor = (lang: string) => {
-    const colors: { [key: string]: string } = {
+    const languageColors: { [key: string]: string } = {
       javascript: '#f7df1e',
       typescript: '#3178c6',
       python: '#3776ab',
@@ -40,7 +40,7 @@ export const SimpleCodeHighlighter: React.FC<SimpleCodeHighlighterProps> = ({
       kotlin: '#7f52ff',
       default: '#6b7280',
     };
-    return colors[lang.toLowerCase()] || colors.default;
+    return languageColors[lang.toLowerCase()] || languageColors.default;
   };
 
   const copyToClipboard = () => {

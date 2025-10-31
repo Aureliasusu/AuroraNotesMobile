@@ -858,6 +858,6 @@ const styles = StyleSheet.create({
   },
   resultDate: {
     fontSize: 12,
-    color: 'colors.text.quaternary',
+    color: colors.text.quaternary,
   },
 })

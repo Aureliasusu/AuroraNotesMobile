@@ -147,6 +147,7 @@ export function useAuth() {
       setSession(authSession)
       setUser(authSession?.user ?? null)
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err)
     } finally {
       setLoading(false)

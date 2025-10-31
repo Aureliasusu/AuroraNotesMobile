@@ -32,6 +32,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         setThemeState(savedTheme)
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to load theme:', error)
     }
   }
@@ -41,6 +42,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       setThemeState(newTheme)
       await AsyncStorage.setItem('theme', newTheme)
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to save theme:', error)
     }
   }

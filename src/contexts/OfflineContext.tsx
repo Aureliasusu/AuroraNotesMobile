@@ -45,12 +45,15 @@ export const OfflineProvider: React.FC<OfflineProviderProps> = ({ children }) =>
         setLastSyncTime(new Date(timeString))
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
+      // eslint-disable-next-line no-console
       console.error('Failed to load last sync time:', error)
     }
   }
 
   const syncData = async () => {
     if (isOffline) {
+      // eslint-disable-next-line no-console
       console.log('Cannot sync while offline')
       return
     }
@@ -69,6 +72,7 @@ export const OfflineProvider: React.FC<OfflineProviderProps> = ({ children }) =>
       // Reset status after 3 seconds
       setTimeout(() => setSyncStatus('idle'), 3000)
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Sync failed:', error)
       setSyncStatus('error')
       
@@ -82,6 +86,7 @@ export const OfflineProvider: React.FC<OfflineProviderProps> = ({ children }) =>
       const data = await AsyncStorage.getItem(`offline_${key}`)
       return data ? JSON.parse(data) : null
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to get offline data:', error)
       return null
     }
@@ -91,6 +96,7 @@ export const OfflineProvider: React.FC<OfflineProviderProps> = ({ children }) =>
     try {
       await AsyncStorage.setItem(`offline_${key}`, JSON.stringify(data))
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to set offline data:', error)
     }
   }

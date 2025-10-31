@@ -103,6 +103,7 @@ export function useCollaborativeEditing(noteId: string) {
         },
       }))
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err)
       Alert.alert('Error', 'Failed to start editing')
     }
@@ -121,6 +122,7 @@ export function useCollaborativeEditing(noteId: string) {
         currentEditor: null,
       }))
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err)
     }
   }, [user, noteId])
@@ -151,6 +153,7 @@ export function useCollaborativeEditing(noteId: string) {
 
       await updateNote(noteId, noteUpdate)
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err)
       Alert.alert('Error', 'Save failed')
     }
@@ -180,6 +183,7 @@ export function useCollaborativeEditing(noteId: string) {
         conflictResolution: false,
       }))
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err)
       Alert.alert('Error', 'Failed to resolve conflict')
     }
