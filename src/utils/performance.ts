@@ -61,7 +61,8 @@ export class PerformanceMonitor {
   static end(label: string): number {
     const startTime = this.timers.get(label)
     if (!startTime) {
-      console.warn(`Timer "${label}" was not started`)
+      // eslint-disable-next-line no-console
+console.warn(`Timer "${label}" was not started`)
       return 0
     }
     
@@ -69,7 +70,8 @@ export class PerformanceMonitor {
     this.timers.delete(label)
     
     if (__DEV__) {
-      console.log(`⏱️ ${label}: ${duration}ms`)
+      // eslint-disable-next-line no-console
+console.log(`⏱️ ${label}: ${duration}ms`)
     }
     
     return duration

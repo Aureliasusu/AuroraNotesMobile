@@ -36,7 +36,8 @@ export class FileUploadService {
         })
 
       if (error) {
-        console.error('Upload error', error)
+        // eslint-disable-next-line no-console
+console.error('Upload error', error)
         throw new Error(`Upload failed: ${error.message}`)
       }
 
@@ -53,7 +54,8 @@ export class FileUploadService {
         name: fileName,
       }
     } catch (error) {
-      console.error('Image upload failed', error)
+      // eslint-disable-next-line no-console
+console.error('Image upload failed', error)
       Alert.alert('Upload Error', 'Failed to upload image')
       throw error
     }
@@ -84,7 +86,8 @@ export class FileUploadService {
         })
 
       if (error) {
-        console.error('Document upload error', error)
+        // eslint-disable-next-line no-console
+console.error('Document upload error', error)
         throw new Error(`Document upload failed: ${error.message}`)
       }
 
@@ -100,7 +103,8 @@ export class FileUploadService {
         name: fileName,
       }
     } catch (error) {
-      console.error('Document upload failed', error)
+      // eslint-disable-next-line no-console
+console.error('Document upload failed', error)
       Alert.alert('Upload Error', 'Failed to upload document')
       throw error
     }
@@ -114,11 +118,13 @@ export class FileUploadService {
         .remove([filePath])
 
       if (error) {
-        console.error('Delete error', error)
+        // eslint-disable-next-line no-console
+console.error('Delete error', error)
         throw new Error(`Delete failed: ${error.message}`)
       }
     } catch (error) {
-      console.error('File delete failed', error)
+      // eslint-disable-next-line no-console
+console.error('File delete failed', error)
       Alert.alert('Delete Error', 'Failed to delete file')
       throw error
     }
@@ -134,13 +140,15 @@ export class FileUploadService {
         })
 
       if (error) {
-        console.error('Get file info error', error)
+        // eslint-disable-next-line no-console
+console.error('Get file info error', error)
         throw new Error(`Get file info failed: ${error.message}`)
       }
 
       return data?.[0] || null
     } catch (error) {
-      console.error('Get file info failed', error)
+      // eslint-disable-next-line no-console
+console.error('Get file info failed', error)
       throw error
     }
   }
@@ -148,29 +156,35 @@ export class FileUploadService {
   // Test file upload functionality
   static async testUpload(): Promise<boolean> {
     try {
-      console.log('Testing file upload functionality...')
+      // eslint-disable-next-line no-console
+console.log('Testing file upload functionality...')
       
       // Test if bucket exists and is accessible
       const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets()
       
       if (bucketsError) {
-        console.error('Error listing buckets', bucketsError)
+        // eslint-disable-next-line no-console
+console.error('Error listing buckets', bucketsError)
         return false
       }
 
       const noteAttachmentsBucket = buckets.find(bucket => bucket.name === 'note-attachments')
       
       if (!noteAttachmentsBucket) {
-        console.error('note-attachments bucket not found')
+        // eslint-disable-next-line no-console
+console.error('note-attachments bucket not found')
         return false
       }
 
-      console.log('✅ note-attachments bucket found')
-      console.log('✅ File upload service is ready')
+      // eslint-disable-next-line no-console
+console.log('✅ note-attachments bucket found')
+      // eslint-disable-next-line no-console
+console.log('✅ File upload service is ready')
       
       return true
     } catch (error) {
-      console.error('File upload test failed', error)
+      // eslint-disable-next-line no-console
+console.error('File upload test failed', error)
       return false
     }
   }

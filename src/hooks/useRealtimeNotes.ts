@@ -25,7 +25,8 @@ export function useRealtimeNotes() {
           filter: `user_id=eq.${user.id}`,
         },
         (payload: RealtimePostgresChangesPayload<Note>) => {
-          console.log('New note added:', payload.new)
+          // eslint-disable-next-line no-console
+console.log('New note added:', payload.new)
           addNote(payload.new as Note)
         }
       )
@@ -38,7 +39,8 @@ export function useRealtimeNotes() {
           filter: `user_id=eq.${user.id}`,
         },
         (payload: RealtimePostgresChangesPayload<Note>) => {
-          console.log('Note updated:', payload.new)
+          // eslint-disable-next-line no-console
+console.log('Note updated:', payload.new)
           if (payload.new && 'id' in payload.new) {
             updateNote(payload.new.id, payload.new as Note)
           }
@@ -53,7 +55,8 @@ export function useRealtimeNotes() {
           filter: `user_id=eq.${user.id}`,
         },
         (payload: RealtimePostgresChangesPayload<Note>) => {
-          console.log('Note deleted:', payload.old)
+          // eslint-disable-next-line no-console
+console.log('Note deleted:', payload.old)
           if (payload.old && 'id' in payload.old) {
             deleteNote(payload.old.id as string)
           }
@@ -61,7 +64,8 @@ export function useRealtimeNotes() {
       )
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
-          console.log('Real-time notes subscription active')
+          // eslint-disable-next-line no-console
+console.log('Real-time notes subscription active')
         } else if (status === 'CHANNEL_ERROR') {
           Alert.alert('Error', 'Real-time sync connection failed')
         }
@@ -79,7 +83,8 @@ export function useRealtimeNotes() {
     try {
       await fetchNotes()
     } catch (error) {
-      console.error('Failed to refresh notes', error)
+      // eslint-disable-next-line no-console
+console.error('Failed to refresh notes', error)
       Alert.alert('Error', 'Failed to refresh notes')
     }
   }, [user, fetchNotes])
@@ -103,10 +108,12 @@ export function useRealtimeNotes() {
       // Update local store
       if (data) {
         // This would need to be implemented in the store
-        console.log('Synced notes:', data.length)
+        // eslint-disable-next-line no-console
+console.log('Synced notes:', data.length)
       }
     } catch (error) {
-      console.error('Failed to sync notes', error)
+      // eslint-disable-next-line no-console
+console.error('Failed to sync notes', error)
       Alert.alert('Error', 'Failed to sync notes')
     }
   }, [user])

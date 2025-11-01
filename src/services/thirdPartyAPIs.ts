@@ -39,7 +39,8 @@ export class TextProcessingService {
       const data = await response.json()
       return data.choices[0].message.content.trim()
     } catch (error) {
-      console.error('API error:', error)
+      // eslint-disable-next-line no-console
+console.error('API error:', error)
       Alert.alert('Error', 'Failed to generate summary')
       throw error
     }
@@ -79,7 +80,8 @@ export class TextProcessingService {
       const keywords = data.choices[0].message.content.trim()
       return keywords.split(',').map((k: string) => k.trim()).filter((k: string) => k.length > 0)
     } catch (error) {
-      console.error('API error:', error)
+      // eslint-disable-next-line no-console
+console.error('API error:', error)
       Alert.alert('Error', 'Failed to extract keywords')
       throw error
     }
@@ -122,7 +124,8 @@ export class TextProcessingService {
       if (sentiment.includes('negative')) return 'negative'
       return 'neutral'
     } catch (error) {
-      console.error('API error:', error)
+      // eslint-disable-next-line no-console
+console.error('API error:', error)
       Alert.alert('Error', 'Failed to analyze sentiment')
       throw error
     }
@@ -162,7 +165,8 @@ export class TextProcessingService {
       const tags = data.choices[0].message.content.trim()
       return tags.split(',').map((t: string) => t.trim()).filter((t: string) => t.length > 0)
     } catch (error) {
-      console.error('API error:', error)
+      // eslint-disable-next-line no-console
+console.error('API error:', error)
       Alert.alert('Error', 'Failed to suggest tags')
       throw error
     }
@@ -183,7 +187,8 @@ export class TranslationService {
 
       return data.translatedText
     } catch (error) {
-      console.error('Translation error:', error)
+      // eslint-disable-next-line no-console
+console.error('Translation error:', error)
       Alert.alert('Error', 'Failed to translate text')
       throw error
     }
@@ -204,7 +209,8 @@ export class WeatherService {
 
       return data
     } catch (error) {
-      console.error('Weather error:', error)
+      // eslint-disable-next-line no-console
+console.error('Weather error:', error)
       Alert.alert('Error', 'Failed to get weather data')
       throw error
     }
@@ -225,7 +231,8 @@ export class NewsService {
 
       return data.articles
     } catch (error) {
-      console.error('News error:', error)
+      // eslint-disable-next-line no-console
+console.error('News error:', error)
       Alert.alert('Error', 'Failed to get news')
       throw error
     }
@@ -250,7 +257,8 @@ export class BatchProcessingService {
 
       return { summary, keywords, sentiment, tags }
     } catch (error) {
-      console.error('Batch processing error:', error)
+      // eslint-disable-next-line no-console
+console.error('Batch processing error:', error)
       Alert.alert('Error', 'Failed to process text')
       throw error
     }

@@ -27,7 +27,8 @@ export function useFileUpload() {
         )
         return granted === PermissionsAndroid.RESULTS.GRANTED
       } catch (err) {
-        console.warn(err)
+        // eslint-disable-next-line no-console
+console.warn(err)
         return false
       }
     }
@@ -50,7 +51,8 @@ export function useFileUpload() {
         )
         return granted === PermissionsAndroid.RESULTS.GRANTED
       } catch (err) {
-        console.warn(err)
+        // eslint-disable-next-line no-console
+console.warn(err)
         return false
       }
     }
@@ -91,7 +93,8 @@ export function useFileUpload() {
       //   return uploadResult
       // }
     } catch (err) {
-      console.error(err)
+      // eslint-disable-next-line no-console
+console.error(err)
       Alert.alert('Error', 'Failed to pick image')
       setUploading(false)
       return null
@@ -132,7 +135,8 @@ export function useFileUpload() {
       //   return uploadResult
       // }
     } catch (err) {
-      console.error(err)
+      // eslint-disable-next-line no-console
+console.error(err)
       Alert.alert('Error', 'Failed to take photo')
       setUploading(false)
       return null
@@ -170,7 +174,8 @@ export function useFileUpload() {
       //   return uploadResult
       // }
     } catch (err) {
-      console.error(err)
+      // eslint-disable-next-line no-console
+console.error(err)
       Alert.alert('Error', 'Failed to pick document')
       setUploading(false)
       return null
@@ -198,7 +203,8 @@ export function useFileUpload() {
       setUploading(false)
       return uploadResult
     } catch (err) {
-      console.error('Upload error', err)
+      // eslint-disable-next-line no-console
+console.error('Upload error', err)
       setError('Upload failed')
       Alert.alert('Upload Error', 'Failed to upload file')
       setUploading(false)
@@ -213,7 +219,8 @@ export function useFileUpload() {
       setFiles(prev => prev.filter(f => f.path !== file.path))
       Alert.alert('Success', 'File deleted successfully')
     } catch (err) {
-      console.error('Delete error', err)
+      // eslint-disable-next-line no-console
+console.error('Delete error', err)
       setError('Delete failed')
       Alert.alert('Delete Error', 'Failed to delete file')
     }

@@ -40,13 +40,15 @@ export function useKeyboardShortcuts({ shortcuts, enabled = true }: useKeyboardS
   const registerShortcut = useCallback((shortcut: KeyboardShortcut) => {
     // In React Native, keyboard shortcuts are primarily handled via hardware back button
     // For custom shortcuts, you would need to implement them in your component
-    console.log('Registering shortcut:', shortcut)
+    // eslint-disable-next-line no-console
+console.log('Registering shortcut:', shortcut)
   }, [])
 
   // Unregister shortcuts
   const unregisterShortcut = useCallback((key: string) => {
     // In React Native, keyboard shortcuts are primarily handled via hardware back button
-    console.log('Unregistering shortcut:', key)
+    // eslint-disable-next-line no-console
+console.log('Unregistering shortcut:', key)
   }, [])
 
   // Get shortcut help

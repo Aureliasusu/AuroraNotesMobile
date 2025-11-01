@@ -18,7 +18,8 @@ export class EdgeFunctionService {
 
       return data
     } catch (error) {
-      console.error('Failed to analyze note', error)
+      // eslint-disable-next-line no-console
+console.error('Failed to analyze note', error)
       throw error
     }
   }
@@ -39,7 +40,8 @@ export class EdgeFunctionService {
 
       return data
     } catch (error) {
-      console.error('Failed to generate summary', error)
+      // eslint-disable-next-line no-console
+console.error('Failed to generate summary', error)
       throw error
     }
   }
@@ -59,7 +61,8 @@ export class EdgeFunctionService {
 
       return data
     } catch (error) {
-      console.error('Failed to extract keywords', error)
+      // eslint-disable-next-line no-console
+console.error('Failed to extract keywords', error)
       throw error
     }
   }
@@ -79,7 +82,8 @@ export class EdgeFunctionService {
 
       return data
     } catch (error) {
-      console.error('Failed to suggest tags', error)
+      // eslint-disable-next-line no-console
+console.error('Failed to suggest tags', error)
       throw error
     }
   }
@@ -100,7 +104,8 @@ export class EdgeFunctionService {
 
       return data
     } catch (error) {
-      console.error('Failed to find similar notes', error)
+      // eslint-disable-next-line no-console
+console.error('Failed to find similar notes', error)
       throw error
     }
   }
@@ -121,7 +126,8 @@ export class EdgeFunctionService {
 
       return data
     } catch (error) {
-      console.error('Failed to batch process notes', error)
+      // eslint-disable-next-line no-console
+console.error('Failed to batch process notes', error)
       throw error
     }
   }

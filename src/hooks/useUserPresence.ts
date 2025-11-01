@@ -56,10 +56,12 @@ export function useUserPresence() {
         }))
       })
       .on('presence', { event: 'join' }, ({ key, newPresences }) => {
-        console.log('User joined:', key, newPresences)
+        // eslint-disable-next-line no-console
+console.log('User joined:', key, newPresences)
       })
       .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
-        console.log('User left:', key, leftPresences)
+        // eslint-disable-next-line no-console
+console.log('User left:', key, leftPresences)
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
@@ -99,7 +101,8 @@ export function useUserPresence() {
         lastSeen: new Date().toISOString(),
       }))
     } catch (error) {
-      console.error('Failed to update online status', error)
+      // eslint-disable-next-line no-console
+console.error('Failed to update online status', error)
     }
   }, [user])
 
@@ -122,7 +125,8 @@ export function useUserPresence() {
         lastSeen: new Date().toISOString(),
       }))
     } catch (error) {
-      console.error('Failed to update last seen', error)
+      // eslint-disable-next-line no-console
+console.error('Failed to update last seen', error)
     }
   }, [user])
 
@@ -136,13 +140,15 @@ export function useUserPresence() {
         .single()
 
       if (error) {
-        console.error('Failed to get user presence', error)
+        // eslint-disable-next-line no-console
+console.error('Failed to get user presence', error)
         return null
       }
 
       return data
     } catch (error) {
-      console.error('Failed to get user presence', error)
+      // eslint-disable-next-line no-console
+console.error('Failed to get user presence', error)
       return null
     }
   }, [])

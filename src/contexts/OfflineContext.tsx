@@ -46,7 +46,6 @@ export const OfflineProvider: React.FC<OfflineProviderProps> = ({ children }) =>
       }
     } catch (error) {
       // eslint-disable-next-line no-console
-      // eslint-disable-next-line no-console
       console.error('Failed to load last sync time:', error)
     }
   }

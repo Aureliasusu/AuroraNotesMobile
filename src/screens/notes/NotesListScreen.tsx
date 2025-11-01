@@ -254,7 +254,7 @@ export const NotesListScreen: React.FC = () => {
               onPress={() => setShowFolderManager(false)}
               style={styles.closeButton}
             >
-              <Icon name="close" size={24} color="#6b7280" />
+              <Icon name="close" size={24} color="colors.text.tertiary" />
             </TouchableOpacity>
           </View>
           <FolderManager
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#6b7280',
+    color: 'colors.text.tertiary',
   },
   header: {
     flexDirection: 'row',
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: 'colors.background.primary',
     borderBottomWidth: 1,
     borderBottomColor: colors.border.light,
   },
@@ -324,18 +324,18 @@ const styles = StyleSheet.create({
   signOutButton: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: '#ef4444',
+    backgroundColor: 'colors.error[500]',
     borderRadius: 6,
   },
   signOutText: {
-    color: '#fff',
+    color: 'colors.background.primary',
     fontSize: 14,
     fontWeight: '600',
   },
   controls: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: '#fff',
+    backgroundColor: 'colors.background.primary',
   },
   filterContainer: {
     flexDirection: 'row',
@@ -354,10 +354,10 @@ const styles = StyleSheet.create({
   filterButtonText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#6b7280',
+    color: 'colors.text.tertiary',
   },
   activeFilterButtonText: {
-    color: '#fff',
+    color: 'colors.background.primary',
   },
   listContainer: {
     padding: 16,
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
   },
   emptySubtitle: {
     fontSize: 16,
-    color: '#6b7280',
+    color: 'colors.text.tertiary',
     textAlign: 'center',
     lineHeight: 24,
   },
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: 'colors.background.primary',
     borderBottomWidth: 1,
     borderBottomColor: colors.border.light,
   },
