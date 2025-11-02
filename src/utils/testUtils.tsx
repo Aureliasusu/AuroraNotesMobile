@@ -2,14 +2,21 @@
 
 import { render, RenderOptions } from '@testing-library/react-native'
 import React, { ReactElement } from 'react'
+import { StyleSheet } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { NavigationContainer } from '@react-navigation/native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+})
+
 // Mock providers for testing
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
         <NavigationContainer>
           {children}

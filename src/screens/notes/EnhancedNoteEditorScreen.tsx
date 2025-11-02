@@ -308,7 +308,7 @@ export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> =
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'colors.gray[50]',
+    backgroundColor: colors.gray[50],
   },
   keyboardView: {
     flex: 1,
@@ -321,9 +321,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: 'colors.background.primary',
+    backgroundColor: colors.background.primary,
     borderBottomWidth: 1,
-    borderBottomColor: 'colors.border.light',
+    borderBottomColor: colors.border.light,
   },
   headerButton: {
     padding: 8,
@@ -331,19 +331,19 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: 'colors.text.primary',
+    color: colors.text.primary,
   },
   saveButton: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: 'colors.primary[500]',
+    backgroundColor: colors.primary[500],
     borderRadius: 6,
   },
   disabledButton: {
-    backgroundColor: 'colors.gray[300]',
+    backgroundColor: colors.gray[300],
   },
   saveButtonText: {
-    color: 'colors.background.primary',
+    color: colors.background.primary,
     fontSize: 14,
     fontWeight: '500',
   },
@@ -359,12 +359,12 @@ const styles = StyleSheet.create({
   contentInput: {
     minHeight: 200,
     padding: 16,
-    backgroundColor: 'colors.background.primary',
+    backgroundColor: colors.background.primary,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: 'colors.gray[300]',
+    borderColor: colors.gray[300],
     fontSize: 16,
-    color: 'colors.text.primary',
+    color: colors.text.primary,
     marginBottom: 16,
   },
   tagsInput: {
@@ -384,25 +384,25 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 16,
     fontWeight: '600',
-    color: 'colors.text.secondary',
+    color: colors.text.secondary,
   },
   analysisButton: {
     marginBottom: 12,
   },
   analysisResults: {
     padding: 12,
-    backgroundColor: 'colors.gray[100]',
+    backgroundColor: colors.gray[100],
     borderRadius: 6,
   },
   analysisResultTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: 'colors.text.secondary',
+    color: colors.text.secondary,
     marginBottom: 8,
   },
   analysisResultText: {
     fontSize: 12,
-    color: 'colors.text.tertiary',
+    color: colors.text.tertiary,
     marginBottom: 4,
   },
 
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 16,
     fontWeight: '600',
-    color: 'colors.text.secondary',
+    color: colors.text.secondary,
   },
   quickUploadButtons: {
     flexDirection: 'row',
@@ -430,14 +430,14 @@ const styles = StyleSheet.create({
   quickUploadButton: {
     alignItems: 'center',
     padding: 12,
-    backgroundColor: 'colors.gray[100]',
+    backgroundColor: colors.gray[100],
     borderRadius: 8,
     minWidth: 80,
   },
   quickUploadText: {
     marginTop: 4,
     fontSize: 12,
-    color: 'colors.text.secondary',
+    color: colors.text.secondary,
   },
   attachedFiles: {
     marginTop: 8,
@@ -445,14 +445,14 @@ const styles = StyleSheet.create({
   attachedFilesTitle: {
     fontSize: 14,
     fontWeight: '500',
-    color: 'colors.text.secondary',
+    color: colors.text.secondary,
     marginBottom: 8,
   },
   attachedFile: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 8,
-    backgroundColor: 'colors.gray[50]',
+    backgroundColor: colors.gray[50],
     borderRadius: 6,
     marginBottom: 4,
   },
@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 8,
     fontSize: 12,
-    color: 'colors.text.tertiary',
+    color: colors.text.tertiary,
   },
 
   // Loading styles
@@ -470,6 +470,6 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 14,
-    color: 'colors.text.tertiary',
+    color: colors.text.tertiary,
   },
 })
