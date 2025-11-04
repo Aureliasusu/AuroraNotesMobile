@@ -179,4 +179,37 @@ export const commonColors = {
   },
 } as const
 
+// Legacy exports for ThemeContext compatibility
+export const Colors = {
+  primary: colors.primary[500],
+  secondary: colors.gray[500],
+  background: colors.background.secondary,
+  surface: colors.background.primary,
+  textPrimary: colors.text.primary,
+  textSecondary: colors.text.secondary,
+  textTertiary: colors.text.tertiary,
+  border: colors.border.light,
+  error: colors.error[500],
+  success: colors.success[500],
+  warning: colors.warning[500],
+  white: colors.text.inverse,
+  black: colors.shadow.light,
+} as const
+
+export const DarkColors = {
+  primary: colors.primary[500],
+  secondary: colors.gray[500],
+  background: colors.gray[900],
+  surface: colors.gray[800],
+  textPrimary: colors.gray[50],
+  textSecondary: colors.gray[300],
+  textTertiary: colors.gray[400],
+  border: colors.gray[700],
+  error: colors.error[500],
+  success: colors.success[500],
+  warning: colors.warning[500],
+  white: colors.text.inverse,
+  black: colors.shadow.light,
+} as const
+
 export default colors

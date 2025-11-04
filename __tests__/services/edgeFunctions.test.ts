@@ -176,7 +176,7 @@ describe('EdgeFunctionService', () => {
 
       const result = await EdgeFunctionService.findSimilarNotes('note1', 'Content to match')
 
-      expect(supabase.functions.invoke).toHaveBeenCalledWith('find-similar', {
+      expect(supabase.functions.invoke).toHaveBeenCalledWith('find-similar-notes', {
         body: {
           note_id: 'note1',
           content: 'Content to match',
@@ -195,7 +195,7 @@ describe('EdgeFunctionService', () => {
 
       await expect(
         EdgeFunctionService.findSimilarNotes('note1', 'Content')
-      ).rejects.toThrow('Finding similar notes failed: Search failed')
+      ).rejects.toThrow('Similar notes search failed: Search failed')
     })
   })
 

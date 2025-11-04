@@ -18,6 +18,7 @@ import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 import { Card } from '../../components/ui/Card'
 import { FileUpload } from '../../components/ui/FileUpload'
+import { colors } from '../../constants/colors'
 import { FileUploadResult } from '../../services/fileUpload'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
