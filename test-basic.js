@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Basic functionality test script
  * Tests core components and hooks without running the full app

@@ -44,11 +44,6 @@ describe('Example: Mock Supabase Database Query', () => {
     ]
 
     // 2. Mock 查询链
-    const mockSingle = jest.fn().mockResolvedValue({
-      data: mockFolders,
-      error: null,
-    })
-
     ;(supabase.from as jest.Mock).mockReturnValue({
       select: jest.fn().mockReturnThis(),
       eq: jest.fn().mockReturnThis(),

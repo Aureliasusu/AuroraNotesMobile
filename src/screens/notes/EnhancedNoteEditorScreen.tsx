@@ -86,6 +86,7 @@ export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> =
 
       onSave()
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Save error', error)
       Alert.alert('Save Error', 'Failed to save note')
     } finally {
@@ -104,6 +105,7 @@ export const EnhancedNoteEditorScreen: React.FC<EnhancedNoteEditorScreenProps> =
       const analysis = await analyzeNote('temp-id', content)
       setAnalysisSuggestions(analysis)
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Content analysis error', error)
       Alert.alert('Analysis Error', 'Failed to analyze note')
     }

@@ -124,7 +124,7 @@ export const NoteEditorScreen: React.FC<NoteEditorScreenProps> = ({
           <TextInput
             style={styles.titleInput}
             placeholder="Note title..."
-            placeholderTextColor="#9ca3af"
+            placeholderTextColor="colors.text.quaternary"
             value={title}
             onChangeText={setTitle}
             multiline
@@ -133,7 +133,7 @@ export const NoteEditorScreen: React.FC<NoteEditorScreenProps> = ({
           <TextInput
             style={styles.contentInput}
             placeholder="Start writing your note..."
-            placeholderTextColor="#9ca3af"
+            placeholderTextColor="colors.text.quaternary"
             value={content}
             onChangeText={setContent}
             multiline
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   saveButtonDisabled: {
-    backgroundColor: '#9ca3af',
+    backgroundColor: colors.text.quaternary,
   },
   saveButtonText: {
     color: colors.background.primary,

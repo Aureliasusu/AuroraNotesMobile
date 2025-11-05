@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+/* eslint-disable no-console */
 /**
  * Test Runner for AuroraNotes Mobile
  * Runs different types of tests with proper configuration
